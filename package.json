@@ -1,0 +1,43 @@
+{
+  "name": "matia-dosen-portfolio-clone",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "capture": "node scripts/capture-reference.mjs",
+    "capture:interactions": "node scripts/capture-interactions.mjs",
+    "vendor:assets": "node scripts/vendor-assets.mjs",
+    "build": "vite build && vite build --ssr src/entry-server.jsx --outDir .prerender && node scripts/prerender.mjs",
+    "serve": "node scripts/serve-dist.mjs",
+    "crawl": "node scripts/crawl-dist.mjs",
+    "visual:test": "node scripts/visual-regression.mjs"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "lenis": "latest",
+    "motion": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-router-dom": "latest"
+  },
+  "devDependencies": {
+    "@eslint/js": "latest",
+    "@testing-library/jest-dom": "latest",
+    "@testing-library/react": "latest",
+    "@testing-library/user-event": "latest",
+    "eslint": "latest",
+    "eslint-plugin-react-hooks": "latest",
+    "eslint-plugin-react-refresh": "latest",
+    "globals": "latest",
+    "jsdom": "latest",
+    "pixelmatch": "^7.2.0",
+    "playwright-core": "latest",
+    "pngjs": "^7.0.0",
+    "vite": "latest",
+    "vitest": "latest"
+  }
+}

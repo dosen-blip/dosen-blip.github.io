@@ -1,0 +1,143 @@
+.projects-page {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  overflow: hidden;
+}
+
+.availability-badge {
+  align-items: center;
+  align-self: flex-start;
+  display: inline-flex;
+  gap: 6px;
+  width: fit-content;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: var(--green);
+  background: var(--green-wash);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.availability-badge-dot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.projects-index-content {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  width: 100%;
+  min-width: 0;
+}
+
+.projects-index-heading {
+  width: 100%;
+  min-width: 0;
+}
+
+.projects-index-heading h1 {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  color: var(--ink);
+  font-size: 52px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.projects-index-grid {
+  gap: 24px;
+}
+
+.projects-index-grid .project-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: 0 0 12px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+}
+
+.projects-index-grid .project-card-media {
+  width: 100%;
+  margin: 0;
+  padding: 12px;
+  aspect-ratio: 1;
+  border-radius: 6px;
+  background: var(--wash);
+  transition: padding .35s cubic-bezier(.2, .8, .2, 1);
+}
+
+.projects-index-grid .project-card-media img {
+  border-radius: 2px;
+}
+
+.projects-index-grid .project-card:hover .project-card-media {
+  margin: 0;
+  padding: 1px;
+}
+
+.projects-index-grid .project-card-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0;
+}
+
+.projects-index-grid .project-card-copy h3 {
+  margin: 0;
+  color: #333;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.projects-index-grid .project-card-copy span {
+  order: -1;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+@media (max-width: 1199.98px) {
+  .projects-page,
+  .projects-index-content {
+    gap: 24px;
+  }
+
+  .projects-index-heading h1 {
+    font-size: 44px;
+  }
+}
+
+@media (max-width: 1199.98px) and (min-width: 810px) {
+  .projects-page.page-wrap {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+}
+
+@media (max-width: 809.98px) {
+  .projects-index-heading h1 {
+    font-size: 36px;
+  }
+
+  .projects-heading-desktop-break {
+    display: none;
+  }
+
+  .projects-index-grid .project-card-copy h3 {
+    font-size: 16px;
+  }
+}

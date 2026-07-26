@@ -1,0 +1,632 @@
+[
+  {
+    "route": "/",
+    "viewport": "1440x900",
+    "ratio": 0.020621908009092124,
+    "mismatched": 49354,
+    "pixels": 2393280,
+    "referenceHeight": 1629,
+    "localHeight": 1662
+  },
+  {
+    "route": "/",
+    "viewport": "1024x900",
+    "ratio": 0.023595352080820264,
+    "mismatched": 40060,
+    "pixels": 1697792,
+    "referenceHeight": 1658,
+    "localHeight": 1582
+  },
+  {
+    "route": "/",
+    "viewport": "810x900",
+    "ratio": 0.02640908692918149,
+    "mismatched": 33178,
+    "pixels": 1256310,
+    "referenceHeight": 1551,
+    "localHeight": 1475
+  },
+  {
+    "route": "/",
+    "viewport": "809x900",
+    "ratio": 0.07928199415100806,
+    "mismatched": 196843,
+    "pixels": 2482821,
+    "referenceHeight": 3069,
+    "localHeight": 2956
+  },
+  {
+    "route": "/",
+    "viewport": "390x844",
+    "ratio": 0.06085347492788103,
+    "mismatched": 52948,
+    "pixels": 870090,
+    "referenceHeight": 2231,
+    "localHeight": 2137
+  },
+  {
+    "route": "/about",
+    "viewport": "1440x900",
+    "ratio": 0.023512552784375824,
+    "mismatched": 57017,
+    "pixels": 2424960,
+    "referenceHeight": 1684,
+    "localHeight": 1669
+  },
+  {
+    "route": "/about",
+    "viewport": "1024x900",
+    "ratio": 0.028353642278156996,
+    "mismatched": 51042,
+    "pixels": 1800192,
+    "referenceHeight": 1758,
+    "localHeight": 1659
+  },
+  {
+    "route": "/about",
+    "viewport": "810x900",
+    "ratio": 0.03228270357899988,
+    "mismatched": 51775,
+    "pixels": 1603800,
+    "referenceHeight": 1980,
+    "localHeight": 1926
+  },
+  {
+    "route": "/about",
+    "viewport": "809x900",
+    "ratio": 0.02923638240261957,
+    "mismatched": 51893,
+    "pixels": 1774946,
+    "referenceHeight": 2194,
+    "localHeight": 2084
+  },
+  {
+    "route": "/about",
+    "viewport": "390x844",
+    "ratio": 0.05255717831538355,
+    "mismatched": 49337,
+    "pixels": 938730,
+    "referenceHeight": 2407,
+    "localHeight": 2316
+  },
+  {
+    "route": "/projects",
+    "viewport": "1440x900",
+    "ratio": 0.006901346033972261,
+    "mismatched": 28343,
+    "pixels": 4106880,
+    "referenceHeight": 2852,
+    "localHeight": 2835
+  },
+  {
+    "route": "/projects",
+    "viewport": "1024x900",
+    "ratio": 0.012170798365724381,
+    "mismatched": 28216,
+    "pixels": 2318336,
+    "referenceHeight": 2264,
+    "localHeight": 2163
+  },
+  {
+    "route": "/projects",
+    "viewport": "810x900",
+    "ratio": 0.06918085478361441,
+    "mismatched": 102883,
+    "pixels": 1487160,
+    "referenceHeight": 1836,
+    "localHeight": 1760
+  },
+  {
+    "route": "/projects",
+    "viewport": "809x900",
+    "ratio": 0.10122500403844703,
+    "mismatched": 599688,
+    "pixels": 5924307,
+    "referenceHeight": 7323,
+    "localHeight": 7191
+  },
+  {
+    "route": "/projects",
+    "viewport": "390x844",
+    "ratio": 0.13413769493130612,
+    "mismatched": 209621,
+    "pixels": 1562730,
+    "referenceHeight": 4007,
+    "localHeight": 3875
+  },
+  {
+    "route": "/stack",
+    "viewport": "1440x900",
+    "ratio": 0.03162525016677785,
+    "mismatched": 68265,
+    "pixels": 2158560,
+    "referenceHeight": 1499,
+    "localHeight": 1481
+  },
+  {
+    "route": "/stack",
+    "viewport": "1024x900",
+    "ratio": 0.0312785094705746,
+    "mismatched": 69119,
+    "pixels": 2209792,
+    "referenceHeight": 2158,
+    "localHeight": 2078
+  },
+  {
+    "route": "/stack",
+    "viewport": "810x900",
+    "ratio": 0.03402421453079164,
+    "mismatched": 65647,
+    "pixels": 1929420,
+    "referenceHeight": 2382,
+    "localHeight": 2279
+  },
+  {
+    "route": "/stack",
+    "viewport": "809x900",
+    "ratio": 0.046750380512853726,
+    "mismatched": 76512,
+    "pixels": 1636607,
+    "referenceHeight": 2023,
+    "localHeight": 1912
+  },
+  {
+    "route": "/stack",
+    "viewport": "390x844",
+    "ratio": 0.07396427324566508,
+    "mismatched": 76269,
+    "pixels": 1031160,
+    "referenceHeight": 2644,
+    "localHeight": 2533
+  },
+  {
+    "route": "/contact",
+    "viewport": "1440x900",
+    "ratio": 0.010801217038539554,
+    "mismatched": 15336,
+    "pixels": 1419840,
+    "referenceHeight": 986,
+    "localHeight": 970
+  },
+  {
+    "route": "/contact",
+    "viewport": "1024x900",
+    "ratio": 0.013533734924366313,
+    "mismatched": 16949,
+    "pixels": 1252352,
+    "referenceHeight": 1223,
+    "localHeight": 1125
+  },
+  {
+    "route": "/contact",
+    "viewport": "810x900",
+    "ratio": 0.016378466228561622,
+    "mismatched": 16225,
+    "pixels": 990630,
+    "referenceHeight": 1223,
+    "localHeight": 1125
+  },
+  {
+    "route": "/contact",
+    "viewport": "809x900",
+    "ratio": 0.012215465979871295,
+    "mismatched": 14191,
+    "pixels": 1161724,
+    "referenceHeight": 1436,
+    "localHeight": 1337
+  },
+  {
+    "route": "/contact",
+    "viewport": "390x844",
+    "ratio": 0.021302049853581886,
+    "mismatched": 11930,
+    "pixels": 560040,
+    "referenceHeight": 1436,
+    "localHeight": 1337
+  },
+  {
+    "route": "/projects/trendless",
+    "viewport": "1440x900",
+    "ratio": 0.2367246713070379,
+    "mismatched": 1469208,
+    "pixels": 6206400,
+    "referenceHeight": 4310,
+    "localHeight": 4080
+  },
+  {
+    "route": "/projects/trendless",
+    "viewport": "1024x900",
+    "ratio": 0.33610355758901167,
+    "mismatched": 2803265,
+    "pixels": 8340480,
+    "referenceHeight": 6616,
+    "localHeight": 8145
+  },
+  {
+    "route": "/projects/trendless",
+    "viewport": "810x900",
+    "ratio": 0.25169319689733355,
+    "mismatched": 1386530,
+    "pixels": 5508810,
+    "referenceHeight": 6175,
+    "localHeight": 6801
+  },
+  {
+    "route": "/projects/trendless",
+    "viewport": "809x900",
+    "ratio": 0.45497851266647954,
+    "mismatched": 3428643,
+    "pixels": 7535835,
+    "referenceHeight": 8434,
+    "localHeight": 9315
+  },
+  {
+    "route": "/projects/trendless",
+    "viewport": "390x844",
+    "ratio": 0.3212261422787739,
+    "mismatched": 783114,
+    "pixels": 2437890,
+    "referenceHeight": 5919,
+    "localHeight": 6251
+  },
+  {
+    "route": "/projects/animatic-remastered",
+    "viewport": "1440x900",
+    "ratio": 0.035442258310777984,
+    "mismatched": 81710,
+    "pixels": 2305440,
+    "referenceHeight": 1585,
+    "localHeight": 1601
+  },
+  {
+    "route": "/projects/animatic-remastered",
+    "viewport": "1024x900",
+    "ratio": 0.059799752184139784,
+    "mismatched": 113897,
+    "pixels": 1904640,
+    "referenceHeight": 1860,
+    "localHeight": 1785
+  },
+  {
+    "route": "/projects/animatic-remastered",
+    "viewport": "810x900",
+    "ratio": 0.060595278057513705,
+    "mismatched": 81231,
+    "pixels": 1340550,
+    "referenceHeight": 1655,
+    "localHeight": 1580
+  },
+  {
+    "route": "/projects/animatic-remastered",
+    "viewport": "809x900",
+    "ratio": 0.10341764958043406,
+    "mismatched": 265134,
+    "pixels": 2563721,
+    "referenceHeight": 3169,
+    "localHeight": 3055
+  },
+  {
+    "route": "/projects/animatic-remastered",
+    "viewport": "390x844",
+    "ratio": 0.11782228524164008,
+    "mismatched": 99713,
+    "pixels": 846300,
+    "referenceHeight": 2170,
+    "localHeight": 2057
+  },
+  {
+    "route": "/projects/seven-due-dates",
+    "viewport": "1440x900",
+    "ratio": 0.035041900895273786,
+    "mismatched": 80787,
+    "pixels": 2305440,
+    "referenceHeight": 1585,
+    "localHeight": 1601
+  },
+  {
+    "route": "/projects/seven-due-dates",
+    "viewport": "1024x900",
+    "ratio": 0.056844551175611054,
+    "mismatched": 109549,
+    "pixels": 1927168,
+    "referenceHeight": 1882,
+    "localHeight": 1807
+  },
+  {
+    "route": "/projects/seven-due-dates",
+    "viewport": "810x900",
+    "ratio": 0.058248488997843004,
+    "mismatched": 79123,
+    "pixels": 1358370,
+    "referenceHeight": 1677,
+    "localHeight": 1602
+  },
+  {
+    "route": "/projects/seven-due-dates",
+    "viewport": "809x900",
+    "ratio": 0.10178504683043489,
+    "mismatched": 262513,
+    "pixels": 2579092,
+    "referenceHeight": 3188,
+    "localHeight": 3075
+  },
+  {
+    "route": "/projects/seven-due-dates",
+    "viewport": "390x844",
+    "ratio": 0.1159738590100707,
+    "mismatched": 97425,
+    "pixels": 840060,
+    "referenceHeight": 2154,
+    "localHeight": 2040
+  },
+  {
+    "route": "/projects/2024-chasing-greatness",
+    "viewport": "1440x900",
+    "ratio": 0.15502637495676236,
+    "mismatched": 645381,
+    "pixels": 4163040,
+    "referenceHeight": 2891,
+    "localHeight": 2827
+  },
+  {
+    "route": "/projects/2024-chasing-greatness",
+    "viewport": "1024x900",
+    "ratio": 0.25077291728967305,
+    "mismatched": 1288066,
+    "pixels": 5136384,
+    "referenceHeight": 4409,
+    "localHeight": 5016
+  },
+  {
+    "route": "/projects/2024-chasing-greatness",
+    "viewport": "810x900",
+    "ratio": 0.0947653250939636,
+    "mismatched": 354247,
+    "pixels": 3738150,
+    "referenceHeight": 4615,
+    "localHeight": 4580
+  },
+  {
+    "route": "/projects/2024-chasing-greatness",
+    "viewport": "809x900",
+    "ratio": 0.11741680408218981,
+    "mismatched": 590934,
+    "pixels": 5032789,
+    "referenceHeight": 6221,
+    "localHeight": 6156
+  },
+  {
+    "route": "/projects/2024-chasing-greatness",
+    "viewport": "390x844",
+    "ratio": 0.1757954313136856,
+    "mismatched": 326758,
+    "pixels": 1858740,
+    "referenceHeight": 4766,
+    "localHeight": 4737
+  },
+  {
+    "route": "/projects/novak-books",
+    "viewport": "1440x900",
+    "ratio": 0.19829452255418864,
+    "mismatched": 812373,
+    "pixels": 4096800,
+    "referenceHeight": 2563,
+    "localHeight": 2845
+  },
+  {
+    "route": "/projects/novak-books",
+    "viewport": "1024x900",
+    "ratio": 0.25133631848560517,
+    "mismatched": 1314123,
+    "pixels": 5228544,
+    "referenceHeight": 4599,
+    "localHeight": 5106
+  },
+  {
+    "route": "/projects/novak-books",
+    "viewport": "810x900",
+    "ratio": 0.1635818558204889,
+    "mismatched": 610036,
+    "pixels": 3729240,
+    "referenceHeight": 4604,
+    "localHeight": 4366
+  },
+  {
+    "route": "/projects/novak-books",
+    "viewport": "809x900",
+    "ratio": 0.28951953225817867,
+    "mismatched": 1554761,
+    "pixels": 5370142,
+    "referenceHeight": 6638,
+    "localHeight": 6240
+  },
+  {
+    "route": "/projects/novak-books",
+    "viewport": "390x844",
+    "ratio": 0.15266868944591938,
+    "mismatched": 265671,
+    "pixels": 1740180,
+    "referenceHeight": 4462,
+    "localHeight": 4348
+  },
+  {
+    "route": "/projects/menu-design",
+    "viewport": "1440x900",
+    "ratio": 0.10612915121795638,
+    "mismatched": 425926,
+    "pixels": 4013280,
+    "referenceHeight": 2787,
+    "localHeight": 2664
+  },
+  {
+    "route": "/projects/menu-design",
+    "viewport": "1024x900",
+    "ratio": 0.16606593010631926,
+    "mismatched": 567802,
+    "pixels": 3419136,
+    "referenceHeight": 3264,
+    "localHeight": 3339
+  },
+  {
+    "route": "/projects/menu-design",
+    "viewport": "810x900",
+    "ratio": 0.06984641773511203,
+    "mismatched": 193828,
+    "pixels": 2775060,
+    "referenceHeight": 3426,
+    "localHeight": 3324
+  },
+  {
+    "route": "/projects/menu-design",
+    "viewport": "809x900",
+    "ratio": 0.13529099832919492,
+    "mismatched": 511024,
+    "pixels": 3777221,
+    "referenceHeight": 4669,
+    "localHeight": 4499
+  },
+  {
+    "route": "/projects/menu-design",
+    "viewport": "390x844",
+    "ratio": 0.11225855288902574,
+    "mismatched": 174992,
+    "pixels": 1558830,
+    "referenceHeight": 3997,
+    "localHeight": 3877
+  },
+  {
+    "route": "/projects/beatport-redesign",
+    "viewport": "1440x900",
+    "ratio": 0.10335573476702509,
+    "mismatched": 392173,
+    "pixels": 3794400,
+    "referenceHeight": 2635,
+    "localHeight": 2596
+  },
+  {
+    "route": "/projects/beatport-redesign",
+    "viewport": "1024x900",
+    "ratio": 0.16725456126702679,
+    "mismatched": 729262,
+    "pixels": 4360192,
+    "referenceHeight": 4258,
+    "localHeight": 4097
+  },
+  {
+    "route": "/projects/beatport-redesign",
+    "viewport": "810x900",
+    "ratio": 0.19174184690468646,
+    "mismatched": 689891,
+    "pixels": 3598020,
+    "referenceHeight": 4442,
+    "localHeight": 3853
+  },
+  {
+    "route": "/projects/beatport-redesign",
+    "viewport": "809x900",
+    "ratio": 0.43127085921347347,
+    "mismatched": 2102809,
+    "pixels": 4875843,
+    "referenceHeight": 6027,
+    "localHeight": 5183
+  },
+  {
+    "route": "/projects/beatport-redesign",
+    "viewport": "390x844",
+    "ratio": 0.2603303424404342,
+    "mismatched": 464799,
+    "pixels": 1785420,
+    "referenceHeight": 4578,
+    "localHeight": 4231
+  },
+  {
+    "route": "/projects/toldya-tennis",
+    "viewport": "1440x900",
+    "ratio": 0.07128767247639797,
+    "mismatched": 314122,
+    "pixels": 4406400,
+    "referenceHeight": 3060,
+    "localHeight": 3040
+  },
+  {
+    "route": "/projects/toldya-tennis",
+    "viewport": "1024x900",
+    "ratio": 0.08366631244562064,
+    "mismatched": 295405,
+    "pixels": 3530752,
+    "referenceHeight": 3448,
+    "localHeight": 3410
+  },
+  {
+    "route": "/projects/toldya-tennis",
+    "viewport": "810x900",
+    "ratio": 0.09741700284484447,
+    "mismatched": 288329,
+    "pixels": 2959740,
+    "referenceHeight": 3654,
+    "localHeight": 3517
+  },
+  {
+    "route": "/projects/toldya-tennis",
+    "viewport": "809x900",
+    "ratio": 0.22296747406400902,
+    "mismatched": 872321,
+    "pixels": 3912324,
+    "referenceHeight": 4836,
+    "localHeight": 4510
+  },
+  {
+    "route": "/projects/toldya-tennis",
+    "viewport": "390x844",
+    "ratio": 0.12830515276205534,
+    "mismatched": 214217,
+    "pixels": 1669590,
+    "referenceHeight": 4281,
+    "localHeight": 4174
+  },
+  {
+    "route": "/404-probe",
+    "viewport": "1440x900",
+    "ratio": 0.01362962962962963,
+    "mismatched": 17664,
+    "pixels": 1296000,
+    "referenceHeight": 900,
+    "localHeight": 900
+  },
+  {
+    "route": "/404-probe",
+    "viewport": "1024x900",
+    "ratio": 0.015824652777777778,
+    "mismatched": 14584,
+    "pixels": 921600,
+    "referenceHeight": 900,
+    "localHeight": 900
+  },
+  {
+    "route": "/404-probe",
+    "viewport": "810x900",
+    "ratio": 0.02000548696844993,
+    "mismatched": 14584,
+    "pixels": 729000,
+    "referenceHeight": 900,
+    "localHeight": 900
+  },
+  {
+    "route": "/404-probe",
+    "viewport": "809x900",
+    "ratio": 0.022099986265622856,
+    "mismatched": 16091,
+    "pixels": 728100,
+    "referenceHeight": 900,
+    "localHeight": 900
+  },
+  {
+    "route": "/404-probe",
+    "viewport": "390x844",
+    "ratio": 0.0032567748207558635,
+    "mismatched": 1072,
+    "pixels": 329160,
+    "referenceHeight": 844,
+    "localHeight": 844
+  }
+]

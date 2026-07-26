@@ -1,0 +1,42 @@
+{
+  "route": "/projects/animatic-remastered",
+  "title": "Animatic Remastered - My Framer Site",
+  "source": {
+    "manifest": "references/manifest.json",
+    "dom": "references/dom/projects__animatic-remastered--*.html",
+    "styles": "references/styles/projects__animatic-remastered--*.json",
+    "screenshots": "references/screenshots/projects__animatic-remastered--*.png"
+  },
+  "metadata": {
+    "title": "Animatic Remastered",
+    "client": "Algonquin College",
+    "duration": "1 Week",
+    "category": "Academic Project"
+  },
+  "content": [
+    {
+      "type": "youtube",
+      "id": "fSDhwuEcBgQ",
+      "title": "Youtube Video",
+      "poster": "https://i.ytimg.com/vi_webp/fSDhwuEcBgQ/sddefault.webp",
+      "autoplay": false
+    },
+    {
+      "type": "richText",
+      "html": "<p><strong>Remaster of a short motion graphics project I made at Algonquin College. Updated lighting and textures. Watch at 1080p. Inspired heavily by twin peaks.</strong></p>"
+    }
+  ],
+  "relatedSlugs": [
+    "trendless",
+    "seven-due-dates",
+    "2024-chasing-greatness"
+  ],
+  "seo": {
+    "description": "UX Designer and Creative",
+    "canonical": "https://matiadosen.com/projects/animatic-remastered"
+  },
+  "responsive": {
+    "desktop": "At 1200px and wider, the frozen page shows all three related projects.",
+    "tabletAndMobile": "Below 1200px, the frozen page shows the first two related projects while preserving their order."
+  }
+}

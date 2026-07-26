@@ -1,0 +1,43 @@
+{
+  "route": "/contact",
+  "title": "Matia Dosen",
+  "source": {
+    "manifest": "references/manifest.json",
+    "dom": "references/dom/contact--*.html",
+    "styles": "references/styles/contact--*.json",
+    "screenshots": "references/screenshots/contact--*.png"
+  },
+  "copy": {
+    "availability": "Available for Work",
+    "heading": "Let's Connect!",
+    "intro": "Feel free to reach out with your projects, questions, or to connect. I'll respond promptly, and we can explore opportunities together.",
+    "formHeading": "Get in Touch",
+    "contactHeading": "Contact",
+    "email": "matiadosen@outlook.com",
+    "socialHeading": "Social",
+    "submit": "Send Message"
+  },
+  "fields": [
+    { "name": "Name", "type": "text", "placeholder": "Name", "required": true },
+    { "name": "Email", "type": "email", "placeholder": "Email", "required": true },
+    { "name": "Message", "type": "textarea", "placeholder": "Write a message...", "required": true },
+    { "name": "website", "type": "honeypot", "value": "" }
+  ],
+  "links": [
+    { "label": "Instagram", "href": "https://www.instagram.com/matia_dosen/", "target": "_blank" },
+    { "label": "LinkedIn", "href": "https://www.linkedin.com/in/matia-dosen-719090273", "target": "_blank" }
+  ],
+  "responsive": {
+    "desktop": "At 1200px and wider, the form occupies 60% on the left and contact details occupy the remaining space on the right.",
+    "tablet": "From 810px through 1199px, contact and social details form two columns above the full-width form.",
+    "mobile": "Below 810px, contact details, social details, and the form stack in one column; name and email also stack."
+  },
+  "submission": {
+    "endpointEnv": "VITE_CONTACT_ENDPOINT",
+    "method": "POST",
+    "encoding": "FormData",
+    "success": "Thanks—your message has been sent.",
+    "failure": "Message could not be sent. Please try again or email matiadosen@outlook.com.",
+    "unavailable": "Message submission is unavailable in this local build."
+  }
+}

@@ -1,0 +1,375 @@
+.about-page {
+  width: 100%;
+  padding: 24px 48px 0;
+  overflow: hidden;
+}
+
+.about-page h1,
+.about-page h2,
+.about-page h3,
+.about-page p {
+  margin: 0;
+}
+
+.about-page h1,
+.about-page h2,
+.about-page h3 {
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.about-page p {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.about-hero {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 48px;
+  padding: 24px 0 48px;
+  border-bottom: 1px solid var(--line);
+}
+
+.about-hero-content {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.about-availability {
+  align-self: flex-start;
+  display: inline-flex;
+  min-height: 29px;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: var(--green-wash);
+  color: var(--green);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 17px;
+  white-space: nowrap;
+}
+
+.about-availability > span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.about-intro {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.about-intro h1 {
+  width: 100%;
+  max-width: none;
+  overflow-wrap: anywhere;
+  font-size: 52px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.about-title-mobile {
+  display: none;
+}
+
+.about-intro p,
+.about-capability p,
+.about-experience-description {
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.about-portrait {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  align-self: stretch;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.about-portrait img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.about-capabilities {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 48px;
+  padding: 48px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.about-capability {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.about-page h2 {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.about-link {
+  display: inline-flex;
+  min-width: 0;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 24px 0 36px;
+  border: 1px solid var(--muted);
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
+  transition: color .2s ease, border-color .2s ease;
+}
+
+.about-link:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.about-link svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.35;
+}
+
+.about-experience {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 48px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.about-experience-list {
+  display: grid;
+  width: 100%;
+  gap: 24px;
+}
+
+.about-experience-card {
+  display: flex;
+  width: 100%;
+  min-height: 180px;
+  align-items: flex-start;
+  gap: 48px;
+  padding: 24px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--wash);
+}
+
+.about-experience-meta,
+.about-experience-copy {
+  flex: 1 0 0;
+  min-width: 0;
+}
+
+.about-experience-meta {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.about-experience-meta > svg {
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: var(--ink);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.15;
+}
+
+.about-experience-meta > div {
+  min-width: 0;
+}
+
+.about-experience-meta h3 {
+  margin-bottom: 2px;
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.about-experience-meta p {
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.about-experience-copy {
+  display: flex;
+  align-items: flex-start;
+}
+
+.about-experience-description {
+  width: 240px;
+}
+
+@media (max-width: 1199.98px) and (min-width: 810px) {
+  .about-hero {
+    gap: 24px;
+    padding-top: 0;
+  }
+
+  .about-hero-content {
+    gap: 24px;
+  }
+
+  .about-intro {
+    gap: 12px;
+  }
+
+  .about-intro h1 {
+    font-size: 44px;
+  }
+
+  .about-capabilities {
+    gap: 24px;
+  }
+
+  .about-page h2 {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 809.98px) {
+  .about-page {
+    padding: 120px 24px 0;
+  }
+
+  .about-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 0 0 48px;
+  }
+
+  .about-hero-content {
+    display: contents;
+  }
+
+  .about-availability {
+    order: 0;
+    font-size: 12px;
+    line-height: 15px;
+  }
+
+  .about-availability > span {
+    width: 7px;
+    height: 7px;
+  }
+
+  .about-portrait {
+    order: 1;
+    width: 100%;
+    height: 325px;
+    align-self: auto;
+  }
+
+  .about-intro {
+    order: 2;
+    gap: 12px;
+  }
+
+  .about-title-desktop {
+    display: none;
+  }
+
+  .about-title-mobile {
+    display: inline;
+  }
+
+  .about-intro h1 {
+    font-size: 36px;
+    line-height: 1;
+  }
+
+  .about-intro p,
+  .about-capability p,
+  .about-experience-description {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .about-intro p,
+  .about-capability p {
+    max-width: 400px;
+  }
+
+  .about-capabilities {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    padding: 48px 0;
+  }
+
+  .about-capability {
+    width: 100%;
+    gap: 24px;
+  }
+
+  .about-page h2 {
+    font-size: 24px;
+  }
+
+  .about-link {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  .about-experience {
+    gap: 24px;
+    padding: 80px 0 48px;
+  }
+
+  .about-experience-card {
+    min-height: 0;
+    flex-direction: column;
+    gap: 12px;
+    padding: 24px 12px;
+  }
+
+  .about-experience-meta {
+    width: 100%;
+    flex: none;
+  }
+
+  .about-experience-copy {
+    width: 100%;
+    flex: none;
+    padding-left: 32px;
+  }
+
+  .about-experience-description {
+    width: 100%;
+  }
+}

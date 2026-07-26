@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.prerender/
+.DS_Store
+references/screenshots/
+references/dom/
+references/styles/
+references/assets.json
+references/local/
+references/diff/
+npm-debug.log*

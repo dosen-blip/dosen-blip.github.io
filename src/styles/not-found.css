@@ -1,0 +1,104 @@
+.not-found-page {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  min-width: 320px;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 24px 48px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  background: #fff;
+  color: #1a1a1a;
+  text-align: center;
+}
+
+.not-found-card {
+  width: 100%;
+  padding-bottom: 144px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.not-found-copy {
+  width: 100%;
+  padding-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.not-found-page h1 {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  color: #1a1a1a;
+  font-size: 52px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.not-found-message {
+  width: min(400px, 100%);
+}
+
+.not-found-message p {
+  margin: 0;
+  color: #666;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.4;
+}
+
+.not-found-message p + p {
+  margin-top: 20px;
+}
+
+.not-found-home {
+  min-width: 184.72px;
+  min-height: 43.2px;
+  padding: 12px 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+@media (max-width: 1199px) and (min-width: 810px) {
+  .not-found-card {
+    padding-bottom: 131px;
+  }
+
+  .not-found-page h1 {
+    font-size: 44px;
+  }
+}
+
+@media (max-width: 809px) {
+  .not-found-page {
+    padding: 0 24px;
+  }
+
+  .not-found-card {
+    padding-bottom: 117px;
+  }
+
+  .not-found-page h1 {
+    font-size: 36px;
+  }
+
+  .not-found-message p {
+    font-size: 14px;
+  }
+}
