@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { ArrowLink } from "./ArrowLink"
 import { ProjectCard } from "./ProjectCard"
 import { Reveal } from "./Reveal"
+import { ArrowLeftIcon, PlayIcon } from "./Icons"
 import { getProject } from "../data/projects"
 
 function YouTubeBlock({ id, title }) {
@@ -12,7 +13,7 @@ function YouTubeBlock({ id, title }) {
   }
   return (
     <button className="youtube-poster" type="button" onClick={() => setActive(true)} aria-label={`Play ${title}`}>
-      <img src={`https://i.ytimg.com/vi/${id}/maxresdefault.jpg`} alt="" /><span aria-hidden="true">▶</span>
+      <img src={`https://i.ytimg.com/vi/${id}/maxresdefault.jpg`} alt="" /><span aria-hidden="true"><PlayIcon /></span>
     </button>
   )
 }
@@ -50,7 +51,7 @@ export function ProjectDetail({ project }) {
   return (
     <article className={`detail-page detail-page--${project.slug} page-wrap`}>
       <Reveal as="header" className="detail-heading">
-        <Link className="back-link" to="/projects">←&nbsp; Back to Projects</Link>
+        <Link className="back-link" to="/projects"><ArrowLeftIcon /><span>Back to Projects</span></Link>
         <span className="detail-kicker">{project.category} / {project.client}</span>
         <h1>{project.title}</h1>
         <p className="detail-dek">{project.summary || `A ${project.category.toLowerCase()} project created for ${project.client} over ${project.duration.toLowerCase()}.`}</p>

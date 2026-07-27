@@ -137,13 +137,17 @@ body {
 }
 
 .sidebar .dosen-button { position: relative; inset: auto; width: 100%; }
-.dosen-button::after {
-  content: "EXTERNAL STUDIO ↗";
+.dosen-external-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   margin-left: auto;
   color: var(--soft);
   font-size: 8px;
   letter-spacing: .1em;
+  text-transform: uppercase;
 }
+.dosen-external-label .ui-icon { width: 11px; height: 11px; }
 .dosen-button:hover,
 .dosen-button:focus-visible { background: var(--green-wash); }
 .dosen-wordmark-window { transition: transform .4s cubic-bezier(.16, 1, .3, 1); }
@@ -178,7 +182,8 @@ body {
   letter-spacing: .11em;
 }
 .site-footer > div > span:nth-child(2) { color: rgba(247, 245, 237, .56); }
-.site-footer a { padding-bottom: 3px; border-bottom: 1px solid rgba(247, 245, 237, .45); }
+.site-footer a { display: inline-flex; align-items: center; gap: 7px; padding-bottom: 3px; border-bottom: 1px solid rgba(247, 245, 237, .45); }
+.site-footer a .ui-icon { width: 12px; height: 12px; }
 .site-footer a:hover { border-color: var(--green); color: var(--green); }
 
 /* Typography and controls */
@@ -323,14 +328,15 @@ p { text-wrap: pretty; }
 .home-stack-card strong { font-size: 16px; }
 .home-stack-card small { margin-top: 4px; color: var(--muted); font-size: 11px; letter-spacing: .04em; }
 .home-stack-card:hover { padding-left: 12px; background: var(--wash); }
-.home-stack-card::after {
-  content: "↗";
+.home-stack-card > .external-link-icon {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
   margin-left: auto;
   color: var(--soft);
-  font-size: 14px;
   transition: color .25s ease, transform .3s ease;
 }
-.home-stack-card:hover::after { color: var(--green); transform: translate(2px, -2px); }
+.home-stack-card:hover > .external-link-icon { color: var(--green); transform: translate(2px, -2px); }
 
 /* Shared project language */
 .project-grid,
@@ -393,10 +399,11 @@ p { text-wrap: pretty; }
 .project-card-arrow {
   grid-column: 3;
   grid-row: 1 / span 2;
-  font-size: 18px;
-  font-style: normal;
+  width: 18px;
+  height: 18px;
   transition: transform .35s cubic-bezier(.22, 1, .36, 1);
 }
+.project-card-arrow .ui-icon { width: 100%; height: 100%; }
 .project-card:hover .project-card-arrow { transform: translate(3px, -3px); }
 
 /* Index pages */
@@ -452,16 +459,16 @@ p { text-wrap: pretty; }
 .stack-card h2 { font-size: 20px; letter-spacing: -.025em; }
 .stack-card-description { max-width: 500px; font-size: 14px; line-height: 1.55; }
 .stack-card:hover { padding-left: 62px; background: var(--wash); }
-.stack-card::after {
-  content: "↗";
+.stack-card > .external-link-icon {
   position: absolute;
   top: 22px;
   right: 4px;
+  width: 17px;
+  height: 17px;
   color: var(--soft);
-  font-size: 17px;
   transition: color .25s ease, transform .3s ease;
 }
-.stack-card:hover::after { color: var(--green); transform: translate(2px, -2px); }
+.stack-card:hover > .external-link-icon { color: var(--green); transform: translate(2px, -2px); }
 
 /* About */
 .about-page { background: transparent; }
@@ -693,7 +700,7 @@ p { text-wrap: pretty; }
     min-height: 48px;
     padding: 13px;
   }
-  .sidebar .dosen-button::after { display: none; }
+  .sidebar .dosen-external-label { display: none; }
   .sidebar .dosen-wordmark-window {
     display: block;
     width: 76px;

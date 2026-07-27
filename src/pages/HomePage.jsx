@@ -1,6 +1,7 @@
 import { ArrowLink } from "../components/ArrowLink"
 import { ProjectCard } from "../components/ProjectCard"
 import { Reveal } from "../components/Reveal"
+import { ArrowUpRightIcon } from "../components/Icons"
 import { asset } from "../data/site"
 import "../styles/home.css"
 
@@ -124,6 +125,7 @@ export default function HomePage() {
             <a className="home-stack-card" href={item.href} target="_blank" rel="noreferrer" key={item.name}>
               <img src={asset(item.icon)} alt="" />
               <span><strong>{item.name}</strong><small>{item.detail}</small></span>
+              <ArrowUpRightIcon className="external-link-icon" />
             </a>
           ))}
         </div>

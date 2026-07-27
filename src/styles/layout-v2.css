@@ -155,7 +155,8 @@ body,
   grid-column: 3;
   grid-row: 1;
   color: var(--soft);
-  font-size: 15px;
+  width: 15px;
+  height: 15px;
   line-height: 1;
 }
 

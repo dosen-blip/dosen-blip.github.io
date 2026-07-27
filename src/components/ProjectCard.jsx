@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import { ArrowUpRightIcon } from "./Icons"
 
 export function ProjectCard({ project, className = "" }) {
   const mediaClassName = [
@@ -17,7 +18,7 @@ export function ProjectCard({ project, className = "" }) {
       <div className="project-card-copy">
         <span>{project.category}</span>
         <h3>{project.title}</h3>
-        <i className="project-card-arrow" aria-hidden="true">↗</i>
+        <span className="project-card-arrow" aria-hidden="true"><ArrowUpRightIcon /></span>
       </div>
     </Link>
   )

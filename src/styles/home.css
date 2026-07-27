@@ -82,15 +82,6 @@
   color: var(--muted);
 }
 
-.home-action .arrow-swap span {
-  font-size: 0;
-}
-
-.home-action .arrow-swap span::after {
-  content: "→";
-  font-size: 16px;
-}
-
 .home-section {
   gap: 24px;
   padding: 48px 0;

@@ -1,4 +1,5 @@
 import "../styles/stack.css"
+import { ArrowUpRightIcon } from "../components/Icons"
 
 const stackGroups = [
   {
@@ -157,6 +158,7 @@ function StackCard({ item }) {
         <ul className="stack-tags" aria-label={`${item.name} capabilities`}>
           {item.tags.map((tag) => <li key={tag}>{tag}</li>)}
         </ul>
+        <ArrowUpRightIcon className="external-link-icon" />
       </a>
     </li>
   )

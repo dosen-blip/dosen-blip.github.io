@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { NavLink, Link } from "react-router-dom"
 import { navItems } from "../data/routes"
 import { asset, socialLinks } from "../data/site"
+import { ArrowUpRightIcon, FacebookIcon, InstagramIcon, LinkedInIcon } from "./Icons"
 
 function NavIcon({ name }) {
   if (name === "home") return <svg viewBox="0 0 24 24"><path d="m4 10 8-7 8 7v10h-6v-6h-4v6H4Z" /></svg>
@@ -26,10 +27,17 @@ function NavList({ onNavigate }) {
 }
 
 function Socials() {
+  const icons = {
+    Instagram: InstagramIcon,
+    LinkedIn: LinkedInIcon,
+  }
   return (
     <div className="socials" aria-label="Social links">
-      <a className="facebook" href="https://www.facebook.com/" target="_blank" rel="noreferrer" aria-label="Facebook"><span aria-hidden="true">f</span></a>
-      {socialLinks.map((link) => <a key={link.label} href={link.href} target="_blank" rel="noreferrer" aria-label={link.label}><span aria-hidden="true">{link.label === "Instagram" ? "◎" : "in"}</span><span className="social-label">{link.label}</span></a>)}
+      <a className="facebook" href="https://www.facebook.com/" target="_blank" rel="noreferrer" aria-label="Facebook"><FacebookIcon /></a>
+      {socialLinks.map((link) => {
+        const SocialIcon = icons[link.label]
+        return <a key={link.label} href={link.href} target="_blank" rel="noreferrer" aria-label={link.label}><SocialIcon /><span className="social-label">{link.label}</span></a>
+      })}
     </div>
   )
 }
@@ -59,6 +67,10 @@ function DosenButton() {
       <span className="dosen-wordmark-window" aria-hidden="true">
         <img className="dosen-wordmark dosen-wordmark-outline" src={asset("8w0l0Gui033mioUQjzI6JOUa6f4.png")} alt="" />
         <img className="dosen-wordmark dosen-wordmark-filled" src={asset("LRpJWtcLJyxTvUVMYNlxsHXRA.png")} alt="" />
+      </span>
+      <span className="dosen-external-label" aria-hidden="true">
+        <span>External Studio</span>
+        <ArrowUpRightIcon />
       </span>
     </a>
   )
@@ -125,7 +137,7 @@ export function SiteShell({ children }) {
         <div>
           <span>MATIA DOSEN / 2026</span>
           <span>DESIGNING BETWEEN CLARITY &amp; CULTURE</span>
-          <a href="mailto:matiadosen@outlook.com">START A CONVERSATION ↗</a>
+          <a href="mailto:matiadosen@outlook.com"><span>START A CONVERSATION</span><ArrowUpRightIcon /></a>
         </div>
       </footer>
     </>
