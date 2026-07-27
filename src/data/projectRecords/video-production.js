@@ -27,14 +27,14 @@ const videoProduction = {
       type: "youtube",
       id: "hYZgGD9qSzY",
       title: "Creativity in Public Sector",
-      description: "Client: Adobe",
+      description: "Client Adobe",
       number: "02",
     },
     {
       type: "youtube",
       id: "Kjk2cX7xaNU",
       title: "The 2024 Tennis Season",
-      description: "Official Book Trailer",
+      description: "fficial Book Trailer",
       number: "03",
     },
     {
