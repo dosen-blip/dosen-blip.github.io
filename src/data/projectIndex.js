@@ -1,5 +1,11 @@
 export const projectIndex = [
   {
+    slug: "video-production",
+    title: "Video Production at HintonX",
+    category: "FILM / MOTION",
+    cover: "/assets/video-production-cover.jpg",
+  },
+  {
     slug: "trendless",
     title: "Trendless",
     category: "UI / UX",

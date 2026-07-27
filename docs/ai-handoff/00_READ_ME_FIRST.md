@@ -1,14 +1,14 @@
 # AI handoff: read this first
 
-This repository is a standalone React/Vite clone of the **published** `https://matiadosen.com` portfolio. The Framer editor is not authoritative because it contains unpublished work. The frozen production capture at `references/` is the visual and content authority.
+This repository began as a standalone React/Vite clone of the **published** `https://matiadosen.com` portfolio and has since been expanded into a refreshed portfolio. The frozen production capture at `references/` remains the authority for cloned material; explicitly approved additions can have their own reference files.
 
 ## Current scope
 
-- 13 known routes: five static pages and eight project pages.
+- 14 known routes: five static pages and nine project pages.
 - One catch-all 404, emitted as `dist/404.html` and returned with HTTP 404 by the local production server.
 - Plain JavaScript/JSX, React Router, Vite, CSS, Motion, Lenis, Vitest, and Playwright-based capture scripts.
-- 55 localized assets in `public/assets/`; third-party destinations and YouTube media remain external.
-- No deployment configuration and no deployment is authorized by the original task.
+- 63 localized assets in `public/assets/`; third-party destinations and YouTube media remain external.
+- Pushes to `main` deploy through GitHub Actions to `https://dosen-blip.github.io`.
 
 ## Minimal context-loading strategy
 
@@ -36,12 +36,13 @@ If production changes after the capture, keep the frozen capture unless the user
 ## Guardrails
 
 - Preserve exact published wording, including typos and unusual titles such as `Project Name - My Framer Site`.
+- The approved `/projects/video-production` addition is sourced from `https://www.hintonx.com/matiadosen`; its capture is in `references/hintonx-video-production.json`, and its overview is intentionally rewritten in first person.
 - Do not add draft routes: `/hintonx`, `/page`, `/dj-production`, or `/page-2`.
 - Do not run `npm run capture` casually: it overwrites the frozen production reference.
-- Do not make real contact submissions unless the user separately supplies an endpoint and authorizes a submission test.
+- Do not make real contact submissions during testing unless the user separately authorizes one. The public form defaults to FormSubmit for `matiadosen@outlook.com`.
 - Keep Framer-hosted static media local. Keep YouTube, social, App Store, Google Play, Figma, and project-site destinations external.
 - Accessibility improvements are allowed when they do not alter the reference appearance.
-- The working tree was created as a new, currently untracked project; do not assume Git history exists for individual changes.
+- GitHub repository: `https://github.com/dosen-blip/dosen-blip.github.io`, branch `main`.
 
 ## Fast commands
 

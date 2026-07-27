@@ -26,6 +26,20 @@ function MetaIcon({ type }) {
 function ContentBlock({ block, projectTitle }) {
   if (block.type === "richText") return <section className="rich-text" dangerouslySetInnerHTML={{ __html: block.html }} />
   if (block.type === "image") return <figure><img src={block.src} alt={block.alt || `${projectTitle} project presentation`} />{block.caption && <figcaption>{block.caption}</figcaption>}</figure>
+  if (block.type === "youtube" && block.description) {
+    return (
+      <section className="video-showcase" aria-labelledby={`video-${block.id}`}>
+        <div className="video-showcase-heading">
+          <span>{block.number}</span>
+          <div>
+            <h2 id={`video-${block.id}`}>{block.title}</h2>
+            <p>{block.description}</p>
+          </div>
+        </div>
+        <YouTubeBlock id={block.id} title={block.title} />
+      </section>
+    )
+  }
   if (block.type === "youtube") return <YouTubeBlock id={block.id} title={block.title} />
   if (block.type === "link") return <ArrowLink to={block.href} external>{block.label}</ArrowLink>
   return null
@@ -34,7 +48,7 @@ function ContentBlock({ block, projectTitle }) {
 export function ProjectDetail({ project }) {
   const related = project.relatedSlugs.map(getProject).filter(Boolean)
   return (
-    <article className="detail-page page-wrap">
+    <article className={`detail-page detail-page--${project.slug} page-wrap`}>
       <Reveal as="header" className="detail-heading">
         <Link className="back-link" to="/projects">←&nbsp; Back to Projects</Link>
         <span className="detail-kicker">{project.category} / {project.client}</span>

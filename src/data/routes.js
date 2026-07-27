@@ -1,4 +1,5 @@
 export const projectSlugs = [
+  "video-production",
   "trendless",
   "animatic-remastered",
   "seven-due-dates",

@@ -2,8 +2,9 @@ import { describe, expect, it } from "vitest"
 import { projectIndex } from "../src/data/projectIndex"
 
 describe("project index", () => {
-  it("matches the eight frozen project cards in display order", () => {
+  it("matches the expanded project cards in display order", () => {
     expect(projectIndex).toEqual([
+      { slug: "video-production", title: "Video Production at HintonX", category: "FILM / MOTION", cover: "/assets/video-production-cover.jpg" },
       { slug: "trendless", title: "Trendless", category: "UI / UX", cover: "/assets/trendless-cover.png" },
       { slug: "animatic-remastered", title: "Animatic Remastered", category: "ACADEMIC PROJECT", cover: "/assets/animatic-cover.png" },
       { slug: "seven-due-dates", title: "Seven Due Dates", category: "ACADEMIC PROJECT", cover: "/assets/seven-due-dates-cover.png" },

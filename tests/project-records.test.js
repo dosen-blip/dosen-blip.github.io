@@ -5,8 +5,25 @@ import { projectIndex } from "../src/data/projectIndex"
 import { projects } from "../src/data/projects"
 
 describe("project records", () => {
-  it("completes all eight index records in route order", () => {
+  it("completes all nine index records in route order", () => {
     expect(projects.map((project) => project.slug)).toEqual(projectIndex.map((project) => project.slug))
+  })
+
+  it("preserves all seven HintonX video embeds and their descriptions", () => {
+    const videoProject = projects.find((project) => project.slug === "video-production")
+    const videos = videoProject.blocks.filter((block) => block.type === "youtube")
+
+    expect(videos).toHaveLength(7)
+    expect(videos.map((video) => video.id)).toEqual([
+      "iUXu4dyxbSI",
+      "hYZgGD9qSzY",
+      "Kjk2cX7xaNU",
+      "qzKlpU0CvGM",
+      "3mxLcNnxfNU",
+      "5OH6sWLEL8c",
+      "bmYRh4Yy1nk",
+    ])
+    expect(videos.every((video) => video.title && video.description)).toBe(true)
   })
 
   it("uses valid blocks, localized assets, valid related slugs, and route SEO", () => {

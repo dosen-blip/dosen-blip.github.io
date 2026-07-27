@@ -6,6 +6,12 @@ import "../styles/home.css"
 
 const recentProjects = [
   {
+    slug: "video-production",
+    title: "Video Production at HintonX",
+    category: "FILM / MOTION",
+    cover: asset("video-production-cover.jpg"),
+  },
+  {
     slug: "trendless",
     title: "Trendless",
     category: "UI / UX",
@@ -16,12 +22,6 @@ const recentProjects = [
     title: "Animatic Remastered",
     category: "ACADEMIC PROJECT",
     cover: asset("didBAU6tFaNthCNwaTxWiqYyQnU.png"),
-  },
-  {
-    slug: "seven-due-dates",
-    title: "Seven Due Dates",
-    category: "ACADEMIC PROJECT",
-    cover: asset("vRbvWigCRAAs6gN38Olpwe6Xvo.png"),
   },
 ]
 
@@ -106,8 +106,19 @@ export default function HomePage() {
         <ArrowLink className="home-action" to="/projects">All Projects</ArrowLink>
       </Reveal>
 
+      <Reveal as="section" className="home-section home-video-production">
+        <div className="section-heading"><span>02 / VIDEO PRODUCTION</span><h2>Stories built from first frame to final delivery.</h2></div>
+        <div className="home-video-production-layout">
+          <img src={asset("video-production-cover.jpg")} alt="" />
+          <div>
+            <p>I lead filming, photography, editing, sound, and final production for documentary, brand, sports, public-sector, and product stories through HintonX.</p>
+            <ArrowLink className="home-action" to="/projects/video-production">Watch the selected work</ArrowLink>
+          </div>
+        </div>
+      </Reveal>
+
       <Reveal as="section" className="home-section home-stack">
-        <div className="section-heading"><span>02 / CAPABILITIES</span><h2>Working Stack</h2></div>
+        <div className="section-heading"><span>03 / CAPABILITIES</span><h2>Working Stack</h2></div>
         <div className="home-stack-grid">
           {stack.map((item) => (
             <a className="home-stack-card" href={item.href} target="_blank" rel="noreferrer" key={item.name}>

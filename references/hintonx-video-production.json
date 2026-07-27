@@ -1,0 +1,43 @@
+{
+  "capturedAt": "2026-07-27",
+  "sourceUrl": "https://www.hintonx.com/matiadosen",
+  "sourceHeading": "Video Production",
+  "sourceBody": "HintonX offers end-to-end video production services, led by videographer Matia Dosen, supporting clients across Ottawa and beyond — from Adobe and public-sector organizations to sports brands, athletes, and publications. Our work includes promotional videos, brand storytelling, interviews, event coverage, and full-length documentaries focused on memorable sports personalities and moments. From filming and photography to editing, sound engineering, and final production, we bring every element together into polished, engaging videos that capture attention and leave a lasting impression.",
+  "videos": [
+    {
+      "id": "iUXu4dyxbSI",
+      "title": "The Legend",
+      "description": "Opening Sequence Teaser for the Upcoming Documentary"
+    },
+    {
+      "id": "hYZgGD9qSzY",
+      "title": "Creativity in Public Sector",
+      "description": "Client Adobe"
+    },
+    {
+      "id": "Kjk2cX7xaNU",
+      "title": "The 2024 Tennis Season",
+      "description": "Official Book Trailer"
+    },
+    {
+      "id": "qzKlpU0CvGM",
+      "title": "Adobe and Service Canada",
+      "description": "Promo Video"
+    },
+    {
+      "id": "3mxLcNnxfNU",
+      "title": "Novak Djokovic",
+      "description": "Year End #1 Yearbook Collection"
+    },
+    {
+      "id": "5OH6sWLEL8c",
+      "title": "ToldYa",
+      "description": "Mobile App Promo"
+    },
+    {
+      "id": "bmYRh4Yy1nk",
+      "title": "100 Mobile",
+      "description": "Message App Promo"
+    }
+  ]
+}
