@@ -28,10 +28,12 @@ describe("Frequency Shift project page", () => {
     expect(cardStyles).toContain("brightness(1.36)")
     expect(cardStyles).toContain("drop-shadow(0 0 1.45rem rgba(197, 72, 240, .58))")
     expect(cardStyles).toContain("frequency-shift-card-tube-flicker 820ms")
-    expect(wordmark).toContain("@keyframes fs-neon-ignite")
-    expect(wordmark).toContain("1.92s linear var(--ignite-delay)")
-    expect(wordmark).toContain("--ignite-delay: 315ms")
-    expect(wordmark).toContain("prefers-reduced-motion: reduce")
+    expect(styles).toContain("@keyframes fs-neon-power-core")
+    expect(styles).toContain("fs-neon-power-core 1.92s")
+    expect(styles).toContain("fs-neon-power-bloom 1.92s")
+    expect(styles).toContain("fs-neon-power-ambient 1.92s")
+    expect(wordmark).toContain("opacity: 1")
+    expect(wordmark).not.toContain("@keyframes fs-neon-ignite")
   })
 
   it("prioritizes creative and operational leadership before the supplementary DJ role", () => {

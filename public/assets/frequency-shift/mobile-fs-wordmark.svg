@@ -3,44 +3,15 @@
   <defs>
     <style>
       .cls-1 {
-        --ignite-delay: 0ms;
         fill: #eb73c1;
-        opacity: 0.04;
+        opacity: 1;
         paint-order: stroke fill;
         transform-box: fill-box;
         transform-origin: center;
-        animation: fs-neon-ignite 1.92s linear var(--ignite-delay) forwards;
-      }
-
-      path:nth-of-type(2) { --ignite-delay: 105ms; }
-      path:nth-of-type(3) { --ignite-delay: 38ms; }
-      path:nth-of-type(4) { --ignite-delay: 225ms; }
-      path:nth-of-type(5) { --ignite-delay: 135ms; }
-      path:nth-of-type(6) { --ignite-delay: 315ms; }
-      path:nth-of-type(7) { --ignite-delay: 68ms; }
-      path:nth-of-type(8) { --ignite-delay: 263ms; }
-      path:nth-of-type(9) { --ignite-delay: 173ms; }
-
-      @keyframes fs-neon-ignite {
-        0%, 7% { opacity: 0.03; }
-        8% { opacity: 0.88; }
-        11% { opacity: 0.08; }
-        15% { opacity: 1; }
-        21% { opacity: 0.18; }
-        27% { opacity: 1; }
-        34% { opacity: 0.62; }
-        42%, 100% { opacity: 1; }
       }
 
       path {
         pointer-events: visiblePainted;
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .cls-1 {
-          opacity: 1;
-          animation: none;
-        }
       }
     </style>
   </defs>
