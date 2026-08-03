@@ -2,6 +2,7 @@ import { Routes, Route, useLocation } from "react-router-dom"
 import { useReducedMotion } from "motion/react"
 import { ReactLenis } from "lenis/react"
 import { SiteShell } from "./components/SiteShell"
+import { RouteScrollReset } from "./components/RouteScrollReset"
 import { ProjectDetail } from "./components/ProjectDetail"
 import { FrequencyShiftDetail } from "./components/FrequencyShiftDetail"
 import { getProject } from "./data/projects"
@@ -31,17 +32,20 @@ export function App() {
   const normalizedPath = location.pathname !== "/" ? location.pathname.replace(/\/$/, "") : "/"
   if (!knownRoutes.includes(normalizedPath)) return <NotFoundPage />
   const content = (
-    <SiteShell>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/projects" element={<ProjectsPage />} />
-        <Route path="/stack" element={<StackPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/projects/:slug" element={<ProjectRoute />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </SiteShell>
+    <>
+      <RouteScrollReset />
+      <SiteShell>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/stack" element={<StackPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/projects/:slug" element={<ProjectRoute />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </SiteShell>
+    </>
   )
   return reduced ? content : <ReactLenis root options={{ lerp: 0.1, smoothWheel: true }}>{content}</ReactLenis>
 }
