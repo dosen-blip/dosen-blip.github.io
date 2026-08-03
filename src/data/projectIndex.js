@@ -6,6 +6,13 @@ export const projectIndex = [
     cover: "/assets/video-production-cover.jpg",
   },
   {
+    slug: "frequency-shift",
+    title: "Frequency Shift",
+    category: "CREATIVE DIRECTION / WEB / VIDEO",
+    cover: "/assets/frequency-shift/fs-icon-vector.svg",
+    mediaBackground: "#020102",
+  },
+  {
     slug: "trendless",
     title: "Trendless",
     category: "UI / UX",

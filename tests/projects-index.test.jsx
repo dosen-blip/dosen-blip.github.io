@@ -5,6 +5,13 @@ describe("project index", () => {
   it("matches the expanded project cards in display order", () => {
     expect(projectIndex).toEqual([
       { slug: "video-production", title: "Video Production at HintonX", category: "FILM / MOTION", cover: "/assets/video-production-cover.jpg" },
+      {
+        slug: "frequency-shift",
+        title: "Frequency Shift",
+        category: "CREATIVE DIRECTION / WEB / VIDEO",
+        cover: "/assets/frequency-shift/fs-icon-vector.svg",
+        mediaBackground: "#020102",
+      },
       { slug: "trendless", title: "Trendless", category: "UI / UX", cover: "/assets/trendless-cover.png" },
       { slug: "animatic-remastered", title: "Animatic Remastered", category: "ACADEMIC PROJECT", cover: "/assets/animatic-cover.png" },
       { slug: "seven-due-dates", title: "Seven Due Dates", category: "ACADEMIC PROJECT", cover: "/assets/seven-due-dates-cover.png" },

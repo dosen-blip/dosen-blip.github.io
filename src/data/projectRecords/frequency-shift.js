@@ -1,0 +1,146 @@
+const frequencyShift = {
+  slug: "frequency-shift",
+  layout: "frequencyShift",
+  title: "Frequency Shift",
+  category: "Creative Direction / Web / Video",
+  client: "Frequency Shift",
+  duration: "Ongoing",
+  date: "2025 — Present",
+  location: "Ottawa, Canada",
+  cover: "/assets/frequency-shift/fs-icon-vector.svg",
+  gallery: [],
+  relatedSlugs: ["video-production", "trendless", "menu-design"],
+  liveUrl: "https://frequencyshift.ca/",
+  instagramUrl: "https://www.instagram.com/frequency___shift/",
+  content: {
+    hero: {
+      kicker: "Creative Direction / Web Management / Video",
+      dek: "I shape Frequency Shift from first announcement to final archive—directing the identity, building and managing the website, and editing the video work around each event. I also support planning, promotion, and the room itself as part of the core team.",
+      image: "/assets/frequency-shift/hero-crowd.webp",
+      meta: [
+        { label: "Role", value: "Creative Direction" },
+        { label: "Platform", value: "frequencyshift.ca" },
+        { label: "Output", value: "Web Development / Video Editing" },
+        { label: "Period", value: "2025—Present" },
+      ],
+    },
+    overview: {
+      eyebrow: "01 / The role",
+      title: "One role across the whole series.",
+      paragraphs: [
+        "Frequency Shift is an Ottawa house series built around the dancefloor—solo nights, partner takeovers, and a two-stage festival, each with its own room and energy.",
+        "My role is to keep that range coherent. I direct the visual language, manage frequencyshift.ca, edit the motion work, and keep each campaign moving from the first announcement through doors and into the archive.",
+      ],
+      annotation: "For the love of house.",
+    },
+    creative: {
+      eyebrow: "02 / Creative direction",
+      title: "A visual system built to move between rooms.",
+      paragraphs: [
+        "Each night asks for a different rhythm—from the first solo GRIDWRKS event to collaborations at City At Night and Frequency Fest at Club SAW. The system starts with bold type, saturated colour, the FS mark, and fast, high-contrast motion, then flexes around each partner, lineup, and room.",
+        "These photographs are the other half of the brief. They keep the identity grounded in the people and venues it is built to serve—not only the assets that announce them.",
+      ],
+    },
+    featuredPosts: [
+      {
+        title: "Frequency Fest Vol. 1",
+        venue: "Club SAW",
+        credit: "Photo: Catherine Archambault",
+        src: "/assets/frequency-shift/photos/frequency-fest-04.webp",
+        alt: "A dancer in silver sunglasses moving through the warm amber Frequency Fest crowd at Club SAW.",
+        href: "https://www.instagram.com/p/Das9FdvCfZt/",
+      },
+      {
+        title: "Frequency Shift 001",
+        venue: "Poa Tiki",
+        credit: "Photo: Blue Chapel Lamb",
+        src: "/assets/frequency-shift/photos/frequency-shift-001-01.webp",
+        alt: "The first Frequency Shift dancefloor glowing red, blue, and white beneath Poa Tiki’s rope ceiling.",
+        href: "https://www.instagram.com/p/DKe8HNiOT1M/",
+      },
+      {
+        title: "Frequency Shift 003",
+        venue: "GRIDWRKS",
+        credit: "Photo credit not listed",
+        src: "/assets/frequency-shift/photos/frequency-shift-003-feature.webp",
+        alt: "Hands raised beneath blue and magenta beams with the Frequency Shift roundel glowing at GRIDWRKS.",
+        href: "https://www.instagram.com/p/DNEDMbduITH/",
+        position: "60% center",
+      },
+      {
+        title: "World Cup",
+        venue: "GRIDWRKS",
+        credit: "Photo credit not listed",
+        src: "/assets/frequency-shift/photos/world-cup-feature.webp",
+        alt: "DJs framed by a packed GRIDWRKS dancefloor under deep red and pink lighting during the World Cup special.",
+        href: "https://www.instagram.com/p/DaBDdIyjhBX/",
+      },
+      {
+        title: "Dopamine",
+        venue: "City At Night",
+        credit: "Photo: Mystic Does Media",
+        src: "/assets/frequency-shift/photos/dopamine-02.webp",
+        alt: "Three dancers leaning into the booth rail under saturated green light at City At Night.",
+        href: "https://www.instagram.com/p/DWUtWzUjo6R/",
+      },
+    ],
+    motion: {
+      eyebrow: "03 / Motion and promotion",
+      title: "Cut for the announcement and the afterimage.",
+      paragraphs: [
+        "I edit every promotional film for Frequency Shift. Announcement pieces make the date, lineup, venue, and ticket route legible in seconds; recap edits hold onto the texture of the room after the doors close.",
+        "The GRIDWRKS standalone film and Frequency Shift × Solstice piece show both sides of that job: vertical-first campaign pacing, then a cut driven by the room itself.",
+      ],
+      slots: [
+        {
+          number: "01",
+          title: "Frequency Shift at GRIDWRKS",
+          venue: "GRIDWRKS",
+          description: "Standalone event film",
+          src: "/assets/frequency-shift/video/frequency-shift-gridwrks-master.mov",
+          poster: "/assets/frequency-shift/video/frequency-shift-campaign-teaser-poster.jpg",
+          fallbackUrl: "https://frequencyshift.ca/archive/frequency-shift-005/",
+        },
+        {
+          number: "02",
+          title: "Frequency Shift × Solstice",
+          venue: "City At Night",
+          description: "Collaboration / live-event film",
+          src: "/assets/frequency-shift/video/frequency-shift-solstice-city-at-night-master.mov",
+          poster: "/assets/frequency-shift/video/frequency-shift-live-recap-poster.jpg",
+          fallbackUrl: "https://frequencyshift.ca/archive/solstice/",
+        },
+      ],
+    },
+    web: {
+      eyebrow: "04 / Web platform",
+      title: "A permanent home for a moving series.",
+      paragraphs: [
+        "I built and maintain frequencyshift.ca as the working home of the series. Each event has a clear path to the essentials—date, lineup, venue, and tickets—while completed nights move into an archive with photography, credits, collaborators, and source posts.",
+        "I handle releases, content updates, media, and the archive as the program changes. The site moves at the speed of the feed without losing the longer story.",
+      ],
+      homeScreenshot: "/assets/frequency-shift/web/home-desktop.webp",
+    },
+    room: {
+      eyebrow: "05 / Inside the room",
+      title: "The work continues when doors open.",
+      body: "I stay involved in planning, promotion, last-minute asset updates, and on-site support. Watching where people hesitate, what information they need, and how the room actually moves feeds directly into the next campaign.",
+      dj: "I also play selected Frequency Shift nights. It is a supporting part of the role, not the centre of the project, but it keeps me close to the audience the work is built around.",
+    },
+    closing: {
+      eyebrow: "06 / Continuity",
+      title: "From first post to final record.",
+      paragraphs: [
+        "Since May 2025, Frequency Shift has grown from a first Ottawa night into solo editions, partner takeovers, and Frequency Fest at Club SAW. The archive keeps the artists, venues, collaborators, and photographers visible alongside the work.",
+        "My contribution is the continuity between those moments: carrying each night through campaign, live experience, and permanent record without changing voice at every handoff.",
+      ],
+    },
+  },
+  seo: {
+    title: "Frequency Shift — Creative Direction, Web & Video by Matia Dosen",
+    description: "Creative direction, web management, video editing, campaign production, and event support for Ottawa house series Frequency Shift.",
+    image: "/assets/frequency-shift/hero-crowd.webp",
+  },
+}
+
+export default frequencyShift

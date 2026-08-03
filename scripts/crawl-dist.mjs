@@ -12,6 +12,18 @@ try {
     page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()) })
     page.on("pageerror", (error) => errors.push(error.message))
     const response = await page.goto(`${base}${route}`, { waitUntil: "networkidle" })
+    await page.locator('img[loading="lazy"]').evaluateAll((images) => {
+      images.forEach((image) => { image.loading = "eager" })
+    })
+    await page.evaluate(() => Promise.race([
+      Promise.all([...document.images].map((image) => image.complete
+        ? true
+        : new Promise((resolve) => {
+          image.addEventListener("load", resolve, { once: true })
+          image.addEventListener("error", resolve, { once: true })
+        }))),
+      new Promise((resolve) => setTimeout(resolve, 3000)),
+    ]))
     const title = await page.title()
     const canonical = await page.locator('link[rel="canonical"]').getAttribute("href")
     const broken = await page.locator("img").evaluateAll((images) => images.filter((image) => !image.complete || image.naturalWidth === 0).map((image) => image.src))

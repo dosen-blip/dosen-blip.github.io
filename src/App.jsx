@@ -3,6 +3,7 @@ import { useReducedMotion } from "motion/react"
 import { ReactLenis } from "lenis/react"
 import { SiteShell } from "./components/SiteShell"
 import { ProjectDetail } from "./components/ProjectDetail"
+import { FrequencyShiftDetail } from "./components/FrequencyShiftDetail"
 import { getProject } from "./data/projects"
 import { knownRoutes } from "./data/routes"
 import HomePage from "./pages/HomePage"
@@ -18,7 +19,10 @@ import "./styles/layout-v2.css"
 function ProjectRoute() {
   const slug = useLocation().pathname.split("/").filter(Boolean).at(-1)
   const project = getProject(slug)
-  return project ? <ProjectDetail project={project} /> : <NotFoundPage />
+  if (!project) return <NotFoundPage />
+  return project.layout === "frequencyShift"
+    ? <FrequencyShiftDetail project={project} />
+    : <ProjectDetail project={project} />
 }
 
 export function App() {

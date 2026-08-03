@@ -165,6 +165,155 @@ body,
   color: var(--green);
 }
 
+/* Frequency Shift project card: a contained neon sign inside the shared card. */
+.project-card-frequency-shift .project-card-media,
+.project-card-frequency-shift:hover .project-card-media,
+.project-card-frequency-shift:focus-visible .project-card-media {
+  position: relative;
+  isolation: isolate;
+  padding: 0;
+  overflow: hidden;
+  background: #020102;
+}
+
+.project-card-frequency-shift .project-card-media::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(20, 5, 30, 0), rgba(1, 1, 8, .1) 58%, rgba(0, 0, 0, .38) 100%),
+    linear-gradient(180deg, rgba(1, 2, 9, .1), rgba(0, 0, 0, .22));
+  opacity: 1;
+  transition: background-color 520ms ease;
+  pointer-events: none;
+}
+
+.project-card-frequency-shift .project-card-media img.frequency-shift-card-backdrop {
+  position: absolute;
+  z-index: 0;
+  inset: -4%;
+  width: 108%;
+  height: 108%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 48%;
+  filter: blur(5px) brightness(.68) saturate(1.02) contrast(1.04);
+  transform: scale(1.025);
+  transition: filter 620ms ease, transform 900ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.frequency-shift-card-logo {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.project-card-frequency-shift .project-card-media .frequency-shift-card-logo-layer {
+  grid-area: 1 / 1;
+  width: min(62%, 28rem);
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 0;
+  object-fit: contain;
+  transform: scale(1);
+  transition: opacity 420ms ease, filter 520ms ease, transform 720ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.project-card-frequency-shift .project-card-media .frequency-shift-card-logo-ambient {
+  opacity: .3;
+  filter: blur(2.2rem) saturate(1.5);
+  transform: scale(1.018);
+}
+
+.project-card-frequency-shift .project-card-media .frequency-shift-card-logo-bloom {
+  opacity: .58;
+  filter:
+    blur(.36rem)
+    drop-shadow(0 0 .5rem rgba(235, 115, 193, .94))
+    drop-shadow(0 0 1.8rem rgba(197, 72, 240, .78));
+}
+
+.project-card-frequency-shift .project-card-media .frequency-shift-card-logo-core {
+  z-index: 2;
+  opacity: 1;
+  filter:
+    brightness(1.36)
+    drop-shadow(0 0 .12rem #fff5fb)
+    drop-shadow(0 0 .5rem rgba(235, 115, 193, .96))
+    drop-shadow(0 0 1.45rem rgba(197, 72, 240, .58));
+}
+
+.project-card-frequency-shift:hover .project-card-media::before,
+.project-card-frequency-shift:focus-visible .project-card-media::before {
+  opacity: 1;
+}
+
+.project-card-frequency-shift:hover .project-card-media img.frequency-shift-card-backdrop,
+.project-card-frequency-shift:focus-visible .project-card-media img.frequency-shift-card-backdrop {
+  filter: blur(3px) brightness(.78) saturate(1.08) contrast(1.06);
+  transform: scale(1.055);
+}
+
+.project-card-frequency-shift:hover .project-card-media .frequency-shift-card-logo-layer,
+.project-card-frequency-shift:focus-visible .project-card-media .frequency-shift-card-logo-layer {
+  transform: scale(1.012);
+}
+
+.project-card-frequency-shift:hover .project-card-media .frequency-shift-card-logo-ambient,
+.project-card-frequency-shift:focus-visible .project-card-media .frequency-shift-card-logo-ambient {
+  opacity: .34;
+  filter: blur(2.2rem) saturate(1.5);
+  transform: scale(1.03);
+}
+
+.project-card-frequency-shift:hover .project-card-media .frequency-shift-card-logo-bloom,
+.project-card-frequency-shift:focus-visible .project-card-media .frequency-shift-card-logo-bloom {
+  opacity: .66;
+  filter:
+    blur(.36rem)
+    drop-shadow(0 0 .5rem rgba(235, 115, 193, .98))
+    drop-shadow(0 0 1.8rem rgba(197, 72, 240, .84));
+}
+
+.project-card-frequency-shift:hover .project-card-media .frequency-shift-card-logo-core,
+.project-card-frequency-shift:focus-visible .project-card-media .frequency-shift-card-logo-core {
+  animation: frequency-shift-card-tube-flicker 820ms linear both;
+  filter:
+    brightness(1.36)
+    drop-shadow(0 0 .12rem #fff5fb)
+    drop-shadow(0 0 .5rem rgba(235, 115, 193, .96))
+    drop-shadow(0 0 1.45rem rgba(197, 72, 240, .58));
+}
+
+@keyframes frequency-shift-card-tube-flicker {
+  0%, 5% { opacity: 1; }
+  9% { opacity: .08; }
+  15% { opacity: .98; }
+  21% { opacity: .14; }
+  28% { opacity: 1; }
+  34% { opacity: .22; }
+  43% { opacity: 1; }
+  56% { opacity: .64; }
+  63% { opacity: .16; }
+  71%, 100% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-card-frequency-shift .project-card-media::before,
+  .project-card-frequency-shift .project-card-media img.frequency-shift-card-backdrop,
+  .project-card-frequency-shift .project-card-media .frequency-shift-card-logo-layer {
+    transition: none;
+  }
+
+  .project-card-frequency-shift:hover .project-card-media .frequency-shift-card-logo-core,
+  .project-card-frequency-shift:focus-visible .project-card-media .frequency-shift-card-logo-core {
+    animation: none;
+  }
+}
+
 /* Home: one featured story with a contained supporting column. */
 .home-project-grid {
   display: grid;

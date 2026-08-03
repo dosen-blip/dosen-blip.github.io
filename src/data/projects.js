@@ -7,13 +7,16 @@ import menuDesign from "./projectRecords/menu-design"
 import beatportRedesign from "./projectRecords/beatport-redesign"
 import toldyaTennis from "./projectRecords/toldya-tennis"
 import videoProduction from "./projectRecords/video-production"
+import frequencyShift from "./projectRecords/frequency-shift"
 
 /**
  * Shared project-detail records. Every record contains route metadata, localized
- * cover/gallery media, ordered render blocks, related slugs, and route SEO.
+ * media, related slugs, and route SEO. Custom layouts may replace render blocks
+ * with their own structured content.
  */
 export const projects = [
   videoProduction,
+  frequencyShift,
   trendless,
   animaticRemastered,
   sevenDueDates,
