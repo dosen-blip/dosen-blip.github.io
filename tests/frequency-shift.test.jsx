@@ -56,16 +56,18 @@ describe("Frequency Shift project page", () => {
     )
   })
 
-  it("uses only the two supplied local video masters with no pending media card", () => {
+  it("leads with the supplied Techno Special master and has no pending media card", () => {
     const { container } = render(
       <MemoryRouter><FrequencyShiftDetail project={frequencyShift} /></MemoryRouter>,
     )
 
-    expect(container.querySelectorAll(".fs-motion-card")).toHaveLength(2)
+    expect(container.querySelectorAll(".fs-motion-card")).toHaveLength(3)
+    expect(container.querySelector(".fs-motion-card")).toHaveClass("fs-motion-card-featured")
     expect(container.querySelectorAll(".fs-motion-card-pending")).toHaveLength(0)
     const videos = [...container.querySelectorAll("video")]
-    expect(videos).toHaveLength(2)
+    expect(videos).toHaveLength(3)
     expect(videos.map((video) => video.getAttribute("src"))).toEqual([
+      "/assets/frequency-shift/video/frequency-shift-techno-special-master.mp4",
       "/assets/frequency-shift/video/frequency-shift-gridwrks-master.mov",
       "/assets/frequency-shift/video/frequency-shift-solstice-city-at-night-master.mov",
     ])
@@ -76,6 +78,7 @@ describe("Frequency Shift project page", () => {
       expect(video.getAttribute("preload")).toBe("none")
       expect(video.getAttribute("poster")).toMatch(/^\/assets\/frequency-shift\/video\/.+-poster\.jpg$/)
     }
+    expect(container).toHaveTextContent("Frequency Shift: Techno Special")
     expect(container).toHaveTextContent("Frequency Shift at GRIDWRKS")
     expect(container).toHaveTextContent("Frequency Shift × Solstice")
     expect(container).toHaveTextContent("City At Night")
@@ -87,8 +90,8 @@ describe("Frequency Shift project page", () => {
     expect(container).not.toHaveTextContent("Next master")
 
     fireEvent.error(videos[0])
-    expect(container).toHaveTextContent("This browser may not support the original HEVC master.")
-    expect(container.querySelector('a[href="https://frequencyshift.ca/archive/frequency-shift-005/"]')).toBeTruthy()
+    expect(container).toHaveTextContent("This browser could not play the original master.")
+    expect(container.querySelector('a[href="https://frequencyshift.ca/events/september-4/"]')).toBeTruthy()
   })
 
   it("shows five venue-photography posts with visible source credits and no posters", () => {

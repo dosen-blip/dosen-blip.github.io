@@ -231,22 +231,24 @@ function FrequencyShiftHeroWordmark({ src }) {
 
 function MotionCard({ item }) {
   const [failed, setFailed] = useState(false)
+  const cardClassName = `fs-motion-card${item.featured ? " fs-motion-card-featured" : ""}`
+  const mediaStyle = item.aspectRatio ? { "--fs-motion-ratio": item.aspectRatio } : undefined
 
   return (
-    <article className="fs-motion-card">
-      <div className="fs-motion-media">
+    <article className={cardClassName}>
+      <div className="fs-motion-media" style={mediaStyle}>
         {failed ? (
           <div className="fs-motion-error" role="status">
             <img
               src={item.poster}
               alt=""
-              width="720"
-              height="1280"
+              width={item.featured ? "1920" : "720"}
+              height={item.featured ? "1080" : "1280"}
               loading="lazy"
               decoding="async"
             />
             <div>
-              <p>This browser may not support the original HEVC master.</p>
+              <p>This browser could not play the original master.</p>
               <ExternalSource href={item.fallbackUrl}>View event archive</ExternalSource>
             </div>
           </div>

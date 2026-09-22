@@ -46,12 +46,17 @@ describe("project records", () => {
         expect(project.content.hero.dek).toContain("directing the identity")
         expect(project.content.hero.meta.map((item) => item.label)).toEqual(["Role", "Platform", "Output", "Period"])
         expect(project.content.hero.meta.find((item) => item.label === "Output")?.value).toBe("Web Development / Video Editing")
-        expect(project.content.motion.slots).toHaveLength(2)
-        expect(project.content.motion.slots.filter((slot) => slot.src)).toHaveLength(2)
+        expect(project.content.motion.slots).toHaveLength(3)
+        expect(project.content.motion.slots.filter((slot) => slot.src)).toHaveLength(3)
+        expect(project.content.motion.slots[0]).toMatchObject({
+          title: "Frequency Shift: Techno Special",
+          featured: true,
+          aspectRatio: "16 / 9",
+        })
         for (const slot of project.content.motion.slots.filter((item) => item.src)) {
           expect(slot.src.startsWith("/assets/")).toBe(true)
           expect(slot.poster.startsWith("/assets/")).toBe(true)
-          expect(slot.fallbackUrl).toMatch(/^https:\/\/frequencyshift\.ca\/archive\//)
+          expect(slot.fallbackUrl).toMatch(/^https:\/\/frequencyshift\.ca\/(archive|events)\//)
           expect(fs.existsSync(path.join(process.cwd(), "public", slot.src))).toBe(true)
           expect(fs.existsSync(path.join(process.cwd(), "public", slot.poster))).toBe(true)
         }

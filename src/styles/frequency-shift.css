@@ -775,10 +775,16 @@
   transition: transform .45s var(--fs-ease);
 }
 
+.fs-motion-card-featured {
+  width: min(100%, 960px);
+  grid-column: 1 / -1;
+  justify-self: center;
+}
+
 .fs-motion-media,
 .fs-motion-video {
   width: 100%;
-  aspect-ratio: 9 / 16;
+  aspect-ratio: var(--fs-motion-ratio, 9 / 16);
 }
 
 .fs-motion-media {
@@ -1379,6 +1385,10 @@
   .fs-motion-card {
     flex: 0 0 min(82vw, 330px);
     scroll-snap-align: start;
+  }
+
+  .fs-motion-card-featured {
+    flex-basis: min(88vw, 620px);
   }
 
   .fs-web {

@@ -89,11 +89,22 @@ const frequencyShift = {
       title: "Cut for the announcement and the afterimage.",
       paragraphs: [
         "I edit every promotional film for Frequency Shift. Announcement pieces make the date, lineup, venue, and ticket route legible in seconds; recap edits hold onto the texture of the room after the doors close.",
-        "The GRIDWRKS standalone film and Frequency Shift × Solstice piece show both sides of that job: vertical-first campaign pacing, then a cut driven by the room itself.",
+        "The Techno Special film leads this selection, pairing the live energy of GRIDWRKS with a campaign edit built to move tickets. The standalone and Frequency Shift × Solstice pieces show the wider range: vertical-first promotion and cuts driven by the room itself.",
       ],
       slots: [
         {
           number: "01",
+          title: "Frequency Shift: Techno Special",
+          venue: "GRIDWRKS",
+          description: "Featured campaign film / September 4, 2026",
+          src: "/assets/frequency-shift/video/frequency-shift-techno-special-master.mp4",
+          poster: "/assets/frequency-shift/video/frequency-shift-techno-special-poster.jpg",
+          fallbackUrl: "https://frequencyshift.ca/events/september-4/",
+          featured: true,
+          aspectRatio: "16 / 9",
+        },
+        {
+          number: "02",
           title: "Frequency Shift at GRIDWRKS",
           venue: "GRIDWRKS",
           description: "Standalone event film",
@@ -102,7 +113,7 @@ const frequencyShift = {
           fallbackUrl: "https://frequencyshift.ca/archive/frequency-shift-005/",
         },
         {
-          number: "02",
+          number: "03",
           title: "Frequency Shift × Solstice",
           venue: "City At Night",
           description: "Collaboration / live-event film",
