@@ -13,7 +13,7 @@ describe("Seven Due Dates project record", () => {
       gallery: [],
       relatedSlugs: ["trendless", "animatic-remastered", "2024-chasing-greatness"],
       seo: {
-        title: "Seven Due Dates - My Framer Site",
+        title: "Seven Due Dates — Matia Dosen",
         description: "UX Designer and Creative",
       },
     })

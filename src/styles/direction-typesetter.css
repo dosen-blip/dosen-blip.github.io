@@ -1,0 +1,58 @@
+/*
+ * Direction D: Paper
+ * Built from the publishing side of the practice (Novak Books, Hinton Publishing,
+ * the menu work). Warm paper ground and a single printer's red; headings, navigation
+ * and labels stay in Inter, and serif is kept only for long-form reading text, set
+ * with old-style figures. Extends the work-led layer.
+ */
+
+:root[data-direction="d"] {
+  --ink: #1c1a17;
+  --muted: #5d5850;
+  --soft: #948d82;
+  --line: #e2ddd3;
+  --wash: #f4f1ea;
+  --white: #fdfcf9;
+  --paper: #fdfcf9;
+  --accent: #b8321f;
+  --green-wash: #f7e6e1;
+  --grid-line: rgba(28, 26, 23, .055);
+
+  /* Reading text: serif, set like a page. */
+  & .home-intro > p:last-child,
+  & .about-intro > p,
+  & .about-capability p,
+  & .about-experience-description,
+  & .projects-index-heading p,
+  & .contact-intro p,
+  & .detail-dek,
+  & .home-video-production-layout p,
+  & .rich-text p,
+  & .rich-text li {
+    color: #49453e;
+    font-family: var(--serif);
+    font-variant-numeric: oldstyle-nums proportional-nums;
+  }
+  & .home-intro > p:last-child,
+  & .about-intro > p { font-size: 19px; line-height: 1.5; }
+  & .rich-text p,
+  & .rich-text li {
+    font-size: 17px;
+    line-height: 1.55;
+    hyphens: auto;
+  }
+  & .detail-copy > .rich-text:first-child p:first-of-type { font-size: 22px; line-height: 1.4; color: var(--ink); }
+
+  /* The accent marks what is current or clickable. */
+  & .sidebar nav a::after { background: var(--accent); }
+  & .arrow-link { border-bottom-color: var(--accent); }
+  & .home-project-card .project-card-copy,
+  & .projects-index-grid .project-card-copy { border-top: 1px solid var(--line); }
+  & .contact-form button { border-radius: 0; }
+}
+
+@media (min-width: 810px) {
+  :root[data-direction="d"] {
+    & .rich-text p { text-align: justify; }
+  }
+}

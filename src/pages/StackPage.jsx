@@ -4,9 +4,9 @@ import { ArrowUpRightIcon } from "../components/Icons"
 const stackGroups = [
   {
     id: "ai",
-    number: "02",
+    number: "03",
     title: "AI Systems & Agents",
-    summary: "Applied AI workflows spanning agentic development, local inference, research, retrieval, and evaluation.",
+    summary: "The AI tools I use for development and research, and how I keep their output checked.",
     items: [
       {
         name: "OpenAI Codex",
@@ -37,7 +37,7 @@ const stackGroups = [
         category: "Grounded AI Systems",
         icon: "/assets/stack-retrieval.svg",
         href: "https://huggingface.co/docs/evaluate/index",
-        description: "I work with source-grounded retrieval, reranking, citations, regression datasets, and evaluation gauntlets. The emphasis is on traceable answers, repeatable tests, and knowing when evidence is incomplete rather than filling gaps with assumptions.",
+        description: "I work with source-grounded retrieval, reranking, citations, regression datasets, and evaluation tests. The emphasis is on traceable answers, repeatable tests, and knowing when evidence is incomplete rather than filling gaps with assumptions.",
         tags: ["RAG", "Reranking", "Evaluation"],
       },
       {
@@ -62,7 +62,7 @@ const stackGroups = [
     id: "design",
     number: "01",
     title: "Design & Development",
-    summary: "The systems I use to move from visual direction to responsive, production-ready digital experiences.",
+    summary: "What I use to design and build interfaces, websites and print.",
     items: [
       {
         name: "Framer",
@@ -100,9 +100,9 @@ const stackGroups = [
   },
   {
     id: "creative",
-    number: "03",
+    number: "02",
     title: "Creative Production",
-    summary: "Specialist tools for image finishing, sound, motion, and three-dimensional visual work.",
+    summary: "Music, 3D and image finishing.",
     items: [
       {
         name: "Topaz AI Suite",
@@ -132,16 +132,7 @@ const stackGroups = [
   },
 ]
 
-const orderedStackGroups = ["design", "ai", "creative"].map((id) => stackGroups.find((group) => group.id === id))
-
-function Availability() {
-  return (
-    <div className="stack-availability">
-      <span aria-hidden="true" />
-      Available for Work
-    </div>
-  )
-}
+const orderedStackGroups = ["design", "creative", "ai"].map((id) => stackGroups.find((group) => group.id === id))
 
 function StackCard({ item }) {
   return (
@@ -182,25 +173,14 @@ function StackGroup({ group }) {
 }
 
 export default function StackPage() {
-  const capabilityCount = orderedStackGroups.reduce((total, group) => total + group.items.length, 0)
-
   return (
     <section className="page-wrap stack-page" aria-labelledby="stack-heading">
-      <Availability />
-
       <div className="stack-content">
         <header className="stack-hero">
-          <p className="stack-hero-kicker">Creative practice / technical fluency</p>
-          <h1 id="stack-heading">
-            <span className="stack-title-wide">Tools are only useful<br />when they become<br />working systems.</span>
-            <span className="stack-title-narrow">Tools become valuable when they become working systems.</span>
-          </h1>
+          <p className="stack-hero-kicker">Tools</p>
+          <h1 id="stack-heading">What I work in</h1>
           <div className="stack-hero-summary">
-            <p>I combine visual design, production craft, frontend development, and applied AI to take ideas from research through execution.</p>
-            <dl>
-              <div><dt>{capabilityCount}</dt><dd>Capabilities</dd></div>
-              <div><dt>{orderedStackGroups.length}</dt><dd>Disciplines</dd></div>
-            </dl>
+            <p>The software behind the projects: design and print tools first, then music and 3D, then the AI tools I use for development and research.</p>
           </div>
         </header>
 

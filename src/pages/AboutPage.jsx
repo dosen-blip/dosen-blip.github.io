@@ -2,22 +2,22 @@ import { Link } from "react-router-dom"
 import { Reveal } from "../components/Reveal"
 import "../styles/about.css"
 
-const education = "I’m currently pursuing Graphic Design at Algonquin College, Ottawa, deepening my skills in user experience, interactive media, and visual communication. My previous studies in Business Technology at Concordia University have equipped me with strategic insights essential for effective digital design and e-commerce management."
+const education = "I’m studying Graphic Design at Algonquin College in Ottawa. Before that I studied Business Technology at Concordia University."
 
-const stack = "I’m skilled across digital platforms, including Figma, Shopify, and the Adobe Creative Suite. My expertise extends to UX/UI design, interactive prototyping, and e-commerce optimization, supported by a solid foundation in visual design principles and AI-enhanced methodologies."
+const stack = "Figma and Framer for interfaces and websites. InDesign, Illustrator and Photoshop for books and print. After Effects for motion, Ableton for music, and Shopify for the stores I manage. I also use AI coding tools for development work."
 
 const experience = [
   {
     role: "Co-Owner and Designer",
     company: "Hinton Publishing",
-    dates: "2020 - present",
-    description: "Working on the visual and UX design of international sports book projects, and managing e-commerce solutions on Shopify.",
+    dates: "2020–present",
+    description: "I design international sports books and their websites, and I manage the Shopify stores that sell them.",
   },
   {
     role: "UX Designer",
     company: "HintonX",
-    dates: "2019 - Present",
-    description: "At Hinton X, I contributed to a range of projects; from UX and backend support for the ToldYa tennis app to typesetting and designing for the Novak Books series. My responsibilities included user experience design, asset management, server setup, and handling detailed typesetting to help bring each project from concept to completion.",
+    dates: "2019–present",
+    description: "UX design and backend support for the ToldYa tennis app, typesetting for the Novak Books series, and video production: filming, editing, sound and delivery.",
   },
 ]
 
@@ -49,15 +49,6 @@ function AboutLink({ to, children }) {
   )
 }
 
-function Availability() {
-  return (
-    <div className="about-availability">
-      <span aria-hidden="true" />
-      Available for Work
-    </div>
-  )
-}
-
 function ExperienceCard({ item }) {
   return (
     <article className="about-experience-card">
@@ -81,13 +72,11 @@ export default function AboutPage() {
     <div className="about-page">
       <Reveal as="section" className="about-hero">
         <div className="about-hero-content">
-          <Availability />
           <div className="about-intro">
             <h1>
-              <span className="about-title-desktop">About Me:<br />Crafting Digital<br />Experiences</span>
-              <span className="about-title-mobile">About Me:<br />Crafting Digital Excellence</span>
+              Hi, I&apos;m Matia.
             </h1>
-            <p>I’m a UX designer and creative strategist passionate about creating intuitive, user-centered digital experiences. Leveraging expertise in Figma, Adobe Creative Suite, and Shopify, I focus on delivering seamless interactions, visually engaging designs, and innovative solutions driven by AI technology.</p>
+            <p>I’m a designer and video editor in Ottawa. I co-own Hinton Publishing, where I design and typeset sports books, and I’ve worked at HintonX since 2019 on apps, books and film. I also run the visuals for Frequency Shift, a house music series, and I DJ and produce music in Ableton.</p>
           </div>
         </div>
 
@@ -101,12 +90,12 @@ export default function AboutPage() {
         <div className="about-capability">
           <h2>Education</h2>
           <p>{education}</p>
-          <AboutLink to="/projects">View Projects</AboutLink>
+          <AboutLink to="/projects">See the projects</AboutLink>
         </div>
         <div className="about-capability">
-          <h2>Stack</h2>
+          <h2>Tools</h2>
           <p>{stack}</p>
-          <AboutLink to="/stack">View Stack</AboutLink>
+          <AboutLink to="/stack">All tools</AboutLink>
         </div>
       </Reveal>
 
@@ -115,7 +104,7 @@ export default function AboutPage() {
         <div className="about-experience-list">
           {experience.map((item) => <ExperienceCard key={item.role} item={item} />)}
         </div>
-        <AboutLink to="/contact">Contact Me</AboutLink>
+        <AboutLink to="/contact">Get in touch</AboutLink>
       </Reveal>
     </div>
   )

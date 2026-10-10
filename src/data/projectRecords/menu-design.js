@@ -5,6 +5,7 @@ const menuDesign = {
   client: "Algonquin College",
   duration: "4 Weeks",
   cover: "/assets/czdIiEbyUnEDhx9s7vDxQeZ3ZI.png",
+  summary: "A print menu for Sol de Fuego Cocina, a Latin-inspired restaurant, set in InDesign with Illustrator and Photoshop artwork.",
   gallery: ["/assets/8TlOjYKhhE1pqyjPZM9jRrWktMA.png"],
   blocks: [
     {
@@ -28,7 +29,7 @@ const menuDesign = {
   ],
   relatedSlugs: ["trendless", "animatic-remastered", "seven-due-dates"],
   seo: {
-    title: "Restaurant Menu Design - My Framer Site",
+    title: "Restaurant Menu Design — Matia Dosen",
     description: "UX Designer and Creative",
   },
 }

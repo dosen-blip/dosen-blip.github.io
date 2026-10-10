@@ -5,6 +5,7 @@ const chasingGreatness = {
   client: "Hinton Publishing",
   duration: "2 Months",
   cover: "/assets/qJJ7hslHIvchtu1qY2MfQZN5ML0.png",
+  summary: "A Shopify rebuild of the Novak Books store as it grew into the Chasing Greatness tennis history series.",
   gallery: [
     "/assets/qJJ7hslHIvchtu1qY2MfQZN5ML0.png",
     "/assets/HNl746YzEQv7JphMq5A5nQJ1Y.webp",
@@ -40,7 +41,7 @@ const chasingGreatness = {
   ],
   relatedSlugs: ["trendless", "animatic-remastered", "seven-due-dates"],
   seo: {
-    title: "Chasing Greatness - ECommerce Website - My Framer Site",
+    title: "Chasing Greatness - ECommerce Website — Matia Dosen",
     description: "UX Designer and Creative",
   },
 }

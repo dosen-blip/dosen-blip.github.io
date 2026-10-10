@@ -5,6 +5,9 @@ import { ProjectCard } from "./ProjectCard"
 import { Reveal } from "./Reveal"
 import { ArrowLeftIcon, PlayIcon } from "./Icons"
 import { getProject } from "../data/projects"
+import { projectIndex } from "../data/projectIndex"
+
+const indexCategories = Object.fromEntries(projectIndex.map((item) => [item.slug, item.category]))
 
 function YouTubeBlock({ id, title }) {
   const [active, setActive] = useState(false)
@@ -47,14 +50,17 @@ function ContentBlock({ block, projectTitle }) {
 }
 
 export function ProjectDetail({ project }) {
-  const related = project.relatedSlugs.map(getProject).filter(Boolean)
+  const related = project.relatedSlugs
+    .map(getProject)
+    .filter(Boolean)
+    .map((item) => ({ ...item, category: indexCategories[item.slug] ?? item.category }))
   return (
     <article className={`detail-page detail-page--${project.slug} page-wrap`}>
       <Reveal as="header" className="detail-heading">
         <Link className="back-link" to="/projects"><ArrowLeftIcon /><span>Back to Projects</span></Link>
         <span className="detail-kicker">{project.category} / {project.client}</span>
         <h1>{project.title}</h1>
-        <p className="detail-dek">{project.summary || `A ${project.category.toLowerCase()} project created for ${project.client} over ${project.duration.toLowerCase()}.`}</p>
+        {project.summary && <p className="detail-dek">{project.summary}</p>}
       </Reveal>
       <div className="detail-layout">
         <div className="detail-copy">

@@ -5,6 +5,7 @@ const sevenDueDates = {
   client: "Algonquin College",
   duration: "1 Week",
   cover: "/assets/vRbvWigCRAAs6gN38Olpwe6Xvo.png",
+  summary: "A 60–90 second video for the Innovative Strategies course at Algonquin College, explaining the course deliverables.",
   gallery: [],
   blocks: [
     {
@@ -19,7 +20,7 @@ const sevenDueDates = {
   ],
   relatedSlugs: ["trendless", "animatic-remastered", "2024-chasing-greatness"],
   seo: {
-    title: "Seven Due Dates - My Framer Site",
+    title: "Seven Due Dates — Matia Dosen",
     description: "UX Designer and Creative",
   },
 }

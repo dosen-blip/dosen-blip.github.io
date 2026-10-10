@@ -37,7 +37,7 @@ export function ProjectCard({ project, className = "" }) {
         ) : <img src={project.cover} alt="" />}
       </div>
       <div className="project-card-copy">
-        <span>{project.category}</span>
+        <span className="project-card-category">{project.category}</span>
         <h3>{project.title}</h3>
         <span className="project-card-arrow" aria-hidden="true"><ArrowUpRightIcon /></span>
       </div>

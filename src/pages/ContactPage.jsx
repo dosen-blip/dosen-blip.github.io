@@ -143,8 +143,8 @@ export default function ContactPage() {
       <section className="contact-content" aria-labelledby="contact-heading">
         <Availability />
         <div className="contact-intro">
-          <h1 id="contact-heading">Let&apos;s Connect!</h1>
-          <p>Feel free to reach out with your projects, questions, or to connect. I&apos;ll respond promptly, and we can explore opportunities together.</p>
+          <h1 id="contact-heading">Contact</h1>
+          <p>I’m taking on design, video and web work. Send a note with what you’re making and when you need it.</p>
         </div>
         <div className="contact-main-grid">
           <ContactForm />

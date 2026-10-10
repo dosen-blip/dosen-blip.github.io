@@ -5,6 +5,7 @@ const novakBooks = {
   client: "Hinton Publishing",
   duration: "4 Months",
   cover: "/assets/9zh6YwzW0lOAZBWPNljZRfhKo.png",
+  summary: "Typesetting all seven volumes of the Serbian edition of the Novak Djokovic book series.",
   gallery: [
     "/assets/TXAK14AXR5tFChq1CTe7k5QBqk.png",
     "/assets/9zh6YwzW0lOAZBWPNljZRfhKo.png",
@@ -39,7 +40,7 @@ const novakBooks = {
   ],
   relatedSlugs: ["trendless", "animatic-remastered", "seven-due-dates"],
   seo: {
-    title: "Novak Books - My Framer Site",
+    title: "Novak Books — Matia Dosen",
     description: "UX Designer and Creative",
   },
 }

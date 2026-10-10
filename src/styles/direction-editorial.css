@@ -1,0 +1,49 @@
+/*
+ * Direction A: Editorial
+ * The original cream art direction (tracked capitals, matted images, grid lines),
+ * now set entirely in Inter, kept intact and corrected where the review found it working against
+ * the work: a full-screen hero that hid the projects, desaturated imagery, and
+ * decorative hover recolouring.
+ */
+
+:root[data-direction="a"] {
+  /* Hero: keeps its air, but the first projects now reach the first screen. */
+  & .home-hero { min-height: 0; padding-bottom: 44px; }
+  & .home-intro { margin-top: 64px; }
+  & .home-intro h1 { font-size: clamp(60px, 6.6vw, 104px); }
+
+  /* Imagery at its true colour. */
+  & .profile-lockup img,
+  & .about-portrait img,
+  & .home-video-production-layout > img,
+  & .project-card:not(.project-card-frequency-shift) .project-card-media img,
+  & .home-stack-card img,
+  & .stack-card-heading img { filter: none; }
+  & .project-card:not(.project-card-frequency-shift):hover .project-card-media img { filter: none; }
+
+  /* Card labels at the size of the other tracked capitals, so they fit on one line. */
+  & .home-project-card .project-card-copy > .project-card-category {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: .1em;
+  }
+}
+
+@media (min-width: 1200px) {
+  :root[data-direction="a"] {
+    /* Intro copy starts on the centre grid line. */
+    & .home-intro > p:last-child {
+      width: auto;
+      max-width: 500px;
+      margin-left: calc(50vw - var(--rail-start) + 8px);
+    }
+  }
+}
+
+@media (max-width: 809.98px) {
+  :root[data-direction="a"] {
+    & .home-hero { padding-top: 8px; }
+    & .home-intro { margin-top: 48px; }
+    & .home-intro h1 { font-size: clamp(52px, 16vw, 76px); }
+  }
+}

@@ -6,8 +6,8 @@ afterEach(cleanup)
 
 const expectedGroups = [
   "Design & Development",
-  "AI Systems & Agents",
   "Creative Production",
+  "AI Systems & Agents",
 ]
 
 const expectedAiCapabilities = [
@@ -23,7 +23,7 @@ describe("stack page", () => {
   it("organizes the expanded stack into three capability groups", () => {
     render(<StackPage />)
 
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Tools become valuable when they become working systems")
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("What I work in")
     expect(screen.getAllByRole("heading", { level: 2 }).map((heading) => heading.textContent)).toEqual(expectedGroups)
     expect(screen.getAllByRole("link")).toHaveLength(13)
   })

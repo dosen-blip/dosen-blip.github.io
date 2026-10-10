@@ -5,6 +5,7 @@ const trendless = {
   client: "Academic Team Project",
   duration: "7 Weeks",
   cover: "/assets/8X7OARkiaVXsQCtwTWOBiMfjFU.png",
+  summary: "A seven-week team project at Algonquin: a campaign, a website and a browser plugin that flags sponsored content and slows impulse buying.",
   gallery: [
     "/assets/I0DVoBcpZHBzAw3QFwjcaCXWU.png",
     "/assets/kMCkEBGDbcPlDmv4sBatHalzt7g.png",
@@ -45,7 +46,7 @@ const trendless = {
     "2024-chasing-greatness",
   ],
   seo: {
-    title: "Trendless - My Framer Site",
+    title: "Trendless — Matia Dosen",
     description: "UX Designer and Creative",
   },
 }

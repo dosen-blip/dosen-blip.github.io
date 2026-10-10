@@ -6,16 +6,12 @@ import "../styles/projects.css"
 export default function ProjectsPage() {
   return (
     <section className="page-wrap projects-page" aria-labelledby="projects-heading">
-      <Reveal className="availability-badge">
-        <span className="availability-badge-dot" aria-hidden="true" />
-        <span>Available for Work</span>
-      </Reveal>
-
       <div className="projects-index-content">
         <Reveal as="header" className="projects-index-heading">
           <h1 id="projects-heading">
-            Projects:<br className="projects-heading-desktop-break" /> Showcasing<br />My Journey
+            Projects
           </h1>
+          <p>Film, books, interfaces and identities, 2019–2026. Client work for HintonX, Hinton Publishing and Frequency Shift, and coursework from Algonquin College.</p>
         </Reveal>
 
         <Reveal className="project-grid projects-index-grid">

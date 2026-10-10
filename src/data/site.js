@@ -5,4 +5,6 @@ export const socialLinks = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/matia-dosen-719090273" },
 ]
 
+export const siteDescription = "Matia Dosen designs interfaces, websites and books, and shoots and edits film, in Ottawa."
+
 export const asset = (filename) => `/assets/${filename}`

@@ -17,7 +17,7 @@ describe("contact page", () => {
   it("preserves the frozen copy, fields, and external links", () => {
     render(<ContactPage />)
 
-    expect(screen.getByRole("heading", { level: 1, name: "Let's Connect!" })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { level: 1, name: "Contact" })).toBeInTheDocument()
     expect(screen.getByText("Available for Work")).toBeInTheDocument()
     expect(screen.getByText("matiadosen@outlook.com").closest("a")).toBeNull()
     expect(screen.getByLabelText("Name")).toHaveAttribute("name", "Name")

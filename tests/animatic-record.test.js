@@ -14,6 +14,7 @@ describe("Animatic Remastered project record", () => {
       client: "Algonquin College",
       duration: "1 Week",
       cover: "/assets/animatic-cover.png",
+      summary: "A remaster of a Twin Peaks–inspired motion graphics short from Algonquin College, relit and retextured.",
       gallery: [],
       blocks: [
         {
@@ -28,7 +29,7 @@ describe("Animatic Remastered project record", () => {
       ],
       relatedSlugs: ["trendless", "seven-due-dates", "2024-chasing-greatness"],
       seo: {
-        title: "Animatic Remastered - My Framer Site",
+        title: "Animatic Remastered — Matia Dosen",
         description: "UX Designer and Creative",
       },
     })

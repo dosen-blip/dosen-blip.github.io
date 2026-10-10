@@ -1,6 +1,6 @@
-import { SITE_URL } from "../data/site"
+import { SITE_URL, siteDescription } from "../data/site"
 
-export function seoFor({ path, title = "Matia Dosen", description = "UX Designer and Creative", image }) {
+export function seoFor({ path, title = "Matia Dosen", description = siteDescription, image }) {
   const canonical = new URL(path, SITE_URL).href
   const tags = [
     `<title>${escapeHtml(title)}</title>`,

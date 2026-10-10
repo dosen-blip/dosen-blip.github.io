@@ -7,7 +7,7 @@ const videoProduction = {
   date: "2019 — Present",
   cover: "/assets/video-production-cover.jpg",
   gallery: [],
-  summary: "Documentary, brand, public-sector, sports, and product storytelling produced from first frame through final delivery.",
+  summary: "Documentary, brand, sports, public-sector and product films. I shoot, edit, mix and deliver them.",
   blocks: [
     {
       type: "richText",

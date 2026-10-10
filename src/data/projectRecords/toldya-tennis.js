@@ -5,6 +5,7 @@ const toldyaTennis = {
   client: "HintonX",
   duration: "6 Months",
   cover: "/assets/toldya-cover.png",
+  summary: "Figma wireframes and prototypes for ToldYa, a tennis prediction app, plus asset management and AWS server support.",
   gallery: ["/assets/Woh8k3hHG8neWrRRcDQWii4A1ug.png"],
   blocks: [
     {
@@ -38,7 +39,7 @@ const toldyaTennis = {
   ],
   relatedSlugs: ["trendless", "animatic-remastered", "seven-due-dates"],
   seo: {
-    title: "ToldYa - Tennis Application - My Framer Site",
+    title: "ToldYa - Tennis Application — Matia Dosen",
     description: "UX Designer and Creative",
   },
 }

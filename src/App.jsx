@@ -16,6 +16,10 @@ import NotFoundPage from "./pages/NotFoundPage"
 import "./styles/global.css"
 import "./styles/editorial-v1.css"
 import "./styles/layout-v2.css"
+import "./styles/refinements.css"
+import "./styles/direction-editorial.css"
+import "./styles/direction-work-led.css"
+import "./styles/direction-typesetter.css"
 
 function ProjectRoute() {
   const slug = useLocation().pathname.split("/").filter(Boolean).at(-1)

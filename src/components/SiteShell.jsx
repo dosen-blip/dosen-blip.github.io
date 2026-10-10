@@ -3,6 +3,7 @@ import { NavLink, Link } from "react-router-dom"
 import { navItems } from "../data/routes"
 import { asset, socialLinks } from "../data/site"
 import { ArrowUpRightIcon, FacebookIcon, InstagramIcon, LinkedInIcon } from "./Icons"
+import { DirectionSwitcher } from "./DirectionSwitcher"
 
 function NavIcon({ name }) {
   if (name === "home") return <svg viewBox="0 0 24 24"><path d="m4 10 8-7 8 7v10h-6v-6h-4v6H4Z" /></svg>
@@ -100,12 +101,12 @@ export function SiteShell({ children }) {
     <>
       <aside className="sidebar">
         <div className="sidebar-edition" aria-hidden="true">
-          <span>PORTFOLIO</span>
-          <span>2026 / V1</span>
+          <span>Ottawa, Canada</span>
+          <span>Since 2019</span>
         </div>
         <div className="profile-lockup">
           <Link to="/" className="avatar-link" aria-label="Matia Dosen, home"><img src={asset("avatar.png")} alt="Matia Dosen" /></Link>
-          <div><strong>Matia Dosen</strong><span>Designer / Creative</span></div>
+          <div><strong>Matia Dosen</strong><span>Designer &amp; video editor</span></div>
         </div>
         <NavList />
         <div className="sidebar-bottom">
@@ -118,7 +119,7 @@ export function SiteShell({ children }) {
       <header className="mobile-header">
         <div className="profile-lockup">
           <Link to="/" className="avatar-link" aria-label="Matia Dosen, home"><img src={asset("avatar.png")} alt="Matia Dosen" /></Link>
-          <div><strong>Matia Dosen</strong><span>Designer / Creative</span></div>
+          <div><strong>Matia Dosen</strong><span>Designer &amp; video editor</span></div>
         </div>
         <button ref={buttonRef} className="menu-button" type="button" aria-expanded={menuOpen} aria-controls="mobile-menu" onClick={() => setMenuOpen((open) => !open)}>
           <span className="sr-only">{menuOpen ? "Close menu" : "Open menu"}</span>
@@ -128,6 +129,7 @@ export function SiteShell({ children }) {
       <div id="mobile-menu" className={`mobile-menu ${menuOpen ? "is-open" : ""}`} aria-hidden={!menuOpen}>
         <NavList onNavigate={() => setMenuOpen(false)} />
         <div className="mobile-menu-bottom">
+          <div className="sidebar-status"><span aria-hidden="true" />Available for selected work</div>
           <DosenButton />
           <Socials />
         </div>
@@ -135,11 +137,12 @@ export function SiteShell({ children }) {
       <main id="main-content">{children}</main>
       <footer className="site-footer">
         <div>
-          <span>MATIA DOSEN / 2026</span>
-          <span>DESIGNING BETWEEN CLARITY &amp; CULTURE</span>
-          <a href="mailto:matiadosen@outlook.com"><span>START A CONVERSATION</span><ArrowUpRightIcon /></a>
+          <span>Matia Dosen, 2026</span>
+          <span>Design, film and sound from Ottawa</span>
+          <a href="mailto:matiadosen@outlook.com"><span>matiadosen@outlook.com</span><ArrowUpRightIcon /></a>
         </div>
       </footer>
+      {import.meta.env.DEV && <DirectionSwitcher />}
     </>
   )
 }

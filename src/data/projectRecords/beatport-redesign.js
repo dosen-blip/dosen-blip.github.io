@@ -5,6 +5,7 @@ const beatportRedesign = {
   client: "Algonquin College",
   duration: "4 Weeks",
   cover: "/assets/MushaMQRbFC1w6cQEKh1PKvojw.png",
+  summary: "A four-week capstone for Web Design 3 at Algonquin: a site audit, a style guide and a dark, neon-accented redesign of Beatport.",
   gallery: [
     "/assets/MushaMQRbFC1w6cQEKh1PKvojw.png",
     "/assets/pCdrhhgZ8bup07TXcvULkWSOk.png",
@@ -40,7 +41,7 @@ const beatportRedesign = {
   ],
   relatedSlugs: ["trendless", "animatic-remastered", "seven-due-dates"],
   seo: {
-    title: "Beatport Redesign - My Framer Site",
+    title: "Beatport Redesign — Matia Dosen",
     description: "UX Designer and Creative",
   },
 }
