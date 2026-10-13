@@ -7,6 +7,7 @@ import { disciplineForPath, disciplines } from "../data/disciplines"
 import { projectDisciplines } from "../data/projectIndex"
 import { ArrowUpRightIcon, InstagramIcon, LinkedInIcon } from "./Icons"
 import { BrandBackdrop } from "./BrandBackdrop"
+import { NeonCursor } from "./NeonCursor"
 import { BrandSprite, MDMark, Wordmark } from "./Wordmark"
 import { ThemeToggle } from "./ThemeToggle"
 import { StatusChip } from "./StatusChip"
@@ -184,6 +185,7 @@ export function SiteShell({ children }) {
       <a className="skip-link" href="#main-content">Skip to content</a>
       <BrandSprite />
       <BrandBackdrop discipline={discipline} />
+      <NeonCursor />
 
       <header className={`site-header${menuOpen ? " is-menu-open" : ""}${night ? " is-night" : ""}`} id="top">
         <div className="page site-header-inner">

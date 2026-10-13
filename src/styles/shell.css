@@ -24,12 +24,9 @@
   background-size: var(--grid) var(--grid);
 }
 
-/* Tools fade towards the reading column so they never compete with the page. */
 .backdrop-tools {
   --t1: var(--tool-1);
   --t2: var(--tool-2);
-  -webkit-mask-image: linear-gradient(90deg, #000 0 10%, rgb(0 0 0 / .5) 26% 74%, #000 90%);
-  mask-image: linear-gradient(90deg, #000 0 10%, rgb(0 0 0 / .5) 26% 74%, #000 90%);
   animation: backdrop-in 1.2s var(--ease) both;
 }
 
@@ -61,10 +58,67 @@
 /* Every so often one tool lights up blue and pops, like something just got selected. */
 .backdrop-tool.is-spark .tool-icon { animation: tool-wander var(--wander, 12s) ease-in-out var(--bob-delay, 0ms) infinite, tool-spark 1.6s var(--ease-out); }
 @keyframes tool-spark {
-  0%, 100% { scale: 1; filter: none; }
-  20% { scale: 1.3; filter: drop-shadow(0 0 8px rgb(56 109 255 / .35)); }
+  0%, 100% { scale: 1; }
+  20% { scale: 1.3; }
 }
 .backdrop-tool.is-spark .tool-icon { --tool-1: var(--accent); --tool-2: var(--accent); transition: transform .4s var(--ease-out); }
+
+/* Lit tools glow. In light that is the soft halo on a spark; in dark (--neon-on) the tool is an LED:
+   the line burns towards white, a tight blue tube and a wide falloff surround it, it strikes with a
+   stutter and hums while lit, and its light catches the dots of the grid around it. */
+@property --spark { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --hum { syntax: "<number>"; inherits: true; initial-value: 1; }
+
+.backdrop-tool {
+  --glow: calc(max(var(--near) * var(--neon-on), var(--spark)) * var(--hum));
+  /* Tools fade towards the reading column (--fade, set per tool), but a lit LED burns through at full strength. */
+  opacity: max(var(--fade, 1), var(--glow) * var(--neon-on));
+}
+.backdrop-tool:is(.is-lit, .is-spark) { animation: tool-hum 1.3s linear infinite; }
+.backdrop-tool.is-spark { animation: tool-strike 1.6s linear, tool-hum 1.3s linear infinite; }
+.backdrop-tool:is(.is-lit, .is-spark) .tool-icon {
+  --tool-1: color-mix(in oklab, var(--neon-core) calc(var(--glow) * var(--glow) * var(--neon-on) * 82%), color-mix(in srgb, var(--accent) min(100%, var(--near) * 80% + var(--spark) * 100%), var(--t1)));
+  --tool-2: color-mix(in oklab, var(--neon-core) calc(var(--glow) * var(--glow) * var(--neon-on) * 82%), color-mix(in srgb, var(--accent) min(100%, var(--near) * 80% + var(--spark) * 100%), var(--t2)));
+  filter:
+    drop-shadow(0 0 .8px rgb(var(--neon-rgb) / calc(var(--glow) * var(--neon-on))))
+    drop-shadow(0 0 5px rgb(var(--neon-rgb) / calc(var(--glow) * var(--neon-on))))
+    drop-shadow(0 0 18px rgb(var(--neon-rgb) / calc(var(--glow) * (.35 + var(--neon-on) * .5))));
+}
+.backdrop-tool:is(.is-lit, .is-spark)::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -88px;
+  /* The grid's own dots, lit blue (aligned to the 30px grid: tools sit 17px left and 9px above a dot column and row) plus a faint wash. */
+  background:
+    radial-gradient(circle at 15px 15px, rgb(var(--neon-rgb)) 1.1px, transparent 1.6px) -15px 7px / var(--grid) var(--grid),
+    radial-gradient(closest-side, rgb(var(--neon-rgb) / .14), transparent);
+  -webkit-mask-image: radial-gradient(closest-side, #000 15%, transparent);
+  mask-image: radial-gradient(closest-side, #000 15%, transparent);
+  opacity: calc(var(--glow) * var(--neon-on));
+  /* Stay pinned to the ground while the tool is pushed away from the pointer. */
+  transform: translate3d(calc(var(--push-x, 0px) * -1), calc(var(--push-y, 0px) * -1), 0);
+  transition: transform .5s var(--ease-out);
+}
+
+/* In light this is the old ease in and out; in dark the tube stutters before it catches. */
+@keyframes tool-strike {
+  0% { --spark: 0; }
+  4% { --spark: calc(.2 + var(--neon-on) * .8); }
+  8% { --spark: calc(.4 - var(--neon-on) * .3); }
+  12% { --spark: calc(.6 + var(--neon-on) * .3); }
+  16% { --spark: calc(.8 - var(--neon-on) * .5); }
+  20% { --spark: 1; }
+  100% { --spark: 0; }
+}
+@keyframes tool-hum {
+  0%, 100% { --hum: 1; }
+  21% { --hum: calc(1 - var(--neon-on) * .12); }
+  27% { --hum: 1; }
+  58% { --hum: calc(1 - var(--neon-on) * .06); }
+  66% { --hum: calc(1 - var(--neon-on) * .18); }
+  71% { --hum: 1; }
+}
 
 /* Small idle motions per tool: the toggle flips, the cursor clicks, the arrow nudges, the pen sketches. */
 .tool-icon--toggle path:nth-child(2) { animation: tool-toggle 6s var(--ease-snap) var(--bob-delay, 0ms) infinite; }
@@ -80,6 +134,39 @@
 @keyframes tool-arc { 0%, 100% { stroke-dashoffset: 0; } 45%, 55% { stroke-dashoffset: 60; } }
 .tool-icon--code-braces path, .tool-icon--code-tag path { animation: tool-blink 5.5s steps(1) var(--bob-delay, 0ms) infinite; }
 @keyframes tool-blink { 0%, 92% { opacity: 1; } 94% { opacity: .35; } 96% { opacity: 1; } 98% { opacity: .35; } }
+
+/* ---------- Cursor: in dark, a white LED dot that turns blue against anything else that glows ---------- */
+
+@property --heat { syntax: "<number>"; inherits: true; initial-value: 0; }
+
+.neon-cursor {
+  --heat: 0;
+  --dot-glow: color-mix(in srgb, rgb(var(--neon-rgb)) calc(var(--heat) * 100%), #fff);
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  background: color-mix(in oklab, rgb(var(--neon-rgb)) calc(var(--heat) * 50%), #fff);
+  box-shadow:
+    0 0 1px 1px color-mix(in srgb, var(--dot-glow) 90%, transparent),
+    0 0 7px 2px color-mix(in srgb, var(--dot-glow) calc(45% + var(--heat) * 50%), transparent),
+    0 0 22px 6px color-mix(in srgb, var(--dot-glow) calc(16% + var(--heat) * 44%), transparent);
+  opacity: var(--neon-on);
+  pointer-events: none;
+  transition: --heat .22s ease, scale .2s var(--ease-out), opacity var(--fast) ease;
+}
+.neon-cursor.is-over-link { scale: 1.5; }
+.neon-cursor.is-down { scale: .7; }
+.neon-cursor.is-hidden { opacity: 0; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]).has-neon-cursor :not(input, textarea, select, [contenteditable="true"]) { cursor: none; }
+}
+:root[data-theme="dark"].has-neon-cursor :not(input, textarea, select, [contenteditable="true"]) { cursor: none; }
 
 @keyframes backdrop-in {
   from { opacity: 0; }

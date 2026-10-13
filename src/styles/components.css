@@ -21,7 +21,7 @@
 
 /* Motion: the pen draws every shape, then the ink fills in. */
 .wordmark[data-splash="motion"] use {
-  stroke: var(--accent);
+  stroke: var(--neon-core);
   stroke-width: var(--wm-stroke);
   stroke-dasharray: 141 1000;
   stroke-dashoffset: 141;
@@ -30,6 +30,22 @@
 }
 @keyframes wm-pen-draw { to { stroke-dashoffset: 0; } }
 @keyframes wm-pen-ink { to { fill-opacity: 1; stroke-opacity: 0; } }
+/* In dark the pen glows like a lit LED while it draws, then cools as the ink lands. */
+.wordmark[data-splash="motion"] .wm-art { animation: wm-pen-glow 1.4s linear both; }
+@keyframes wm-pen-glow {
+  0%, 62% {
+    filter:
+      drop-shadow(0 0 .5px rgb(var(--neon-rgb) / var(--neon-on)))
+      drop-shadow(0 0 3px rgb(var(--neon-rgb) / calc(var(--neon-on) * .7)))
+      drop-shadow(0 0 9px rgb(var(--neon-rgb) / calc(var(--neon-on) * .4)));
+  }
+  100% {
+    filter:
+      drop-shadow(0 0 .5px rgb(var(--neon-rgb) / 0))
+      drop-shadow(0 0 3px rgb(var(--neon-rgb) / 0))
+      drop-shadow(0 0 9px rgb(var(--neon-rgb) / 0));
+  }
+}
 
 /* Web: the name resolves out of code, letter by letter. */
 .wordmark[data-splash="web"] .wm-art { animation: wm-decode-art .95s steps(1, end) .1s both; }
@@ -107,6 +123,7 @@
 @keyframes wm-frame-out { to { opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
+  .project-card .selection-handles { animation: none !important; }
   .wordmark[data-splash] use { stroke: none; fill-opacity: 1; animation: none; }
   .wordmark[data-splash] .wm-art, .wordmark[data-splash] .wm-dosen { animation: none; }
   .wm-code, .wm-frame { display: none; }
@@ -250,7 +267,7 @@
   position: absolute;
   z-index: 3;
   inset: 0;
-  border: 1px solid var(--accent);
+  border: 1px solid var(--neon-core);
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--fast) ease;
@@ -259,7 +276,7 @@
   position: absolute;
   width: 9px;
   height: 9px;
-  border: 1.5px solid var(--accent);
+  border: 1.5px solid var(--neon-core);
   background: var(--bg);
 }
 .selection-handles i:nth-child(1) { top: -5px; left: -5px; }
@@ -267,6 +284,24 @@
 .selection-handles i:nth-child(3) { bottom: -5px; left: -5px; }
 .selection-handles i:nth-child(4) { bottom: -5px; right: -5px; }
 .selection-handles.is-on { opacity: 1; }
+
+/* In dark the pen-tool frames are lit like the rest of the blue: white-hot line, blue glow, and they strike on. */
+:is(.selection-handles, .selection-frame) {
+  filter:
+    drop-shadow(0 0 .5px rgb(var(--neon-rgb) / var(--neon-on)))
+    drop-shadow(0 0 3px rgb(var(--neon-rgb) / calc(var(--neon-on) * .85)))
+    drop-shadow(0 0 12px rgb(var(--neon-rgb) / calc(var(--neon-on) * .5)));
+}
+.project-card:is(:hover, :focus-visible) .selection-handles { animation: frame-strike .45s linear; }
+/* Light: a plain fade in. Dark: the tube stutters before it catches. */
+@keyframes frame-strike {
+  0% { opacity: 0; }
+  10% { opacity: calc(var(--neon-on) + (1 - var(--neon-on)) * .25); }
+  20% { opacity: calc(var(--neon-on) * .15 + (1 - var(--neon-on)) * .5); }
+  30% { opacity: calc(var(--neon-on) * .9 + (1 - var(--neon-on)) * .75); }
+  40% { opacity: calc(var(--neon-on) * .4 + (1 - var(--neon-on))); }
+  55%, 100% { opacity: 1; }
+}
 
 /* ---------- Project cards ---------- */
 

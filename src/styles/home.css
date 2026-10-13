@@ -22,15 +22,20 @@
 .hero-name { margin: 0; line-height: 0; }
 .hero-wordmark { width: 100%; height: auto; overflow: visible; }
 .hero-fill { fill: var(--ink); }
-.hero-pen path { fill: none; stroke: var(--accent); stroke-width: .28; stroke-linejoin: round; opacity: 0; }
+.hero-pen path { fill: none; stroke: var(--neon-core); stroke-width: .28; stroke-linejoin: round; opacity: 0; }
 .hero-anchors rect {
   fill: var(--bg);
-  stroke: var(--accent);
+  stroke: var(--neon-core);
   stroke-width: .2;
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
 }
+
+/* In dark the pen burns like an LED: white-hot core inside a blue glow (filters in HeroLockup). */
+.hero-pen { filter: var(--neon-pen, none); }
+.hero-anchors { filter: var(--neon-anchor, none); }
+.neon-flood { flood-color: rgb(var(--neon-rgb)); }
 
 .hero-descriptor {
   margin-top: clamp(10px, 1.6vw, 24px);
@@ -41,7 +46,7 @@
 .selection-frame {
   position: absolute;
   inset: clamp(-14px, -1.2vw, -8px) clamp(-18px, -1.4vw, -10px);
-  border: 1px solid var(--accent);
+  border: 1px solid var(--neon-core);
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--fast) ease;
@@ -50,7 +55,7 @@
   position: absolute;
   width: 10px;
   height: 10px;
-  border: 1.5px solid var(--accent);
+  border: 1.5px solid var(--neon-core);
   background: var(--bg);
 }
 .selection-frame i:nth-child(1) { top: -5.5px; left: -5.5px; }
@@ -76,9 +81,9 @@
 /* The draw: first visit of a session, or any return to home inside the app. */
 :is(html[data-intro] .hero-lockup, .hero-lockup.is-playing) .hero-pen path {
   stroke-dasharray: var(--len) 1000;
-  animation: hero-draw .72s var(--ease) var(--delay) both;
+  animation: hero-draw .72s var(--ease) var(--delay) both, neon-strike .4s linear var(--delay) both;
 }
-:is(html[data-intro] .hero-lockup, .hero-lockup.is-playing) .hero-pen { animation: hero-fade-out .5s ease 1.5s forwards; }
+:is(html[data-intro] .hero-lockup, .hero-lockup.is-playing) .hero-pen { animation: neon-hum 1.1s linear infinite, hero-fade-out .5s ease 1.5s forwards; }
 :is(html[data-intro] .hero-lockup, .hero-lockup.is-playing) .hero-anchors rect { animation: hero-anchor .28s var(--ease-out) var(--delay) both; }
 :is(html[data-intro] .hero-lockup, .hero-lockup.is-playing) .hero-anchors { animation: hero-fade-out .45s ease 1.55s forwards; }
 :is(html[data-intro] .hero-lockup, .hero-lockup.is-playing) .hero-fill { animation: hero-ink .6s ease 1.15s both; }
@@ -89,6 +94,23 @@
 @keyframes hero-draw {
   0% { opacity: 1; stroke-dashoffset: var(--len); }
   100% { opacity: 1; stroke-dashoffset: 0; }
+}
+/* Each shape strikes like a tube catching (a few stutters, then steady), and the lit pen hums. Dark only via --neon-on. */
+@keyframes neon-strike {
+  0% { stroke-opacity: calc(1 - var(--neon-on) * .9); }
+  12% { stroke-opacity: 1; }
+  22% { stroke-opacity: calc(1 - var(--neon-on) * .75); }
+  30% { stroke-opacity: 1; }
+  44% { stroke-opacity: calc(1 - var(--neon-on) * .45); }
+  52%, 100% { stroke-opacity: 1; }
+}
+@keyframes neon-hum {
+  0%, 100% { opacity: 1; }
+  23% { opacity: calc(1 - var(--neon-on) * .1); }
+  31% { opacity: 1; }
+  64% { opacity: calc(1 - var(--neon-on) * .05); }
+  70% { opacity: calc(1 - var(--neon-on) * .14); }
+  76% { opacity: 1; }
 }
 @keyframes hero-anchor {
   0% { opacity: 0; transform: scale(0); }

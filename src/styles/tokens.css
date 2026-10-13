@@ -34,6 +34,12 @@
   --on-accent: #fff;
   --online: var(--green);
 
+  /* Neon: in dark the blue lines burn like a lit LED (white-hot core, blue tube, light on the ground).
+     --neon-on gates every glow, so light mode keeps the flat ink lines. */
+  --neon-on: 0;
+  --neon-rgb: 56 109 255;
+  --neon-core: var(--accent);
+
   /* The backdrop sits a few shades off the background. */
   --tool-1: #bfbaa9;
   --tool-2: #cfcabb;
@@ -101,6 +107,11 @@
     --dot: #1e1e22;
     --stage: #000;
     --stage-line: #26262c;
+    --neon-on: 1;
+    --neon-rgb: 92 136 255;
+    --neon-core: #e6ecff;
+    --neon-pen: url(#hero-neon);
+    --neon-anchor: url(#hero-neon-anchor);
   }
 }
 
@@ -124,6 +135,11 @@
   --dot: #1e1e22;
   --stage: #000;
   --stage-line: #26262c;
+  --neon-on: 1;
+  --neon-rgb: 92 136 255;
+  --neon-core: #e6ecff;
+  --neon-pen: url(#hero-neon);
+  --neon-anchor: url(#hero-neon-anchor);
 }
 
 @media (max-width: 809.98px) {
