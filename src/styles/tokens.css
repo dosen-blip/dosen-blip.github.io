@@ -35,8 +35,8 @@
   --online: var(--green);
 
   /* The backdrop sits a few shades off the background. */
-  --tool-1: #ccc8ba;
-  --tool-2: #dcd8cb;
+  --tool-1: #bfbaa9;
+  --tool-2: #cfcabb;
   --dot: #dcd8cb;
 
   /* Stages: the black panels that hold anything that moves. */
@@ -96,8 +96,8 @@
     --accent-strong: #6f95ff;
     --accent-wash: rgb(90 134 255 / .14);
     --on-accent: #0c0c0f;
-    --tool-1: #2a2a2f;
-    --tool-2: #2a2a2f;
+    --tool-1: #393940;
+    --tool-2: #33333a;
     --dot: #1e1e22;
     --stage: #000;
     --stage-line: #26262c;
@@ -119,8 +119,8 @@
   --accent-strong: #6f95ff;
   --accent-wash: rgb(90 134 255 / .14);
   --on-accent: #0c0c0f;
-  --tool-1: #2a2a2f;
-  --tool-2: #2a2a2f;
+  --tool-1: #393940;
+  --tool-2: #33333a;
   --dot: #1e1e22;
   --stage: #000;
   --stage-line: #26262c;

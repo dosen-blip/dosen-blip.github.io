@@ -3,12 +3,13 @@ import { ToolIcon } from "../brand/ToolIcon"
 import { toolNames } from "../brand/toolNames"
 import { getDiscipline } from "../data/disciplines"
 
-const CELL_X = 150
+const CELL_X = 120
 const CELL_Y = 120
 const ROWS_PER_TILE = 4
 const PERIOD = CELL_Y * ROWS_PER_TILE // the pattern repeats every 480px, a multiple of the 30px dot grid
 const PARALLAX = .22
-const NEAR = 170
+const NEAR = 220
+const SPARK_EVERY = 900 // ms between icons lighting up blue
 
 // Small deterministic hash so the scatter is stable between renders and resizes.
 function hash(a, b, salt = 0) {
@@ -25,7 +26,7 @@ function buildIcons(width, discipline) {
   for (let row = 0; row < rows; row += 1) {
     const tileRow = row % ROWS_PER_TILE
     for (let column = 0; column < columns; column += 1) {
-      if (hash(column, tileRow) > .34) continue
+      if (hash(column, tileRow) > .5) continue
       const pick = hash(column, tileRow, 7)
       const name = own && pick < .72
         ? own[Math.floor(hash(column, tileRow, 3) * own.length)]
@@ -38,8 +39,10 @@ function buildIcons(width, discipline) {
         name,
         x: column * CELL_X + dx - 17,
         y: row * CELL_Y + dy - 9,
-        bob: 5 + Math.round(hash(column, tileRow, 17) * 5),
-        delay: -Math.round(hash(column, tileRow, 19) * 6000),
+        bob: 8 + Math.round(hash(column, tileRow, 17) * 10),
+        tilt: Math.round((hash(column, tileRow, 23) - .5) * 16),
+        duration: 9 + Math.round(hash(column, tileRow, 29) * 9),
+        delay: -Math.round(hash(column, tileRow, 19) * 12000),
       })
     }
   }
@@ -93,7 +96,7 @@ export function BrandBackdrop({ discipline = null }) {
           const distance = Math.hypot(dx, dy)
           if (distance < NEAR) {
             near = 1 - distance / NEAR
-            const force = near * 14 / (distance || 1)
+            const force = near * 26 / (distance || 1)
             push = [dx * force, dy * force]
           }
         }
@@ -110,12 +113,23 @@ export function BrandBackdrop({ discipline = null }) {
     }
     const onLeave = () => { pointer = null; schedule() }
 
+    const spark = window.setInterval(() => {
+      const nodes = iconsRef.current?.children
+      if (!nodes?.length || document.hidden) return
+      const node = nodes[Math.floor(Math.random() * nodes.length)]
+      node.classList.remove("is-spark")
+      void node.offsetWidth
+      node.classList.add("is-spark")
+      window.setTimeout(() => node.classList.remove("is-spark"), 1600)
+    }, SPARK_EVERY)
+
     render()
     window.addEventListener("scroll", schedule, { passive: true })
     window.addEventListener("pointermove", onPointer, { passive: true })
     document.documentElement.addEventListener("pointerleave", onLeave)
     return () => {
       cancelAnimationFrame(frame)
+      window.clearInterval(spark)
       window.removeEventListener("scroll", schedule)
       window.removeEventListener("pointermove", onPointer)
       document.documentElement.removeEventListener("pointerleave", onLeave)
@@ -132,9 +146,9 @@ export function BrandBackdrop({ discipline = null }) {
             className="backdrop-tool"
             data-x={icon.x}
             data-y={icon.y}
-            style={{ left: icon.x, top: icon.y, "--bob": `${icon.bob}px`, "--bob-delay": `${icon.delay}ms` }}
+            style={{ left: icon.x, top: icon.y, "--bob": `${icon.bob}px`, "--tilt": `${icon.tilt}deg`, "--wander": `${icon.duration}s`, "--bob-delay": `${icon.delay}ms` }}
           >
-            <ToolIcon name={icon.name} />
+            <ToolIcon name={icon.name} className={`tool-icon--${icon.name}`} />
           </span>
         ))}
       </div>

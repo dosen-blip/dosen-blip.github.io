@@ -28,8 +28,8 @@
 .backdrop-tools {
   --t1: var(--tool-1);
   --t2: var(--tool-2);
-  -webkit-mask-image: linear-gradient(90deg, #000 0 8%, rgb(0 0 0 / .22) 24% 76%, #000 92%);
-  mask-image: linear-gradient(90deg, #000 0 8%, rgb(0 0 0 / .22) 24% 76%, #000 92%);
+  -webkit-mask-image: linear-gradient(90deg, #000 0 10%, rgb(0 0 0 / .5) 26% 74%, #000 90%);
+  mask-image: linear-gradient(90deg, #000 0 10%, rgb(0 0 0 / .5) 26% 74%, #000 90%);
   animation: backdrop-in 1.2s var(--ease) both;
 }
 
@@ -43,15 +43,43 @@
 }
 
 .backdrop-tool .tool-icon {
-  --tool-1: color-mix(in srgb, var(--accent) calc(var(--near) * 70%), var(--t1));
-  --tool-2: color-mix(in srgb, var(--accent) calc(var(--near) * 70%), var(--t2));
-  animation: tool-bob 7s ease-in-out var(--bob-delay, 0ms) infinite alternate;
+  --tool-1: color-mix(in srgb, var(--accent) calc(var(--near) * 80%), var(--t1));
+  --tool-2: color-mix(in srgb, var(--accent) calc(var(--near) * 80%), var(--t2));
+  transform: scale(calc(1 + var(--near) * .25));
+  transition: transform .4s var(--ease-out);
+}
+.backdrop-tool > .tool-icon { animation: tool-wander var(--wander, 12s) ease-in-out var(--bob-delay, 0ms) infinite; }
+
+/* Each icon wanders a loose loop and tilts a little, so the grid never sits completely still. */
+@keyframes tool-wander {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  25% { translate: calc(var(--bob) * .6) calc(var(--bob) * -.5); rotate: var(--tilt); }
+  50% { translate: calc(var(--bob) * -.2) calc(var(--bob) * .6); rotate: calc(var(--tilt) * -.5); }
+  75% { translate: calc(var(--bob) * -.6) calc(var(--bob) * -.2); rotate: calc(var(--tilt) * .6); }
 }
 
-@keyframes tool-bob {
-  from { transform: translateY(calc(var(--bob) * -.5)); }
-  to { transform: translateY(calc(var(--bob) * .5)); }
+/* Every so often one tool lights up blue and pops, like something just got selected. */
+.backdrop-tool.is-spark .tool-icon { animation: tool-wander var(--wander, 12s) ease-in-out var(--bob-delay, 0ms) infinite, tool-spark 1.6s var(--ease-out); }
+@keyframes tool-spark {
+  0%, 100% { scale: 1; filter: none; }
+  20% { scale: 1.3; filter: drop-shadow(0 0 8px rgb(56 109 255 / .35)); }
 }
+.backdrop-tool.is-spark .tool-icon { --tool-1: var(--accent); --tool-2: var(--accent); transition: transform .4s var(--ease-out); }
+
+/* Small idle motions per tool: the toggle flips, the cursor clicks, the arrow nudges, the pen sketches. */
+.tool-icon--toggle path:nth-child(2) { animation: tool-toggle 6s var(--ease-snap) var(--bob-delay, 0ms) infinite; }
+@keyframes tool-toggle { 0%, 40% { translate: 0 0; } 50%, 90% { translate: -16px 0; } 100% { translate: 0 0; } }
+.tool-icon--cursor path { transform-box: fill-box; transform-origin: 20% 10%; animation: tool-click 4.5s ease-in-out var(--bob-delay, 0ms) infinite; }
+@keyframes tool-click { 0%, 84%, 100% { scale: 1; } 90% { scale: .82; } }
+.tool-icon--code-arrow path { animation: tool-nudge 3.2s ease-in-out var(--bob-delay, 0ms) infinite; }
+@keyframes tool-nudge { 0%, 60%, 100% { translate: 0 0; } 75% { translate: 4px 0; } }
+.tool-icon--pen-nib { transform-origin: 30% 80%; }
+.tool-icon--pen-nib path:first-child { transform-box: view-box; transform-origin: 22px 36px; animation: tool-sketch 5s ease-in-out var(--bob-delay, 0ms) infinite; }
+@keyframes tool-sketch { 0%, 100% { rotate: 0deg; } 30% { rotate: -9deg; } 60% { rotate: 6deg; } }
+.tool-icon--bezier-arc path:first-child { stroke-dasharray: 60; animation: tool-arc 7s ease-in-out var(--bob-delay, 0ms) infinite; }
+@keyframes tool-arc { 0%, 100% { stroke-dashoffset: 0; } 45%, 55% { stroke-dashoffset: 60; } }
+.tool-icon--code-braces path, .tool-icon--code-tag path { animation: tool-blink 5.5s steps(1) var(--bob-delay, 0ms) infinite; }
+@keyframes tool-blink { 0%, 92% { opacity: 1; } 94% { opacity: .35; } 96% { opacity: 1; } 98% { opacity: .35; } }
 
 @keyframes backdrop-in {
   from { opacity: 0; }
@@ -59,7 +87,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .backdrop-tool .tool-icon { animation: none; }
+  .backdrop-tool .tool-icon, .backdrop-tool .tool-icon path { animation: none !important; }
 }
 
 /* ---------- Header ---------- */
