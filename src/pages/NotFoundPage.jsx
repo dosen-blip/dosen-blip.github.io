@@ -13,11 +13,11 @@ export default function NotFoundPage() {
         <div className="not-found-copy">
           <h1 id="not-found-title">404</h1>
           <div className="not-found-message">
-            <p>OOPS!</p>
-            <p>The page you are looking for wasn&apos;t found!</p>
+            <p>Page not found</p>
+            <p>There is no page at this address.</p>
           </div>
         </div>
-        <Link className="button button--primary not-found-home" to="/">Go Back Home</Link>
+        <Link className="button button--primary not-found-home" to="/">Back to home</Link>
       </div>
     </section>
   )

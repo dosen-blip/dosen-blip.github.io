@@ -30,10 +30,10 @@ export default function HomePage() {
         </div>
         <HeroLockup />
         <div className="home-hero-foot">
-          <p className="lede">I design it, build it and make it move, start to finish. There’s no hand-off in the middle: the person who designs the interface also writes the code and cuts the video.</p>
+          <p className="lede">Designer and video editor in Ottawa. I design and build websites and apps, and film and edit video for HintonX, Hinton Publishing and Frequency Shift.</p>
           <div className="home-hero-actions">
-            <ButtonLink to="/projects">See the work</ButtonLink>
-            <ButtonLink to="/contact" variant="ghost">Get in touch</ButtonLink>
+            <ButtonLink to="/projects">View work</ButtonLink>
+            <ButtonLink to="/contact" variant="ghost">Contact</ButtonLink>
           </div>
         </div>
       </section>
@@ -41,10 +41,10 @@ export default function HomePage() {
       <Reveal as="section" className="page section home-disciplines" aria-labelledby="disciplines-heading">
         <div className="section-head">
           <div>
-            <p className="eyebrow">Three things I do</p>
-            <h2 id="disciplines-heading">Design it, build it, make it move.</h2>
+            <p className="eyebrow">Disciplines</p>
+            <h2 id="disciplines-heading">Web, motion and UX</h2>
           </div>
-          <p>Most projects need more than one of these. I can take a launch from the first interface sketch to the live site and the video that announces it.</p>
+          <p>Projects grouped by discipline. Some, like Frequency Shift, cover more than one.</p>
         </div>
         <ul className="discipline-grid">
           {disciplines.map((discipline) => (
@@ -85,9 +85,9 @@ export default function HomePage() {
       <Reveal as="section" className="page section home-proof" aria-labelledby="proof-heading">
         <div className="home-proof-card">
           <div className="home-proof-copy">
-            <p className="eyebrow">Where the work happens</p>
-            <h2 id="proof-heading">Seven years of work for real clients, from documentaries to book series.</h2>
-            <ArrowLink to="/about">More about me</ArrowLink>
+            <p className="eyebrow">Experience</p>
+            <h2 id="proof-heading">Clients and employers since 2019</h2>
+            <ArrowLink to="/about">About</ArrowLink>
           </div>
           <dl className="home-proof-list">
             {proof.map((item) => (
@@ -98,7 +98,7 @@ export default function HomePage() {
             ))}
           </dl>
           <div className="home-clients">
-            <span className="eyebrow">Made for</span>
+            <span className="eyebrow">Clients</span>
             <ul>{clients.map((client) => <li key={client}>{client}</li>)}</ul>
           </div>
         </div>

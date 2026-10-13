@@ -1,3 +1,5 @@
+import { trendlessDeck } from "../decks"
+
 const trendless = {
   slug: "trendless",
   title: "Trendless",
@@ -12,6 +14,13 @@ const trendless = {
     "/assets/9oK2gzmRDc0yRssbRJKzMbtp9k.png",
   ],
   blocks: [
+    {
+      type: "deck",
+      id: "trendless-deck",
+      title: "Trendless 2.0",
+      description: "From the 1.0 pitch to the product: a five-page website at desktop and mobile widths, three pop-up styles that explain why they fired, settings on every pop-up and a checkout pause, with focus-group quotes mapped to each decision.",
+      deck: trendlessDeck,
+    },
     {
       type: "richText",
       html: `<h4><strong>Trendless:</strong> A Human-Centred Design Project</h4>

@@ -1,3 +1,5 @@
+import { beatportDeck } from "../decks"
+
 const beatportRedesign = {
   slug: "beatport-redesign",
   title: "Beatport Redesign",
@@ -5,13 +7,29 @@ const beatportRedesign = {
   client: "Algonquin College",
   duration: "4 Weeks",
   cover: "/assets/MushaMQRbFC1w6cQEKh1PKvojw.png",
-  summary: "A four-week capstone for Web Design 3 at Algonquin: a site audit, a style guide and a dark, neon-accented redesign of Beatport.",
+  summary: "A Web Design capstone at Algonquin, rebuilt as a working prototype: real audio, waveforms drawn from the tracks, and eight documented screens for desktop and mobile.",
   gallery: [
     "/assets/MushaMQRbFC1w6cQEKh1PKvojw.png",
     "/assets/pCdrhhgZ8bup07TXcvULkWSOk.png",
     "/assets/f4CrlyLGXLnRrtiNQk7nAwMQTQ.png",
   ],
   blocks: [
+    {
+      type: "deck",
+      id: "beatport-deck",
+      title: "The presentation",
+      description: "From the audit of Beatport today to the eight new screens, each with numbered decision notes, a dedicated mobile layout and a before-and-after table.",
+      deck: beatportDeck,
+      note: "An unofficial student concept, not affiliated with or endorsed by Beatport. Outfit stands in for Beatport’s Gravita GEO.",
+    },
+    {
+      type: "video",
+      id: "beatport-video",
+      title: "The prototype in use",
+      description: "89 seconds through the working prototype: browsing, filtering by genre, playing real tracks and building a cart. Sound on.",
+      src: "/assets/projects/beatport/prototype-demo.mp4",
+      poster: "/assets/projects/beatport/prototype-demo-poster.webp",
+    },
     {
       type: "richText",
       html: `<p>A comprehensive UI/UX and brand refresh for Beatport, the world’s leading music platform for DJs and producers. This project was completed as a capstone for Web Design 3, with a focus on creating a seamless, visually compelling, and intuitive digital experience that better serves Beatport’s global community.</p>

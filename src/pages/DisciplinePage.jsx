@@ -14,18 +14,18 @@ import "../styles/discipline.css"
 const films = videoProduction.blocks.filter((block) => block.type === "youtube")
 
 const liveSites = [
-  { href: "https://frequencyshift.ca/", label: "frequencyshift.ca", note: "Frequency Shift. I direct the identity and build and run the site for every night in the series." },
-  { href: "https://2024tennis.com/", label: "2024tennis.com", note: "Chasing Greatness. A Shopify store for Hinton Publishing’s tennis history series." },
-  { href: "https://instinctgroove.com/", label: "instinctgroove.com", note: "Instinct Groove. The site for an Ottawa minimal tech and house series: next event, past nights, artists and a gallery from the floor." },
-  { href: "https://dosen.ca", label: "dosen.ca", note: "DOSEN. The press kit site for my music, kept separate from this one." },
-  { href: "/", label: "matiadosen.com", note: "This portfolio. I designed the brand and built the site myself.", internal: true },
+  { href: "https://frequencyshift.ca/", label: "frequencyshift.ca", note: "Frequency Shift. Event site: design, build and ongoing management." },
+  { href: "https://2024tennis.com/", label: "2024tennis.com", note: "Chasing Greatness. Shopify store for Hinton Publishing’s tennis history series." },
+  { href: "https://instinctgroove.com/", label: "instinctgroove.com", note: "Instinct Groove. Event site for an Ottawa minimal tech and house series." },
+  { href: "https://dosen.ca", label: "dosen.ca", note: "DOSEN. Press kit site for my music." },
+  { href: "/", label: "matiadosen.com", note: "Portfolio. Brand identity and site build.", internal: true },
 ]
 
 const uxSteps = [
-  { icon: "cursor", title: "Research", body: "Two personas and a five-person focus group shaped Trendless before anything was drawn." },
-  { icon: "selection-box", title: "Audit", body: "Beatport’s redesign started with a full site audit and a style guide." },
-  { icon: "toggle", title: "Prototype", body: "Figma wireframes and prototypes for the ToldYa tennis app at HintonX." },
-  { icon: "code-tag", title: "Build", body: "Then it gets built, often by me, so the details survive the trip to the browser." },
+  { icon: "cursor", title: "Research", body: "Personas and a five-person focus group (Trendless)." },
+  { icon: "selection-box", title: "Audit", body: "Site audit and style guide (Beatport redesign)." },
+  { icon: "toggle", title: "Prototype", body: "Figma wireframes and prototypes (ToldYa, HintonX)." },
+  { icon: "code-tag", title: "Build", body: "Front-end build or developer handoff." },
 ]
 
 function MotionExtra() {
@@ -33,10 +33,10 @@ function MotionExtra() {
     <Reveal as="section" className="page section discipline-extra" aria-labelledby="films-heading">
       <div className="section-head">
         <div>
-          <p className="eyebrow">At HintonX, 2019 to now</p>
+          <p className="eyebrow">HintonX, 2019–present</p>
           <h2 id="films-heading">Selected films</h2>
         </div>
-        <ArrowLink to="/projects/video-production">The full video reel</ArrowLink>
+        <ArrowLink to="/projects/video-production">All films</ArrowLink>
       </div>
       <ul className="film-grid">
         {films.map((film) => (
@@ -55,8 +55,8 @@ function WebExtra() {
     <Reveal as="section" className="page section discipline-extra" aria-labelledby="live-heading">
       <div className="section-head">
         <div>
-          <p className="eyebrow">Live right now</p>
-          <h2 id="live-heading">On the web</h2>
+          <p className="eyebrow">Web</p>
+          <h2 id="live-heading">Live sites</h2>
         </div>
       </div>
       <ul className="live-list">
@@ -87,8 +87,8 @@ function UxExtra() {
     <Reveal as="section" className="page section discipline-extra" aria-labelledby="process-heading">
       <div className="section-head">
         <div>
-          <p className="eyebrow">How it runs</p>
-          <h2 id="process-heading">From people to pixels</h2>
+          <p className="eyebrow">UX</p>
+          <h2 id="process-heading">Process</h2>
         </div>
       </div>
       <ol className="ux-steps">
@@ -123,7 +123,7 @@ export default function DisciplinePage({ id }) {
           <p className="lede">{discipline.intro}</p>
           <div className="discipline-hero-aside">
             <p>{discipline.summary}</p>
-            <p className="discipline-fit"><strong>Good fit for</strong> {discipline.fit}</p>
+            <p className="discipline-fit"><strong>Typical projects</strong> {discipline.fit}</p>
           </div>
         </div>
       </section>

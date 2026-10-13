@@ -4,6 +4,7 @@ import { ArrowLink } from "./ArrowLink"
 import { ProjectCard } from "./ProjectCard"
 import { Reveal } from "./Reveal"
 import { DisciplineTags } from "./Tags"
+import { SlideDeck } from "./SlideDeck"
 import { ArrowLeftIcon, PlayIcon } from "./Icons"
 import { projectIndex } from "../data/projectIndex"
 import "../styles/detail.css"
@@ -49,12 +50,42 @@ function ContentBlock({ block, projectTitle }) {
     )
   }
   if (block.type === "youtube") return <YouTubeBlock id={block.id} title={block.title} />
+  if (block.type === "deck") {
+    return (
+      <section className="media-block" aria-labelledby={`${block.id}-heading`}>
+        <div className="media-block-heading">
+          <h2 id={`${block.id}-heading`}>{block.title}</h2>
+          {block.description && <p>{block.description}</p>}
+        </div>
+        <SlideDeck deck={block.deck} label={block.title} note={block.note} />
+      </section>
+    )
+  }
+  if (block.type === "video") {
+    return (
+      <section className="media-block" aria-labelledby={`${block.id}-heading`}>
+        <div className="media-block-heading">
+          <h2 id={`${block.id}-heading`}>{block.title}</h2>
+          {block.description && <p>{block.description}</p>}
+        </div>
+        <figure className="video-block">
+          <video src={block.src} poster={block.poster} controls playsInline preload="none" width="1920" height="1098" />
+          {block.caption && <figcaption>{block.caption}</figcaption>}
+        </figure>
+      </section>
+    )
+  }
   if (block.type === "link") return <ArrowLink to={block.href} external>{block.label}</ArrowLink>
   return null
 }
 
+const featureTypes = new Set(["deck", "video"])
+
 export function ProjectDetail({ project }) {
   const indexed = indexBySlug[project.slug]
+  // Presentations and videos run full width above the write-up; everything else sits beside the details.
+  const features = project.blocks.filter((block) => featureTypes.has(block.type))
+  const body = project.blocks.filter((block) => !featureTypes.has(block.type))
   const related = project.relatedSlugs.map((slug) => indexBySlug[slug]).filter(Boolean)
   const meta = [
     { type: "client", label: "Client", value: project.client },
@@ -73,9 +104,15 @@ export function ProjectDetail({ project }) {
         <DisciplineTags ids={indexed?.disciplines} />
       </Reveal>
 
+      {features.length > 0 && (
+        <div className="page detail-features">
+          {features.map((block) => <Reveal key={block.id}><ContentBlock block={block} projectTitle={project.title} /></Reveal>)}
+        </div>
+      )}
+
       <div className="page detail-layout">
         <div className="detail-copy">
-          {project.blocks.map((block, index) => <Reveal key={`${block.type}-${index}`}><ContentBlock block={block} projectTitle={project.title} /></Reveal>)}
+          {body.map((block, index) => <Reveal key={`${block.type}-${index}`}><ContentBlock block={block} projectTitle={project.title} /></Reveal>)}
         </div>
         <aside className="detail-rail" aria-label="Project details">
           <dl>
@@ -99,7 +136,7 @@ export function ProjectDetail({ project }) {
       {related.length > 0 && (
         <section className="page section related" aria-labelledby="related-heading">
           <div className="section-head">
-            <div><p className="eyebrow">Keep looking</p><h2 id="related-heading">Other projects</h2></div>
+            <div><p className="eyebrow">More work</p><h2 id="related-heading">Other projects</h2></div>
             <ArrowLink to="/projects">All work</ArrowLink>
           </div>
           <div className="project-grid">{related.map((item) => <ProjectCard key={item.slug} project={item} />)}</div>

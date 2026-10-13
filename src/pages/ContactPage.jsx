@@ -137,7 +137,7 @@ export default function ContactPage() {
         <div className="contact-intro">
           <StatusChip />
           <h1 id="contact-heading" className="page-title">Contact</h1>
-          <p className="lede">I’m taking on design, video and web work. Send a note with what you’re making and when you need it.</p>
+          <p className="lede">Available for design, video and web projects. Include the scope and timeline.</p>
         </div>
         <div className="contact-main-grid">
           <ContactForm />

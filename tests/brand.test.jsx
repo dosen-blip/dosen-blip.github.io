@@ -60,7 +60,7 @@ describe("site header", () => {
     shellAt("/")
     const footer = screen.getByRole("contentinfo")
     expect(within(footer).getByRole("link", { name: /matiadosen@outlook\.com/ })).toHaveAttribute("href", "mailto:matiadosen@outlook.com")
-    expect(within(footer).getByRole("link", { name: /DOSEN, my music/ })).toHaveAttribute("href", "https://dosen.ca")
+    expect(within(footer).getByRole("link", { name: /DOSEN \(music\)/ })).toHaveAttribute("href", "https://dosen.ca")
   })
 })
 

@@ -17,13 +17,13 @@ const experience = [
     role: "Creative Director",
     company: "Frequency Shift",
     dates: "2025–present",
-    description: "The identity, the website and the announcement and recap films for an Ottawa house series. I also play selected nights.",
+    description: "Identity, website and promotional films for an Ottawa house music series. DJ at selected events.",
   },
   {
     role: "Co-Owner and Designer",
     company: "Hinton Publishing",
     dates: "2020–present",
-    description: "I design international sports books and their websites, and I manage the Shopify stores that sell them.",
+    description: "Book design and typesetting for international sports titles, plus their websites and Shopify stores.",
   },
   {
     role: "UX Designer",
@@ -43,10 +43,10 @@ export default function AboutPage() {
           <p className="eyebrow">About</p>
           <h1 id="about-heading" className="page-title">Hi, I&apos;m Matia.</h1>
           <p className="descriptor about-descriptor">{DESCRIPTOR}, in Ottawa.</p>
-          <p className="lede">I co-own Hinton Publishing, where I design and typeset sports books, and I’ve worked at HintonX since 2019 on apps, books and film. I also run the visuals for Frequency Shift, a house music series, and I DJ and produce music in Ableton.</p>
+          <p className="lede">I co-own Hinton Publishing, where I design and typeset sports books, and I’ve worked at HintonX since 2019 on apps, books and film. I also lead creative direction for Frequency Shift, an Ottawa house music series, and DJ and produce music in Ableton.</p>
           <div className="about-actions">
             <StatusChip />
-            <ButtonLink to="/contact">Get in touch</ButtonLink>
+            <ButtonLink to="/contact">Contact</ButtonLink>
           </div>
         </div>
 
@@ -68,10 +68,10 @@ export default function AboutPage() {
       <Reveal as="section" className="page section about-what" aria-labelledby="what-heading">
         <div className="section-head">
           <div>
-            <p className="eyebrow">What I do</p>
-            <h2 id="what-heading">One person, start to finish.</h2>
+            <p className="eyebrow">Disciplines</p>
+            <h2 id="what-heading">What I do</h2>
           </div>
-          <p>The person who designs the interface also writes the code and cuts the video. Nothing gets lost in a hand-off, because there isn’t one.</p>
+          <p>Interface design, front-end development and video production.</p>
         </div>
         <ul className="about-disciplines">
           {disciplines.map((discipline) => (
@@ -90,8 +90,8 @@ export default function AboutPage() {
       <Reveal as="section" className="page section about-experience" aria-labelledby="experience-heading">
         <div className="section-head">
           <div>
-            <p className="eyebrow">Experience</p>
-            <h2 id="experience-heading">Where I work</h2>
+            <p className="eyebrow">2019–present</p>
+            <h2 id="experience-heading">Experience</h2>
           </div>
         </div>
         <ol className="experience-list">
@@ -112,7 +112,7 @@ export default function AboutPage() {
         <div className="about-card">
           <h2>Education</h2>
           <p>{education}</p>
-          <ArrowLink to="/projects">See the work</ArrowLink>
+          <ArrowLink to="/projects">View work</ArrowLink>
         </div>
         <div className="about-card">
           <h2>Tools</h2>
@@ -121,7 +121,7 @@ export default function AboutPage() {
         </div>
         <div className="about-card about-card--night">
           <h2>Music</h2>
-          <p>I DJ and produce as DOSEN. It has its own site, separate from this one.</p>
+          <p>I DJ and produce as DOSEN. Music, mixes and press kit are on a separate site.</p>
           <ArrowLink to={DOSEN_URL} external>dosen.ca</ArrowLink>
         </div>
       </Reveal>

@@ -28,7 +28,7 @@ describe("project records", () => {
 
   it("uses valid blocks, localized assets, valid related slugs, and route SEO", () => {
     const slugs = new Set(projects.map((project) => project.slug))
-    const blockTypes = new Set(["richText", "image", "youtube", "link"])
+    const blockTypes = new Set(["richText", "image", "youtube", "link", "deck", "video"])
     for (const project of projects) {
       expect(project.title).toBeTruthy()
       expect(project.category).toBeTruthy()
@@ -79,6 +79,19 @@ describe("project records", () => {
       for (const block of project.blocks) {
         expect(blockTypes.has(block.type)).toBe(true)
         if (block.type === "image") expect(fs.existsSync(path.join(process.cwd(), "public", block.src))).toBe(true)
+        if (block.type === "video") {
+          expect(fs.existsSync(path.join(process.cwd(), "public", block.src))).toBe(true)
+          expect(fs.existsSync(path.join(process.cwd(), "public", block.poster))).toBe(true)
+        }
+        if (block.type === "deck") {
+          expect(fs.existsSync(path.join(process.cwd(), "public", block.deck.pdf))).toBe(true)
+          expect(block.deck.slides.length).toBeGreaterThan(0)
+          for (const slide of block.deck.slides) {
+            expect(fs.existsSync(path.join(process.cwd(), "public", slide.src))).toBe(true)
+            expect(fs.existsSync(path.join(process.cwd(), "public", slide.thumb))).toBe(true)
+            expect(slide.alt.length).toBeGreaterThan(4)
+          }
+        }
       }
     }
   })

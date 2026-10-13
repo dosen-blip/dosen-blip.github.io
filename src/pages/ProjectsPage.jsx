@@ -27,7 +27,7 @@ export default function ProjectsPage() {
       </Reveal>
 
       <p className="work-note">
-        Print sits alongside the three. I typeset all seven volumes of the Novak Books series and laid out the Sol de Fuego menu in InDesign, and the same eye for type runs through the screen work.
+        Print: typesetting for the seven-volume Serbian edition of the Novak Books series, and a menu for Sol de Fuego Cocina.
       </p>
     </section>
   )

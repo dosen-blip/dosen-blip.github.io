@@ -110,7 +110,7 @@ function EndCard() {
 
           <div className="end-card-cta">
             <StatusChip tone="stage" />
-            <p>Taking on design, video and web work. Tell me what you’re making and when you need it.</p>
+            <p>Available for design, video and web projects.</p>
             <a className="end-card-email" href={`mailto:${EMAIL}`}>
               <span>{EMAIL}</span><ArrowUpRightIcon />
             </a>
@@ -125,7 +125,7 @@ function EndCard() {
               </ul>
             </div>
             <div>
-              <h2>Me</h2>
+              <h2>Info</h2>
               <ul>
                 <li><Link to="/about">About</Link></li>
                 <li><Link to="/stack">Tools</Link></li>
@@ -133,17 +133,17 @@ function EndCard() {
               </ul>
             </div>
             <div>
-              <h2>Elsewhere</h2>
+              <h2>Links</h2>
               <ul>
                 {socialLinks.map((link) => <li key={link.label}><a href={link.href} target="_blank" rel="noreferrer">{link.label}<ArrowUpRightIcon /></a></li>)}
-                <li><a href={DOSEN_URL} target="_blank" rel="noreferrer">DOSEN, my music<ArrowUpRightIcon /></a></li>
+                <li><a href={DOSEN_URL} target="_blank" rel="noreferrer">DOSEN (music)<ArrowUpRightIcon /></a></li>
               </ul>
             </div>
           </nav>
 
           <div className="end-card-base">
             <MDMark label="Matia Dosen" />
-            <span>Matia Dosen, 2026. Designed and built in Ottawa, Canada.</span>
+            <span>© 2026 Matia Dosen · Ottawa, Canada</span>
             <a href="#top" className="end-card-top" onClick={backToTop}>Back to top</a>
           </div>
         </div>

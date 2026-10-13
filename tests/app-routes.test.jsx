@@ -19,6 +19,6 @@ describe("application routes", () => {
   it("renders the standalone 404 for unknown routes", () => {
     const html = renderPath("/not-a-route")
     expect(html).toContain("not-found-page")
-    expect(html).toContain("Go Back Home")
+    expect(html).toContain("Back to home")
   })
 })
