@@ -173,6 +173,10 @@
   to { opacity: 1; }
 }
 
+@media (max-width: 809.98px) {
+  .backdrop-tool > .tool-icon { width: 52px; height: 39px; margin: 4.5px 6px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .backdrop-tool .tool-icon, .backdrop-tool .tool-icon path { animation: none !important; }
 }
@@ -372,6 +376,9 @@
   .header-nav, .header-actions { display: none; }
   .menu-button { display: block; }
   .header-logo .wordmark { --wm-h: 19px; }
+  .header-logo { transition: opacity var(--mid) ease, translate var(--mid) var(--ease-out); }
+  .site-header.is-hero-in-view .header-logo { opacity: 0; translate: 0 6px; pointer-events: none; }
+  .site-header.is-hero-in-view .header-logo:focus-visible { opacity: 1; translate: none; }
 
   .mobile-menu {
     display: block;

@@ -10,6 +10,7 @@ const ROWS_PER_TILE = 4
 const PERIOD = CELL_Y * ROWS_PER_TILE // the pattern repeats every 480px, a multiple of the 30px dot grid
 const PARALLAX = .22
 const NEAR = 220
+const PHONE = 810
 const TOUCH = .62 // how near (0 to 1) the pointer must be before a tool starts tinting the cursor
 const SPARK_EVERY = 900 // ms between icons lighting up blue
 
@@ -22,6 +23,8 @@ function hash(a, b, salt = 0) {
 
 // Tools fade towards the reading column so they never compete with the page: full at the edges, half in the middle.
 function columnFade(x) {
+  // Phones get no reading column (the page is all column); the tools just sit a little quieter.
+  if (window.innerWidth < PHONE) return .7
   const p = x / window.innerWidth
   if (p < .1 || p > .9) return 1
   if (p < .26) return 1 - (p - .1) / .32
@@ -37,7 +40,8 @@ function buildIcons(width, discipline) {
   for (let row = 0; row < rows; row += 1) {
     const tileRow = row % ROWS_PER_TILE
     for (let column = 0; column < columns; column += 1) {
-      if (hash(column, tileRow) > .5) continue
+      // Half as many tools on a phone, where the same density reads as clutter.
+      if (hash(column, tileRow) > (width < PHONE ? .25 : .5)) continue
       const pick = hash(column, tileRow, 7)
       const name = own && pick < .72
         ? own[Math.floor(hash(column, tileRow, 3) * own.length)]

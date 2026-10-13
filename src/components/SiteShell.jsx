@@ -178,6 +178,20 @@ export function SiteShell({ children }) {
     }
   }, [menuOpen])
 
+  // On home the big lockup already says my name, so on phones the header logo waits until it scrolls away.
+  const [heroInView, setHeroInView] = useState(isHome)
+  useEffect(() => {
+    const hero = isHome && document.querySelector(".hero-lockup")
+    if (!hero || typeof IntersectionObserver === "undefined") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setHeroInView(false)
+      return undefined
+    }
+    const observer = new IntersectionObserver(([entry]) => setHeroInView(entry.isIntersecting), { rootMargin: "-72px 0px 0px 0px" })
+    observer.observe(hero)
+    return () => observer.disconnect()
+  }, [isHome, pathname])
+
   const closeMenu = () => setMenuOpen(false)
 
   return (
@@ -187,7 +201,7 @@ export function SiteShell({ children }) {
       <BrandBackdrop discipline={discipline} />
       <NeonCursor />
 
-      <header className={`site-header${menuOpen ? " is-menu-open" : ""}${night ? " is-night" : ""}`} id="top">
+      <header className={`site-header${menuOpen ? " is-menu-open" : ""}${night ? " is-night" : ""}${heroInView && !menuOpen ? " is-hero-in-view" : ""}`} id="top">
         <div className="page site-header-inner">
           <Link to="/" className="header-logo" aria-label="Matia Dosen, home" onClick={closeMenu}>
             <Wordmark key={pathname} splash={isHome ? null : discipline} />

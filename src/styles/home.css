@@ -265,10 +265,27 @@
 }
 
 @media (max-width: 809.98px) {
-  .home-hero { gap: 36px; padding-top: 20px; }
-  .home-hero-top .eyebrow { display: none; }
-  .home-hero-foot { grid-template-columns: 1fr; }
-  .home-hero-actions .button { flex: 1 1 auto; }
+  /* Phone hero: name, one small status line, a short lede, then one clear action. */
+  .home-hero { gap: 28px; padding-top: 28px; padding-bottom: 72px; }
+  .home-hero-top { order: 1; justify-content: flex-start; gap: 0; margin-top: -12px; }
+  .home-hero-foot { order: 2; grid-template-columns: 1fr; gap: 28px; }
+  .home-hero-top .status-chip { min-height: 0; padding: 0; border: 0; background: none; color: var(--body); }
+  .home-hero-top .eyebrow { gap: 0; color: var(--body); font-size: var(--text-xs); }
+  .home-hero-top .eyebrow::before { content: "·"; margin: 0 8px; }
+  .home-hero-foot .lede { font-size: var(--text-md); }
+  .home-lede-intro { display: none; }
+  /* Both actions are plain text; "View work" is lit like the intro pen (white-hot core, blue glow in dark). */
+  .home-hero-actions { align-items: center; gap: 8px 32px; }
+  .home-hero-actions .button { min-height: 44px; padding: 0; border: 0; background: none; font-size: var(--text-md); }
+  .home-hero-actions .button--primary {
+    color: color-mix(in srgb, var(--neon-core) calc(var(--neon-on) * 100%), var(--accent-strong));
+    filter:
+      drop-shadow(0 0 .5px rgb(var(--neon-rgb) / var(--neon-on)))
+      drop-shadow(0 0 4px rgb(var(--neon-rgb) / calc(var(--neon-on) * .9)))
+      drop-shadow(0 0 18px rgb(var(--neon-rgb) / calc(var(--neon-on) * .75)));
+  }
+  .home-hero-actions .button--primary:hover { background: none; }
+  .home-disciplines { padding-top: 24px; }
   .selection-frame { display: none; }
   .discipline-card { grid-template-columns: 1fr; }
   .discipline-card .stage { border-right: 0; border-bottom: 1px solid var(--line); }
