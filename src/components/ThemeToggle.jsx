@@ -3,32 +3,27 @@ import { useEffect, useState } from "react"
 export const THEME_STORAGE_KEY = "md-theme"
 
 function currentTheme() {
-  if (typeof document === "undefined") return "light"
-  const set = document.documentElement.dataset.theme
-  if (set === "light" || set === "dark") return set
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+  if (typeof document === "undefined") return "dark"
+  return document.documentElement.dataset.theme === "light" ? "light" : "dark"
 }
 
 /**
  * Light and dark, as a real version of the toggle from the brand backdrop.
- * The choice is remembered; until then the site follows the system setting.
+ * The site opens dark; switching to light is remembered.
  */
 export function ThemeToggle({ className = "" }) {
-  const [theme, setTheme] = useState("light")
+  const [theme, setTheme] = useState("dark")
 
   useEffect(() => {
-    // The server renders light; read the real theme once mounted.
+    // The server renders dark; read the remembered choice once mounted.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setTheme(currentTheme())
-    const media = window.matchMedia("(prefers-color-scheme: dark)")
-    const onChange = () => setTheme(currentTheme())
-    media.addEventListener?.("change", onChange)
-    return () => media.removeEventListener?.("change", onChange)
   }, [])
 
   function toggle() {
     const next = theme === "dark" ? "light" : "dark"
     document.documentElement.dataset.theme = next
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", next === "dark" ? "#0c0c0f" : "#f7f5ed")
     try {
       window.localStorage.setItem(THEME_STORAGE_KEY, next)
     } catch {
