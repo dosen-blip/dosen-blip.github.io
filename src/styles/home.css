@@ -123,6 +123,7 @@
   from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: none; }
 }
+@keyframes scroll-cue-bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 5px; } }
 @keyframes hero-select {
   0% { opacity: 0; }
   8%, 78% { opacity: 1; }
@@ -131,7 +132,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .hero-pen, .hero-anchors { display: none; }
-  .hero-fill, .hero-descriptor, .selection-frame, .home-hero-top, .home-hero-foot { animation: none !important; }
+  .hero-fill, .hero-descriptor, .selection-frame, .home-hero-top, .home-hero-foot, .home-scroll-cue, .home-scroll-cue .ui-icon { animation: none !important; }
 }
 
 .home-hero-foot {
@@ -143,6 +144,7 @@
 }
 .home-hero-foot .lede { color: var(--body); }
 .home-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.home-scroll-cue { display: none; }
 
 /* ---------- Disciplines ---------- */
 
@@ -271,13 +273,11 @@
     gap: 28px;
     min-height: calc(100svh - var(--header-h));
     align-content: center;
-    padding-block: 32px 40px;
+    padding-block: 32px 96px;
   }
-  .home-hero-top { order: 1; justify-content: flex-start; gap: 0; margin-top: -12px; }
+  .home-hero { position: relative; }
+  .home-hero-top { display: none; }
   .home-hero-foot { order: 2; grid-template-columns: 1fr; gap: 28px; }
-  .home-hero-top .status-chip { min-height: 0; padding: 0; border: 0; background: none; color: var(--body); }
-  .home-hero-top .eyebrow { gap: 0; color: var(--body); font-size: var(--text-xs); }
-  .home-hero-top .eyebrow::before { content: "·"; margin: 0 8px; }
   .home-hero-foot .lede { display: none; }
   /* Both actions are plain text; "View work" is lit like the intro pen (white-hot core, blue glow in dark). */
   .home-hero-actions { align-items: center; gap: 8px 32px; }
@@ -290,6 +290,37 @@
       drop-shadow(0 0 18px rgb(var(--neon-rgb) / calc(var(--neon-on) * .75)));
   }
   .home-hero-actions .button--primary:hover { background: none; }
+
+  /* A lit "Scroll" cue at the foot of the first screen, in the same light as View work. */
+  .home-scroll-cue {
+    position: absolute;
+    display: inline-flex;
+    bottom: 28px;
+    left: 50%;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    color: color-mix(in srgb, var(--neon-core) calc(var(--neon-on) * 100%), var(--accent-strong));
+    font-size: var(--text-sm);
+    font-weight: 500;
+    filter:
+      drop-shadow(0 0 .5px rgb(var(--neon-rgb) / var(--neon-on)))
+      drop-shadow(0 0 4px rgb(var(--neon-rgb) / calc(var(--neon-on) * .9)))
+      drop-shadow(0 0 18px rgb(var(--neon-rgb) / calc(var(--neon-on) * .75)));
+    translate: -50% 0;
+    animation: hero-rise .8s var(--ease-out) 1.8s both;
+  }
+  .home-scroll-cue .ui-icon {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    animation: scroll-cue-bob 1.8s ease-in-out 2.6s infinite;
+  }
   .home-disciplines { padding-top: 56px; }
   .selection-frame { display: none; }
   .discipline-card { grid-template-columns: 1fr; }

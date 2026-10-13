@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom"
+import { useLenis } from "lenis/react"
+import { ArrowDownIcon } from "../components/Icons"
 import { ArrowLink } from "../components/ArrowLink"
 import { ButtonLink } from "../components/ButtonLink"
 import { HeroLockup } from "../components/HeroLockup"
@@ -21,6 +23,13 @@ const proof = [
 const clients = ["Adobe", "Service Canada", "HintonX", "Hinton Publishing", "Frequency Shift", "Algonquin College"]
 
 export default function HomePage() {
+  const lenis = useLenis()
+  const scrollOn = (event) => {
+    if (!lenis) return
+    event.preventDefault()
+    lenis.scrollTo("#disciplines-heading", { offset: -96 })
+  }
+
   return (
     <div className="home">
       <section className="page home-hero" aria-label="Introduction">
@@ -36,6 +45,9 @@ export default function HomePage() {
             <ButtonLink to="/contact" variant="ghost">Contact</ButtonLink>
           </div>
         </div>
+        <a className="home-scroll-cue" href="#disciplines-heading" onClick={scrollOn}>
+          Scroll <ArrowDownIcon />
+        </a>
       </section>
 
       <Reveal as="section" className="page section home-disciplines" aria-labelledby="disciplines-heading">

@@ -13,6 +13,7 @@ const NEAR = 220
 const PHONE = 810
 const TOUCH = .62 // how near (0 to 1) the pointer must be before a tool starts tinting the cursor
 const SPARK_EVERY = 900 // ms between icons lighting up blue
+const SPARK_EVERY_PHONE = 420 // phones have no hover glow, so they spark more often
 
 // Small deterministic hash so the scatter is stable between renders and resizes.
 function hash(a, b, salt = 0) {
@@ -24,7 +25,7 @@ function hash(a, b, salt = 0) {
 // Tools fade towards the reading column so they never compete with the page: full at the edges, half in the middle.
 function columnFade(x) {
   // Phones get no reading column (the page is all column); the tools just sit a little quieter.
-  if (window.innerWidth < PHONE) return .7
+  if (window.innerWidth < PHONE) return .8
   const p = x / window.innerWidth
   if (p < .1 || p > .9) return 1
   if (p < .26) return 1 - (p - .1) / .32
@@ -40,8 +41,8 @@ function buildIcons(width, discipline) {
   for (let row = 0; row < rows; row += 1) {
     const tileRow = row % ROWS_PER_TILE
     for (let column = 0; column < columns; column += 1) {
-      // Half as many tools on a phone, where the same density reads as clutter.
-      if (hash(column, tileRow) > (width < PHONE ? .25 : .5)) continue
+      // Phones get a few more tools than desktop: smaller, and with no pointer they are lit by sparks alone.
+      if (hash(column, tileRow) > (width < PHONE ? .62 : .5)) continue
       const pick = hash(column, tileRow, 7)
       const name = own && pick < .72
         ? own[Math.floor(hash(column, tileRow, 3) * own.length)]
@@ -142,7 +143,7 @@ export function BrandBackdrop({ discipline = null }) {
       void node.offsetWidth
       node.classList.add("is-spark")
       window.setTimeout(() => node.classList.remove("is-spark"), 1600)
-    }, SPARK_EVERY)
+    }, window.innerWidth < PHONE ? SPARK_EVERY_PHONE : SPARK_EVERY)
 
     render()
     window.addEventListener("scroll", schedule, { passive: true })

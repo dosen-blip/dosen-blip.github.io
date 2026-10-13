@@ -20,6 +20,10 @@ export function ArrowRightIcon(props) {
   return <Icon {...props}><path d="M5 12h14M14 7l5 5-5 5" /></Icon>
 }
 
+export function ArrowDownIcon(props) {
+  return <Icon {...props}><path d="M12 5v14M7 14l5 5 5-5" /></Icon>
+}
+
 export function ArrowLeftIcon(props) {
   return <Icon {...props}><path d="M19 12H5M10 7l-5 5 5 5" /></Icon>
 }
