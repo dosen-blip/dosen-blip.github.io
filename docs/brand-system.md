@@ -5,7 +5,7 @@ Source: `~/Desktop/Desktop Files/Design & Portfolio/dosen-matia-final-brand/` (P
 ## Principles from the sheet
 
 - My name first, then the three things I do, then the work. The full name leads; the MD mark only appears where the name can't fit (favicon, app icon, avatar, footer base).
-- Mostly beige and near-black. Black is for anything that moves (reveal stages, video posters, the footer end card, the DOSEN button). Blue is for CTAs, the line under the name and one-off interactions. Green is only the "available" status dot.
+- Mostly beige and near-black. Black is for anything that moves (reveal stages, video posters, the footer end card, the DOSEN button, which inverts to a light pill in dark mode). Blue is for CTAs, the line under the name and one-off interactions. Green is only the "available" status dot.
 - Outfit for headings and the descriptor (Medium/SemiBold, Regular for the line under the name). Inter for reading. JetBrains Mono only for paths and code characters.
 - A low-opacity dot grid with tools from each field floats behind every page, a few shades off the background.
 
@@ -34,7 +34,7 @@ Dark mode follows the system until the header toggle sets `data-theme` (remember
   - `web` (Decode): the name resolves letter by letter out of code characters.
   - `ux` (Responsive): two lines inside a breakpoint frame, then it reflows to one.
 - The header picks the splash from the route (`disciplineForPath`); the end card always draws with the pen when it scrolls into view.
-- `HeroLockup` is the full-size lockup on the home page. On the first visit of a session (`html[data-intro]`) or any return to home inside the app, the pen draws each shape, drops anchors, fills, then the selection box snaps on. Server markup is always the finished mark.
+- `HeroLockup` is the full-size lockup on the home page. On every page load (`html[data-intro]`, unless reduced motion) and any return to home inside the app, the pen draws each shape, drops anchors, fills, then the selection box snaps on. Server markup is always the finished mark.
 - `RevealStage` plays the After Effects renders (`public/assets/brand/reveals/*.mp4`) on a black stage in a browser frame, with the final frame as a still for reduced motion, blocked autoplay and after the video ends.
 
 ## Information architecture

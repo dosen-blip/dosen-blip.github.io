@@ -141,8 +141,13 @@
   transition: transform var(--fast) ease, background-color var(--fast) ease;
 }
 .dosen-button:hover { transform: translateY(-1px); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .dosen-button { box-shadow: inset 0 0 0 1px var(--line-strong); } }
-:root[data-theme="dark"] .dosen-button { box-shadow: inset 0 0 0 1px var(--line-strong); }
+/* In dark mode the pill inverts: light pill, black type, mirroring the black pill on beige. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .dosen-button { background: var(--beige); color: var(--night); }
+  :root:not([data-theme="light"]) .dosen-button .dosen-wordmark { filter: none; }
+}
+:root[data-theme="dark"] .dosen-button { background: var(--beige); color: var(--night); }
+:root[data-theme="dark"] .dosen-button .dosen-wordmark { filter: none; }
 
 .dosen-icon-window {
   position: relative;

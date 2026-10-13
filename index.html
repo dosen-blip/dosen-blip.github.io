@@ -13,18 +13,15 @@
     <link rel="preload" href="/assets/brand/fonts/outfit-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/inter-regular.woff2" as="font" type="font/woff2" crossorigin />
     <script>
-      // Before first paint: the remembered theme, whether motion is welcome, and whether this is the first visit
-      // of the session (the home lockup draws itself once; later visits open straight onto the finished mark).
+      // Before first paint: the remembered theme, and whether motion is welcome. With motion, the home lockup
+      // draws itself on every page load; with reduced motion it opens straight onto the finished mark.
       try {
         var root = document.documentElement
         var theme = localStorage.getItem("md-theme")
         if (theme === "light" || theme === "dark") root.dataset.theme = theme
         if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
           root.dataset.motion = "ok"
-          if (!sessionStorage.getItem("md-intro")) {
-            root.dataset.intro = "1"
-            sessionStorage.setItem("md-intro", "1")
-          }
+          root.dataset.intro = "1"
         }
       } catch (e) {}
     </script>

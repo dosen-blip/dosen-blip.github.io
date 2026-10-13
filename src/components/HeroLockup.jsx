@@ -9,7 +9,7 @@ const DRAW_LENGTH = 700
 
 /**
  * The full-size lockup: my name, then the line under it.
- * On the first visit of a session (html[data-intro]) and on later visits within the app, the pen draws
+ * On every page load (html[data-intro]) and on every return to home within the app, the pen draws
  * each shape of the wordmark, dropping anchors as it goes, then the ink fills in and the selection box snaps on.
  * The server markup is the finished lockup, so nothing is hidden without JavaScript or with reduced motion.
  */
