@@ -16,6 +16,7 @@ const films = videoProduction.blocks.filter((block) => block.type === "youtube")
 const liveSites = [
   { href: "https://frequencyshift.ca/", label: "frequencyshift.ca", note: "Frequency Shift. I direct the identity and build and run the site for every night in the series." },
   { href: "https://2024tennis.com/", label: "2024tennis.com", note: "Chasing Greatness. A Shopify store for Hinton Publishing’s tennis history series." },
+  { href: "https://instinctgroove.com/", label: "instinctgroove.com", note: "Instinct Groove. The site for an Ottawa minimal tech and house series: next event, past nights, artists and a gallery from the floor." },
   { href: "https://dosen.ca", label: "dosen.ca", note: "DOSEN. The press kit site for my music, kept separate from this one." },
   { href: "/", label: "matiadosen.com", note: "This portfolio. I designed the brand and built the site myself.", internal: true },
 ]
