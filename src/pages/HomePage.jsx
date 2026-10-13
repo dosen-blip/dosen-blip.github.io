@@ -10,7 +10,7 @@ import { disciplines } from "../data/disciplines"
 import { projectIndex, projectsFor } from "../data/projectIndex"
 import "../styles/home.css"
 
-const featured = ["video-production", "frequency-shift", "trendless"].map((slug) => projectIndex.find((project) => project.slug === slug))
+const featured = ["video-production", "frequency-shift", "beatport-redesign"].map((slug) => projectIndex.find((project) => project.slug === slug))
 
 const proof = [
   { label: "Film and UX", value: "HintonX", since: "since 2019" },

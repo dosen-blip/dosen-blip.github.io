@@ -152,7 +152,7 @@ describe("Frequency Shift portfolio placement", () => {
     expect(projects[1]).toHaveClass("project-card-frequency-shift")
     expect(projects[1].querySelector('.frequency-shift-card-backdrop[src="/assets/frequency-shift/hero-crowd.webp"]')).toBeTruthy()
     expect(projects[1].querySelectorAll('.frequency-shift-card-logo-layer[src="/assets/frequency-shift/fs-icon-vector.svg"]')).toHaveLength(3)
-    expect(projects[2]).toHaveTextContent("Trendless")
+    expect(projects[2]).toHaveTextContent("Beatport Redesign")
     expect(container).not.toHaveTextContent("Animatic Remastered")
   })
 })
