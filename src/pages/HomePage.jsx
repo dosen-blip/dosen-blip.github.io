@@ -30,7 +30,7 @@ export default function HomePage() {
         </div>
         <HeroLockup />
         <div className="home-hero-foot">
-          <p className="lede"><span className="home-lede-intro">Designer and video editor in Ottawa. </span>I design and build websites and apps, and film and edit video for HintonX, Hinton Publishing and Frequency Shift.</p>
+          <p className="lede">Designer and video editor in Ottawa. I design and build websites and apps, and film and edit video for HintonX, Hinton Publishing and Frequency Shift.</p>
           <div className="home-hero-actions">
             <ButtonLink to="/projects">View work</ButtonLink>
             <ButtonLink to="/contact" variant="ghost">Contact</ButtonLink>

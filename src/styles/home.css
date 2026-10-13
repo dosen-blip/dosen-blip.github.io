@@ -266,14 +266,19 @@
 
 @media (max-width: 809.98px) {
   /* Phone hero: name, one small status line, a short lede, then one clear action. */
-  .home-hero { gap: 28px; padding-top: 28px; padding-bottom: 72px; }
+  /* The hero fills the first screen with the name centred in it; the work starts one scroll down. */
+  .home-hero {
+    gap: 28px;
+    min-height: calc(100svh - var(--header-h));
+    align-content: center;
+    padding-block: 32px 40px;
+  }
   .home-hero-top { order: 1; justify-content: flex-start; gap: 0; margin-top: -12px; }
   .home-hero-foot { order: 2; grid-template-columns: 1fr; gap: 28px; }
   .home-hero-top .status-chip { min-height: 0; padding: 0; border: 0; background: none; color: var(--body); }
   .home-hero-top .eyebrow { gap: 0; color: var(--body); font-size: var(--text-xs); }
   .home-hero-top .eyebrow::before { content: "·"; margin: 0 8px; }
-  .home-hero-foot .lede { font-size: var(--text-md); }
-  .home-lede-intro { display: none; }
+  .home-hero-foot .lede { display: none; }
   /* Both actions are plain text; "View work" is lit like the intro pen (white-hot core, blue glow in dark). */
   .home-hero-actions { align-items: center; gap: 8px 32px; }
   .home-hero-actions .button { min-height: 44px; padding: 0; border: 0; background: none; font-size: var(--text-md); }
@@ -285,7 +290,7 @@
       drop-shadow(0 0 18px rgb(var(--neon-rgb) / calc(var(--neon-on) * .75)));
   }
   .home-hero-actions .button--primary:hover { background: none; }
-  .home-disciplines { padding-top: 24px; }
+  .home-disciplines { padding-top: 56px; }
   .selection-frame { display: none; }
   .discipline-card { grid-template-columns: 1fr; }
   .discipline-card .stage { border-right: 0; border-bottom: 1px solid var(--line); }
