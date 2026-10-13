@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { Routes, Route, useLocation } from "react-router-dom"
 import { useReducedMotion } from "motion/react"
 import { ReactLenis } from "lenis/react"
@@ -7,19 +8,18 @@ import { ProjectDetail } from "./components/ProjectDetail"
 import { FrequencyShiftDetail } from "./components/FrequencyShiftDetail"
 import { getProject } from "./data/projects"
 import { knownRoutes } from "./data/routes"
+import { markHydrated } from "./utils/hydration"
 import HomePage from "./pages/HomePage"
 import AboutPage from "./pages/AboutPage"
 import ProjectsPage from "./pages/ProjectsPage"
+import DisciplinePage from "./pages/DisciplinePage"
 import StackPage from "./pages/StackPage"
 import ContactPage from "./pages/ContactPage"
 import NotFoundPage from "./pages/NotFoundPage"
-import "./styles/global.css"
-import "./styles/editorial-v1.css"
-import "./styles/layout-v2.css"
-import "./styles/refinements.css"
-import "./styles/direction-editorial.css"
-import "./styles/direction-work-led.css"
-import "./styles/direction-typesetter.css"
+import "./styles/tokens.css"
+import "./styles/base.css"
+import "./styles/shell.css"
+import "./styles/components.css"
 
 function ProjectRoute() {
   const slug = useLocation().pathname.split("/").filter(Boolean).at(-1)
@@ -33,6 +33,7 @@ function ProjectRoute() {
 export function App() {
   const reduced = useReducedMotion()
   const location = useLocation()
+  useEffect(() => { markHydrated() }, [])
   const normalizedPath = location.pathname !== "/" ? location.pathname.replace(/\/$/, "") : "/"
   if (!knownRoutes.includes(normalizedPath)) return <NotFoundPage />
   const content = (
@@ -43,6 +44,9 @@ export function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/web" element={<DisciplinePage key="web" id="web" />} />
+          <Route path="/motion" element={<DisciplinePage key="motion" id="motion" />} />
+          <Route path="/ux" element={<DisciplinePage key="ux" id="ux" />} />
           <Route path="/stack" element={<StackPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/projects/:slug" element={<ProjectRoute />} />

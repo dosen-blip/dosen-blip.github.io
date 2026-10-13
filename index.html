@@ -1,18 +1,30 @@
 <!doctype html>
-<html lang="en" data-direction="b">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="max-image-preview:large" />
-    <link rel="icon" href="/assets/favicon-light.png" media="(prefers-color-scheme: light)" />
-    <link rel="icon" href="/assets/favicon-dark.png" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f7f5ed" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0c0c0f" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/favicon-light.png" media="(prefers-color-scheme: light)" sizes="64x64" />
+    <link rel="icon" href="/assets/favicon-dark.png" media="(prefers-color-scheme: dark)" sizes="64x64" />
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+    <link rel="preload" href="/assets/brand/fonts/outfit-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/assets/inter-regular.woff2" as="font" type="font/woff2" crossorigin />
     <script>
-      // Local direction comparison: apply a stored direction before first paint (dev hosts only).
+      // Before first paint: the remembered theme, whether motion is welcome, and whether this is the first visit
+      // of the session (the home lockup draws itself once; later visits open straight onto the finished mark).
       try {
-        if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {
-          var d = new URLSearchParams(location.search).get("direction") || localStorage.getItem("md-direction")
-          if (/^[abd]$/.test(d)) document.documentElement.dataset.direction = d
+        var root = document.documentElement
+        var theme = localStorage.getItem("md-theme")
+        if (theme === "light" || theme === "dark") root.dataset.theme = theme
+        if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          root.dataset.motion = "ok"
+          if (!sessionStorage.getItem("md-intro")) {
+            root.dataset.intro = "1"
+            sessionStorage.setItem("md-intro", "1")
+          }
         }
       } catch (e) {}
     </script>

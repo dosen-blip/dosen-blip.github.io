@@ -21,10 +21,10 @@ export function Reveal({ children, className = "", delay = 0, as = "div" }) {
     <Component
       key={mounted ? "motion" : "static"}
       className={className}
-      initial={!mounted || reduced ? false : { opacity: 0, y: 48 }}
+      initial={!mounted || reduced ? false : { opacity: 0, y: 28 }}
       whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.08 }}
-      transition={{ type: "spring", stiffness: 200, damping: 60, delay }}
+      transition={{ type: "spring", stiffness: 220, damping: 50, delay }}
     >
       {children}
     </Component>

@@ -13,7 +13,7 @@ describe("Frequency Shift project page", () => {
   it("uses one scoped cinematic motion language without the old view-timeline layer", () => {
     const component = fs.readFileSync(path.join(process.cwd(), "src/components/FrequencyShiftDetail.jsx"), "utf8")
     const styles = fs.readFileSync(path.join(process.cwd(), "src/styles/frequency-shift.css"), "utf8")
-    const cardStyles = fs.readFileSync(path.join(process.cwd(), "src/styles/layout-v2.css"), "utf8")
+    const cardStyles = fs.readFileSync(path.join(process.cwd(), "src/styles/project-card-fs.css"), "utf8")
     const wordmark = fs.readFileSync(path.join(process.cwd(), "public/assets/frequency-shift/mobile-fs-wordmark.svg"), "utf8")
 
     expect(component).not.toContain('from "./Reveal"')

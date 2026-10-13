@@ -1,57 +1,39 @@
 import { useEffect, useRef, useState } from "react"
-import { NavLink, Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
+import { useLenis } from "lenis/react"
 import { navItems } from "../data/routes"
-import { asset, socialLinks } from "../data/site"
-import { ArrowUpRightIcon, FacebookIcon, InstagramIcon, LinkedInIcon } from "./Icons"
-import { DirectionSwitcher } from "./DirectionSwitcher"
+import { DESCRIPTOR, DOSEN_URL, EMAIL, asset, socialLinks } from "../data/site"
+import { disciplineForPath, disciplines } from "../data/disciplines"
+import { projectDisciplines } from "../data/projectIndex"
+import { ArrowUpRightIcon, InstagramIcon, LinkedInIcon } from "./Icons"
+import { BrandBackdrop } from "./BrandBackdrop"
+import { BrandSprite, MDMark, Wordmark } from "./Wordmark"
+import { ThemeToggle } from "./ThemeToggle"
+import { StatusChip } from "./StatusChip"
 
-function NavIcon({ name }) {
-  if (name === "home") return <svg viewBox="0 0 24 24"><path d="m4 10 8-7 8 7v10h-6v-6h-4v6H4Z" /></svg>
-  if (name === "about") return <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 21c.8-5 3.3-7.5 7.5-7.5s6.7 2.5 7.5 7.5"/></svg>
-  if (name === "projects") return <svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="13" rx="1"/><path d="M9 7V4h6v3M9 10v10M15 10v10"/></svg>
-  if (name === "stack") return <svg viewBox="0 0 24 24"><path d="m3 9 9-6 9 6-9 6Z"/><path d="m3 13 9 6 9-6"/></svg>
-  return <svg viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5"/><path d="m4.5 7 7.5 5.5L19.5 7"/></svg>
+function isActive(item, pathname) {
+  return item.matches.some((path) => pathname === path || pathname.startsWith(`${path}/`))
 }
 
-function NavList({ onNavigate }) {
+function NavLinks({ pathname, onNavigate, className = "" }) {
   return (
-    <nav aria-label="Primary">
-      {navItems.map((item, index) => (
-        <NavLink key={item.to} to={item.to} end={item.to === "/"} onClick={onNavigate}>
-          <span className="nav-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-          <span className="nav-icon" aria-hidden="true"><NavIcon name={item.icon} /></span>
-          <span className="nav-label">{item.label}</span>
-        </NavLink>
-      ))}
+    <nav className={className} aria-label="Primary">
+      {navItems.map((item) => {
+        const active = isActive(item, pathname)
+        return (
+          <Link key={item.to} to={item.to} onClick={onNavigate} aria-current={active ? "page" : undefined} className={active ? "is-active" : undefined}>
+            {item.label}
+          </Link>
+        )
+      })}
     </nav>
   )
 }
 
-function Socials() {
-  const icons = {
-    Instagram: InstagramIcon,
-    LinkedIn: LinkedInIcon,
-  }
-  return (
-    <div className="socials" aria-label="Social links">
-      <a className="facebook" href="https://www.facebook.com/" target="_blank" rel="noreferrer" aria-label="Facebook"><FacebookIcon /></a>
-      {socialLinks.map((link) => {
-        const SocialIcon = icons[link.label]
-        return <a key={link.label} href={link.href} target="_blank" rel="noreferrer" aria-label={link.label}><SocialIcon /><span className="social-label">{link.label}</span></a>
-      })}
-    </div>
-  )
-}
-
+/** My music lives on its own site; this is the separate button that takes you there. */
 function DosenButton() {
   return (
-    <a
-      className="dosen-button"
-      href="https://dosen.ca"
-      target="_blank"
-      rel="noreferrer"
-      aria-label="Visit DOSEN"
-    >
+    <a className="dosen-button" href={DOSEN_URL} target="_blank" rel="noreferrer" aria-label="Visit DOSEN">
       <span className="dosen-icon-window" aria-hidden="true">
         <svg className="dosen-icon dosen-icon-disco" viewBox="0 0 24 24">
           <path d="M12 2v3M9.5 2h5M5 8l-1.5-1.5M19 8l1.5-1.5" />
@@ -69,17 +51,115 @@ function DosenButton() {
         <img className="dosen-wordmark dosen-wordmark-outline" src={asset("8w0l0Gui033mioUQjzI6JOUa6f4.png")} alt="" />
         <img className="dosen-wordmark dosen-wordmark-filled" src={asset("LRpJWtcLJyxTvUVMYNlxsHXRA.png")} alt="" />
       </span>
-      <span className="dosen-external-label" aria-hidden="true">
-        <span>External Studio</span>
-        <ArrowUpRightIcon />
-      </span>
+      <ArrowUpRightIcon className="dosen-arrow" />
     </a>
+  )
+}
+
+const socialIcons = { Instagram: InstagramIcon, LinkedIn: LinkedInIcon }
+
+function Socials({ className = "" }) {
+  return (
+    <div className={`socials ${className}`.trim()} aria-label="Social links">
+      {socialLinks.map((link) => {
+        const SocialIcon = socialIcons[link.label]
+        return (
+          <a key={link.label} href={link.href} target="_blank" rel="noreferrer" aria-label={link.label}>
+            <SocialIcon /><span className="social-label">{link.label}</span>
+          </a>
+        )
+      })}
+    </div>
+  )
+}
+
+/** The site closes the way my videos do: on an end card with the wordmark. It draws itself when it comes into view. */
+function EndCard() {
+  const ref = useRef(null)
+  const [drawn, setDrawn] = useState(false)
+  const lenis = useLenis()
+
+  useEffect(() => {
+    const node = ref.current
+    if (!node || typeof IntersectionObserver === "undefined") return undefined
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return
+      setDrawn(true)
+      observer.disconnect()
+    }, { threshold: .5 })
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
+
+  function backToTop(event) {
+    event.preventDefault()
+    if (lenis) lenis.scrollTo(0)
+    else window.scrollTo({ top: 0 })
+  }
+
+  return (
+    <footer className="site-footer">
+      <div className="page">
+        <div className="end-card">
+          <div className="end-card-lockup" ref={ref}>
+            <Link to="/" aria-label="Matia Dosen, home" className="end-card-name">
+              <Wordmark key={drawn ? "drawn" : "rest"} splash={drawn ? "motion" : null} />
+            </Link>
+            <p className="descriptor">{DESCRIPTOR}.</p>
+          </div>
+
+          <div className="end-card-cta">
+            <StatusChip tone="stage" />
+            <p>Taking on design, video and web work. Tell me what you’re making and when you need it.</p>
+            <a className="end-card-email" href={`mailto:${EMAIL}`}>
+              <span>{EMAIL}</span><ArrowUpRightIcon />
+            </a>
+          </div>
+
+          <nav className="end-card-links" aria-label="Footer">
+            <div>
+              <h2>Work</h2>
+              <ul>
+                {disciplines.map((discipline) => <li key={discipline.id}><Link to={discipline.path}>{discipline.title}</Link></li>)}
+                <li><Link to="/projects">All work</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h2>Me</h2>
+              <ul>
+                <li><Link to="/about">About</Link></li>
+                <li><Link to="/stack">Tools</Link></li>
+                <li><Link to="/contact">Contact</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h2>Elsewhere</h2>
+              <ul>
+                {socialLinks.map((link) => <li key={link.label}><a href={link.href} target="_blank" rel="noreferrer">{link.label}<ArrowUpRightIcon /></a></li>)}
+                <li><a href={DOSEN_URL} target="_blank" rel="noreferrer">DOSEN, my music<ArrowUpRightIcon /></a></li>
+              </ul>
+            </div>
+          </nav>
+
+          <div className="end-card-base">
+            <MDMark label="Matia Dosen" />
+            <span>Matia Dosen, 2026. Designed and built in Ottawa, Canada.</span>
+            <a href="#top" className="end-card-top" onClick={backToTop}>Back to top</a>
+          </div>
+        </div>
+      </div>
+    </footer>
   )
 }
 
 export function SiteShell({ children }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const buttonRef = useRef(null)
+  const { pathname } = useLocation()
+  const discipline = disciplineForPath(pathname, projectDisciplines)
+  const isHome = pathname === "/"
+  // The Frequency Shift case study is a dark page; the header reverses to match it.
+  const night = pathname === "/projects/frequency-shift"
 
   useEffect(() => {
     document.documentElement.classList.toggle("menu-open", menuOpen)
@@ -97,52 +177,61 @@ export function SiteShell({ children }) {
     }
   }, [menuOpen])
 
+  const closeMenu = () => setMenuOpen(false)
+
   return (
     <>
-      <aside className="sidebar">
-        <div className="sidebar-edition" aria-hidden="true">
-          <span>Ottawa, Canada</span>
-          <span>Since 2019</span>
-        </div>
-        <div className="profile-lockup">
-          <Link to="/" className="avatar-link" aria-label="Matia Dosen, home"><img src={asset("avatar.png")} alt="Matia Dosen" /></Link>
-          <div><strong>Matia Dosen</strong><span>Designer &amp; video editor</span></div>
-        </div>
-        <NavList />
-        <div className="sidebar-bottom">
-          <div className="sidebar-status"><span aria-hidden="true" />Available for selected work</div>
-          <DosenButton />
-          <Socials />
-        </div>
-      </aside>
+      <a className="skip-link" href="#main-content">Skip to content</a>
+      <BrandSprite />
+      <BrandBackdrop discipline={discipline} />
 
-      <header className="mobile-header">
-        <div className="profile-lockup">
-          <Link to="/" className="avatar-link" aria-label="Matia Dosen, home"><img src={asset("avatar.png")} alt="Matia Dosen" /></Link>
-          <div><strong>Matia Dosen</strong><span>Designer &amp; video editor</span></div>
+      <header className={`site-header${menuOpen ? " is-menu-open" : ""}${night ? " is-night" : ""}`} id="top">
+        <div className="page site-header-inner">
+          <Link to="/" className="header-logo" aria-label="Matia Dosen, home" onClick={closeMenu}>
+            <Wordmark key={pathname} splash={isHome ? null : discipline} />
+          </Link>
+          <NavLinks pathname={pathname} className="header-nav" />
+          <div className="header-actions">
+            <DosenButton />
+            <ThemeToggle />
+          </div>
+          <button
+            ref={buttonRef}
+            className="menu-button"
+            type="button"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <span className="sr-only">{menuOpen ? "Close menu" : "Open menu"}</span>
+            <span aria-hidden="true" /><span aria-hidden="true" />
+          </button>
         </div>
-        <button ref={buttonRef} className="menu-button" type="button" aria-expanded={menuOpen} aria-controls="mobile-menu" onClick={() => setMenuOpen((open) => !open)}>
-          <span className="sr-only">{menuOpen ? "Close menu" : "Open menu"}</span>
-          <span /><span />
-        </button>
       </header>
-      <div id="mobile-menu" className={`mobile-menu ${menuOpen ? "is-open" : ""}`} aria-hidden={!menuOpen}>
-        <NavList onNavigate={() => setMenuOpen(false)} />
-        <div className="mobile-menu-bottom">
-          <div className="sidebar-status"><span aria-hidden="true" />Available for selected work</div>
-          <DosenButton />
-          <Socials />
+
+      <div id="mobile-menu" className={`mobile-menu${menuOpen ? " is-open" : ""}`} aria-hidden={!menuOpen} inert={!menuOpen}>
+        <div className="page mobile-menu-inner">
+          <NavLinks pathname={pathname} onNavigate={closeMenu} className="mobile-nav" />
+          <div className="mobile-disciplines" aria-label="Work by discipline">
+            {disciplines.map((item) => (
+              <Link key={item.id} to={item.path} onClick={closeMenu} aria-current={discipline === item.id && pathname === item.path ? "page" : undefined}>
+                <span className="path">{item.path}</span>{item.label}
+              </Link>
+            ))}
+          </div>
+          <div className="mobile-menu-bottom">
+            <StatusChip />
+            <div className="mobile-menu-row">
+              <DosenButton />
+              <ThemeToggle />
+            </div>
+            <Socials />
+          </div>
         </div>
       </div>
-      <main id="main-content">{children}</main>
-      <footer className="site-footer">
-        <div>
-          <span>Matia Dosen, 2026</span>
-          <span>Design, film and sound from Ottawa</span>
-          <a href="mailto:matiadosen@outlook.com"><span>matiadosen@outlook.com</span><ArrowUpRightIcon /></a>
-        </div>
-      </footer>
-      {import.meta.env.DEV && <DirectionSwitcher />}
+
+      <main id="main-content" tabIndex={-1}>{children}</main>
+      <EndCard key={pathname} />
     </>
   )
 }

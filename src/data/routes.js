@@ -11,14 +11,14 @@ export const projectSlugs = [
   "toldya-tennis",
 ]
 
-export const staticRoutes = ["/", "/about", "/projects", "/stack", "/contact"]
+export const disciplineRoutes = ["/web", "/motion", "/ux"]
+export const staticRoutes = ["/", "/about", "/projects", "/stack", "/contact", ...disciplineRoutes]
 export const projectRoutes = projectSlugs.map((slug) => `/projects/${slug}`)
 export const knownRoutes = [...staticRoutes, ...projectRoutes]
 
+// The header carries the three pages from the brand sheet; Work also covers /web, /motion and /ux.
 export const navItems = [
-  { to: "/", label: "Home", icon: "home" },
-  { to: "/about", label: "About", icon: "about" },
-  { to: "/projects", label: "Projects", icon: "projects" },
-  { to: "/stack", label: "Stack", icon: "stack" },
-  { to: "/contact", label: "Contact", icon: "contact" },
+  { to: "/projects", label: "Work", matches: ["/projects", ...disciplineRoutes] },
+  { to: "/about", label: "About", matches: ["/about", "/stack"] },
+  { to: "/contact", label: "Contact", matches: ["/contact"] },
 ]

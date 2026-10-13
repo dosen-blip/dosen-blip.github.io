@@ -18,7 +18,7 @@ describe("contact page", () => {
     render(<ContactPage />)
 
     expect(screen.getByRole("heading", { level: 1, name: "Contact" })).toBeInTheDocument()
-    expect(screen.getByText("Available for Work")).toBeInTheDocument()
+    expect(screen.getByText("Available for work")).toBeInTheDocument()
     expect(screen.getByText("matiadosen@outlook.com").closest("a")).toBeNull()
     expect(screen.getByLabelText("Name")).toHaveAttribute("name", "Name")
     expect(screen.getByLabelText("Email")).toHaveAttribute("type", "email")

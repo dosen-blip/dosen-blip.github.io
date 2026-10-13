@@ -1,18 +1,11 @@
 import { useState } from "react"
+import { StatusChip } from "../components/StatusChip"
 import "../styles/contact.css"
 
 const successMessage = "Thanks—your message has been sent."
 const failureMessage = "Message could not be sent. Please try again or email matiadosen@outlook.com."
 const defaultEndpoint = "https://formsubmit.co/ajax/matiadosen@outlook.com"
 
-function Availability() {
-  return (
-    <div className="contact-availability">
-      <span aria-hidden="true" />
-      Available for Work
-    </div>
-  )
-}
 
 function EnvelopeIcon() {
   return (
@@ -46,7 +39,7 @@ function ContactDetails() {
   return (
     <div className="contact-details">
       <section className="contact-detail-group" aria-labelledby="contact-email-heading">
-        <h3 id="contact-email-heading">Contact</h3>
+        <h2 id="contact-email-heading">Email me</h2>
         <div className="contact-detail-row">
           <EnvelopeIcon />
           <span>matiadosen@outlook.com</span>
@@ -54,7 +47,7 @@ function ContactDetails() {
       </section>
 
       <section className="contact-detail-group" aria-labelledby="contact-social-heading">
-        <h3 id="contact-social-heading">Social</h3>
+        <h2 id="contact-social-heading">Social</h2>
         <div className="contact-social-list">
           <a className="contact-detail-row" href="https://www.instagram.com/matia_dosen/" target="_blank" rel="noreferrer">
             <InstagramIcon />
@@ -105,20 +98,20 @@ function ContactForm() {
 
   return (
     <section className="contact-form-section" aria-labelledby="contact-form-heading">
-      <h3 id="contact-form-heading">Get in Touch</h3>
+      <h2 id="contact-form-heading">Get in touch</h2>
       <form className="contact-form" onSubmit={handleSubmit}>
         <div className="contact-form-row">
           <label>
-            <span className="sr-only">Name</span>
-            <input type="text" name="Name" placeholder="Name" required />
+            <span className="field-label">Name</span>
+            <input type="text" name="Name" placeholder="Your name" autoComplete="name" required />
           </label>
           <label>
-            <span className="sr-only">Email</span>
-            <input type="email" name="Email" placeholder="Email" required />
+            <span className="field-label">Email</span>
+            <input type="email" name="Email" placeholder="you@studio.com" autoComplete="email" required />
           </label>
         </div>
         <label className="contact-message-field">
-          <span className="sr-only">Message</span>
+          <span className="field-label">Message</span>
           <textarea name="Message" placeholder="Write a message..." required />
         </label>
         <input type="hidden" name="_subject" value="New portfolio contact" />
@@ -139,12 +132,12 @@ function ContactForm() {
 
 export default function ContactPage() {
   return (
-    <div className="contact-page">
+    <div className="page contact">
       <section className="contact-content" aria-labelledby="contact-heading">
-        <Availability />
         <div className="contact-intro">
-          <h1 id="contact-heading">Contact</h1>
-          <p>I’m taking on design, video and web work. Send a note with what you’re making and when you need it.</p>
+          <StatusChip />
+          <h1 id="contact-heading" className="page-title">Contact</h1>
+          <p className="lede">I’m taking on design, video and web work. Send a note with what you’re making and when you need it.</p>
         </div>
         <div className="contact-main-grid">
           <ContactForm />

@@ -310,7 +310,7 @@ export function FrequencyShiftDetail({ project }) {
         />
         <div className="fs-hero-shade" aria-hidden="true" />
         <div className="fs-hero-topline">
-          <Link className="fs-back-link" to="/projects"><ArrowLeftIcon /><span>Back to Projects</span></Link>
+          <Link className="fs-back-link" to="/projects"><ArrowLeftIcon /><span>Back to Work</span></Link>
           <div className="fs-hero-links">
             <ExternalSource href={project.liveUrl}>Site</ExternalSource>
             <ExternalSource href={project.instagramUrl}>Instagram</ExternalSource>
@@ -448,7 +448,7 @@ export function FrequencyShiftDetail({ project }) {
             </Link>
           ))}
         </div>
-        <ArrowLink className="fs-cta fs-related-all" to="/projects">View all projects</ArrowLink>
+        <ArrowLink className="fs-cta fs-related-all" to="/projects">All work</ArrowLink>
       </CinematicReveal>
     </article>
   )

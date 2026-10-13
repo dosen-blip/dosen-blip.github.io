@@ -1,0 +1,178 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 16px);
+}
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--bg);
+  color: var(--body);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: 1.6;
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  transition: background-color var(--mid) ease, color var(--mid) ease;
+}
+
+html.menu-open { overflow: hidden; }
+
+img, video, svg { display: block; max-width: 100%; }
+img, video { height: auto; }
+a { color: inherit; text-decoration: none; }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+p, h1, h2, h3, h4, h5, h6, figure, dl, dd, ul, ol { margin: 0; }
+ul, ol { padding: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -.02em;
+  text-wrap: balance;
+}
+
+p { text-wrap: pretty; }
+
+::selection { background: var(--accent); color: var(--on-accent); }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  top: 12px;
+  left: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--ink);
+  color: var(--bg);
+  font-weight: 500;
+  transform: translateY(-160%);
+  transition: transform var(--fast) ease;
+}
+.skip-link:focus-visible { transform: none; }
+
+/* Page frame */
+#main-content {
+  position: relative;
+  z-index: 1;
+  min-height: calc(100svh - var(--header-h));
+}
+
+.page {
+  width: min(100% - var(--gutter) * 2, var(--page-max));
+  margin-inline: auto;
+}
+
+.section { padding-block: var(--section) 0; }
+.section:first-child { padding-top: clamp(48px, 7vw, 104px); }
+
+/* Labels and headings shared across pages */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--soft);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.3;
+}
+.eyebrow code, .path {
+  font-family: var(--font-mono);
+  font-size: .86em;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.section-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 16px 32px;
+  margin-bottom: clamp(28px, 4vw, 48px);
+}
+.section-head h2 { font-size: var(--title-md); }
+.section-head p { max-width: 36rem; margin-top: 14px; }
+.section-head > a { margin-bottom: 4px; }
+
+.page-title {
+  font-size: var(--title-lg);
+  font-weight: 600;
+  letter-spacing: -.035em;
+  line-height: .98;
+}
+
+.lede {
+  max-width: 40rem;
+  color: var(--body);
+  font-size: var(--text-lg);
+  line-height: 1.55;
+}
+
+.descriptor {
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -.01em;
+  line-height: 1.15;
+}
+
+/* Reading text inside project records */
+.prose { color: var(--body); }
+.prose > * + * { margin-top: 1em; }
+.prose h2, .prose h3, .prose h4, .prose h5 { margin-top: 2em; line-height: 1.2; letter-spacing: -.01em; }
+.prose > :first-child { margin-top: 0; }
+.prose h2 { font-size: var(--title-sm); }
+.prose h3 { font-size: 1.375rem; }
+.prose h4 { font-size: 1.25rem; }
+.prose h5 { font-size: 1.0625rem; font-weight: 500; }
+.prose h4 strong, .prose h5 strong { font-weight: inherit; }
+.prose strong { color: var(--ink); font-weight: 500; }
+.prose ul { display: grid; gap: .5em; padding-left: 1.2em; }
+.prose li::marker { color: var(--accent); }
+.prose a { color: var(--accent-strong); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
+.prose a:hover { text-decoration-thickness: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (max-width: 809.98px) {
+  .section-head { grid-template-columns: 1fr; }
+}

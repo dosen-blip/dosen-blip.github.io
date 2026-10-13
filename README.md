@@ -1,6 +1,8 @@
 # Matia Dosen Portfolio Clone
 
-Standalone React + Vite implementation of the published `https://matiadosen.com` portfolio. The source of truth is the frozen production capture in `references/`; unpublished Framer editor changes and excluded draft routes are not included.
+Standalone React + Vite implementation of the `https://matiadosen.com` portfolio, rebuilt on the October 2026 final brand: the matia dosen wordmark, beige and near-black with a blue accent, Outfit and Inter, a dot-grid backdrop, and one page per discipline (`/web`, `/motion`, `/ux`) that each opens on its own reveal of the mark. See [`docs/brand-system.md`](docs/brand-system.md).
+
+The frozen production capture in `references/` documents the earlier published site and is no longer the visual source of truth.
 
 ## AI/model handoff
 

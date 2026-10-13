@@ -174,14 +174,12 @@ function StackGroup({ group }) {
 
 export default function StackPage() {
   return (
-    <section className="page-wrap stack-page" aria-labelledby="stack-heading">
+    <section className="page stack-page" aria-labelledby="stack-heading">
       <div className="stack-content">
         <header className="stack-hero">
-          <p className="stack-hero-kicker">Tools</p>
-          <h1 id="stack-heading">What I work in</h1>
-          <div className="stack-hero-summary">
-            <p>The software behind the projects: design and print tools first, then music and 3D, then the AI tools I use for development and research.</p>
-          </div>
+          <p className="eyebrow">Tools</p>
+          <h1 id="stack-heading" className="page-title">What I work in</h1>
+          <p className="lede">The software behind the projects: design and print tools first, then music and 3D, then the AI tools I use for development and research.</p>
         </header>
 
         <div className="stack-groups">
