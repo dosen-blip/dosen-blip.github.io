@@ -31,11 +31,12 @@
 .work-filter a[aria-current="page"] { border-color: var(--ink); background: var(--ink); color: var(--bg); }
 .work-filter a[aria-current="page"] span { color: inherit; opacity: .7; }
 
+
 .work-note {
-  max-width: 36rem;
+  max-width: 40rem;
   margin-top: clamp(48px, 6vw, 80px);
   padding-top: 20px;
   border-top: 1px solid var(--line);
-  color: var(--soft);
+  color: var(--body);
   font-size: var(--text-sm);
 }

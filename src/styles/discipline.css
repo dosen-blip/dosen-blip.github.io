@@ -29,15 +29,6 @@
   align-self: end;
 }
 
-.reveal-note {
-  padding: 14px 16px;
-  border: 1px dashed var(--line-strong);
-  border-radius: var(--radius-sm);
-  color: var(--body);
-  font-size: var(--text-sm);
-}
-.reveal-note strong { color: var(--ink); font-weight: 500; }
-.reveal-note code { margin: 0 6px; color: var(--accent-strong); font-family: var(--font-mono); font-size: .9em; }
 
 /* Motion: selected films in black frames */
 .film-grid {
@@ -54,8 +45,7 @@
 
 /* Web: live sites as address bars */
 .live-list { display: grid; gap: 12px; list-style: none; }
-.live-list a,
-.live-list-self > div {
+.live-list a {
   display: grid;
   grid-template-columns: minmax(12rem, 18rem) minmax(0, 1fr) auto;
   align-items: center;
@@ -68,10 +58,16 @@
 }
 .live-list code { color: var(--ink); font-family: var(--font-mono); font-size: 1rem; font-weight: 500; }
 .live-list span { color: var(--body); }
+.discipline-fit {
+  padding: 14px 16px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+}
+.discipline-fit strong { margin-right: 6px; color: var(--ink); font-weight: 500; }
 .live-list .ui-icon { width: 20px; height: 20px; color: var(--accent-strong); transition: transform var(--mid) var(--ease-out); }
 .live-list a:hover { border-color: var(--accent); transform: translateX(4px); }
 .live-list a:hover .ui-icon { transform: translate(2px, -2px); }
-.live-list-self > div { grid-template-columns: minmax(12rem, 18rem) minmax(0, 1fr); border-style: dashed; background: transparent; }
 
 /* UX: the process as interface pieces */
 .ux-steps {
@@ -143,7 +139,7 @@
   .discipline-hero-aside { grid-column: 1; grid-row: auto; }
   .film-grid { grid-template-columns: 1fr; }
   .film:first-child { grid-column: auto; }
-  .live-list a, .live-list-self > div { grid-template-columns: 1fr auto; border-radius: var(--radius); }
+  .live-list a { grid-template-columns: 1fr auto; border-radius: var(--radius); }
   .live-list span { grid-column: 1 / -1; grid-row: 2; }
   .ux-steps { grid-template-columns: 1fr; }
   .discipline-next { grid-template-columns: 1fr; }

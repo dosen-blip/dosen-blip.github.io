@@ -5,8 +5,6 @@ import { disciplines } from "../data/disciplines"
 import { projectIndex, projectsFor } from "../data/projectIndex"
 import "../styles/work.css"
 
-const otherWork = projectIndex.filter((project) => project.disciplines.length === 0)
-
 export default function ProjectsPage() {
   return (
     <section className="page work" aria-labelledby="projects-heading">
@@ -28,11 +26,9 @@ export default function ProjectsPage() {
         {projectIndex.map((project) => <ProjectCard key={project.slug} project={project} headingLevel={2} />)}
       </Reveal>
 
-      {otherWork.length > 0 && (
-        <p className="work-note">
-          Print and books, like {otherWork.map((project) => project.title).join(" and ")}, sit outside the three disciplines but use the same eye for type.
-        </p>
-      )}
+      <p className="work-note">
+        Print sits alongside the three. I typeset all seven volumes of the Novak Books series and laid out the Sol de Fuego menu in InDesign, and the same eye for type runs through the screen work.
+      </p>
     </section>
   )
 }

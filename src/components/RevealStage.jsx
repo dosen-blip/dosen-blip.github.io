@@ -91,7 +91,7 @@ export function RevealStage({ discipline, trigger = "view", priority = false, cl
         >
           <source src={`${src}.mp4`} type="video/mp4" />
         </video>
-        <span className="sr-only">{`The matia dosen wordmark, ${discipline.reveal.toLowerCase()} reveal: ${discipline.revealNote}`}</span>
+        <span className="sr-only">matia dosen</span>
       </div>
     </figure>
   )

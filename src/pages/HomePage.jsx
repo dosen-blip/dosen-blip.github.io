@@ -42,9 +42,9 @@ export default function HomePage() {
         <div className="section-head">
           <div>
             <p className="eyebrow">Three things I do</p>
-            <h2 id="disciplines-heading">Each one opens with its own reveal.</h2>
+            <h2 id="disciplines-heading">Design it, build it, make it move.</h2>
           </div>
-          <p>Every part of the site starts with my name, drawn the way that kind of work gets made. Each plays as it comes into view; point at one to replay it.</p>
+          <p>Most projects need more than one of these. I can take a launch from the first interface sketch to the live site and the video that announces it.</p>
         </div>
         <ul className="discipline-grid">
           {disciplines.map((discipline) => (
@@ -53,7 +53,7 @@ export default function HomePage() {
                 <RevealStage discipline={discipline} trigger="hover" />
                 <div className="discipline-card-copy">
                   <h3>{discipline.title}</h3>
-                  <p className="discipline-meta">{discipline.reveal} <span aria-hidden="true">·</span> <code>{discipline.path}</code></p>
+                  <p className="discipline-meta">{discipline.craft}</p>
                   <p>{discipline.intro}</p>
                   <span className="discipline-count">
                     {projectsFor(discipline.id).length} projects

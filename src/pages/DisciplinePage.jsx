@@ -17,6 +17,7 @@ const liveSites = [
   { href: "https://frequencyshift.ca/", label: "frequencyshift.ca", note: "Frequency Shift. I direct the identity and build and run the site for every night in the series." },
   { href: "https://2024tennis.com/", label: "2024tennis.com", note: "Chasing Greatness. A Shopify store for Hinton Publishing’s tennis history series." },
   { href: "https://dosen.ca", label: "dosen.ca", note: "DOSEN. The press kit site for my music, kept separate from this one." },
+  { href: "/", label: "matiadosen.com", note: "This portfolio. I designed the brand and built the site myself.", internal: true },
 ]
 
 const uxSteps = [
@@ -60,19 +61,21 @@ function WebExtra() {
       <ul className="live-list">
         {liveSites.map((site) => (
           <li key={site.href}>
-            <a href={site.href} target="_blank" rel="noreferrer">
-              <code>{site.label}</code>
-              <span>{site.note}</span>
-              <ArrowUpRightIcon />
-            </a>
+            {site.internal ? (
+              <Link to={site.href}>
+                <code>{site.label}</code>
+                <span>{site.note}</span>
+                <ArrowUpRightIcon />
+              </Link>
+            ) : (
+              <a href={site.href} target="_blank" rel="noreferrer">
+                <code>{site.label}</code>
+                <span>{site.note}</span>
+                <ArrowUpRightIcon />
+              </a>
+            )}
           </li>
         ))}
-        <li className="live-list-self">
-          <div>
-            <code>matiadosen.com</code>
-            <span>This site. Built in React and Vite, with Motion and Lenis. The reveals are After Effects renders; the splash on the header wordmark is code.</span>
-          </div>
-        </li>
       </ul>
     </Reveal>
   )
@@ -119,7 +122,7 @@ export default function DisciplinePage({ id }) {
           <p className="lede">{discipline.intro}</p>
           <div className="discipline-hero-aside">
             <p>{discipline.summary}</p>
-            <p className="reveal-note"><strong>{discipline.reveal}</strong> <code>{discipline.path}</code> {discipline.revealNote}</p>
+            <p className="discipline-fit"><strong>Good fit for</strong> {discipline.fit}</p>
           </div>
         </div>
       </section>
