@@ -273,7 +273,7 @@
     gap: 28px;
     min-height: calc(100svh - var(--header-h));
     align-content: center;
-    padding-block: 32px 96px;
+    padding-block: 32px 150px;
   }
   .home-hero { position: relative; }
   .home-hero-top { display: none; }
@@ -295,7 +295,8 @@
   .home-scroll-cue {
     position: absolute;
     display: inline-flex;
-    bottom: 28px;
+    /* Lifted clear of the translucent bottom toolbars phone browsers lay over the page. */
+    bottom: calc(92px + env(safe-area-inset-bottom, 0px));
     left: 50%;
     display: inline-flex;
     align-items: center;
@@ -309,7 +310,7 @@
       drop-shadow(0 0 4px rgb(var(--neon-rgb) / calc(var(--neon-on) * .9)))
       drop-shadow(0 0 18px rgb(var(--neon-rgb) / calc(var(--neon-on) * .75)));
     translate: -50% 0;
-    animation: hero-rise .8s var(--ease-out) 1.8s both;
+    animation: hero-rise .8s var(--ease-out) 2.4s both;
   }
   .home-scroll-cue .ui-icon {
     width: 18px;
@@ -319,7 +320,7 @@
     stroke-width: 1.6;
     stroke-linecap: round;
     stroke-linejoin: round;
-    animation: scroll-cue-bob 1.8s ease-in-out 2.6s infinite;
+    animation: scroll-cue-bob 1.8s ease-in-out 3.2s infinite;
   }
   .home-disciplines { padding-top: 56px; }
   .selection-frame { display: none; }

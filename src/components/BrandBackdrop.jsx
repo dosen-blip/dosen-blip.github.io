@@ -42,7 +42,7 @@ function buildIcons(width, discipline) {
     const tileRow = row % ROWS_PER_TILE
     for (let column = 0; column < columns; column += 1) {
       // Phones get a few more tools than desktop: smaller, and with no pointer they are lit by sparks alone.
-      if (hash(column, tileRow) > (width < PHONE ? .62 : .5)) continue
+      if (hash(column, tileRow) > (width < PHONE ? .88 : .5)) continue
       const pick = hash(column, tileRow, 7)
       const name = own && pick < .72
         ? own[Math.floor(hash(column, tileRow, 3) * own.length)]
