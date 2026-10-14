@@ -36,6 +36,13 @@ export function RevealStage({ discipline, trigger = "view", priority = false, cl
     video.addEventListener("playing", onPlaying)
     video.addEventListener("ended", onEnded)
 
+    // Fetch the video only as the stage nears the screen, then play it once it is mostly in view.
+    const loader = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return
+      loader.disconnect()
+      video.preload = "auto"
+    }, { rootMargin: "600px 0px" })
+    loader.observe(stage)
     const observer = new IntersectionObserver(([entry]) => {
       if (!entry.isIntersecting) return
       observer.disconnect()
@@ -51,6 +58,7 @@ export function RevealStage({ discipline, trigger = "view", priority = false, cl
     stage.replay = play
 
     return () => {
+      loader.disconnect()
       observer.disconnect()
       video.removeEventListener("playing", onPlaying)
       video.removeEventListener("ended", onEnded)
@@ -85,7 +93,7 @@ export function RevealStage({ discipline, trigger = "view", priority = false, cl
           className="stage-video"
           muted
           playsInline
-          preload={priority ? "auto" : "metadata"}
+          preload={priority ? "auto" : "none"}
           aria-hidden="true"
           tabIndex={-1}
         >

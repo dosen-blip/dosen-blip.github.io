@@ -83,7 +83,7 @@
   stroke-dasharray: var(--len) 1000;
   animation: hero-draw .72s var(--ease) var(--delay) both, neon-strike .4s linear var(--delay) both;
 }
-:is(html[data-intro] .hero-lockup, .hero-lockup.is-playing) .hero-pen { animation: neon-hum 1.1s linear infinite, hero-fade-out .5s ease 1.5s forwards; }
+:is(html[data-intro] .hero-lockup, .hero-lockup.is-playing) .hero-pen { animation: neon-hum 1.1s linear 2, hero-fade-out .5s ease 1.5s forwards; }
 :is(html[data-intro] .hero-lockup, .hero-lockup.is-playing) .hero-anchors rect { animation: hero-anchor .28s var(--ease-out) var(--delay) both; }
 :is(html[data-intro] .hero-lockup, .hero-lockup.is-playing) .hero-anchors { animation: hero-fade-out .45s ease 1.55s forwards; }
 :is(html[data-intro] .hero-lockup, .hero-lockup.is-playing) .hero-fill { animation: hero-ink .6s ease 1.15s both; }

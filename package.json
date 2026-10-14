@@ -19,7 +19,6 @@
   "dependencies": {
     "@vitejs/plugin-react": "latest",
     "lenis": "latest",
-    "motion": "latest",
     "react": "latest",
     "react-dom": "latest",
     "react-router-dom": "latest"

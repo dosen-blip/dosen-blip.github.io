@@ -13,7 +13,7 @@ const NEAR = 220
 const PHONE = 810
 const TOUCH = .62 // how near (0 to 1) the pointer must be before a tool starts tinting the cursor
 const SPARK_EVERY = 900 // ms between icons lighting up blue
-const SPARK_EVERY_PHONE = 420 // phones have no hover glow, so they spark more often
+const SPARK_EVERY_PHONE = 600 // phones have no hover glow, so they spark more often
 
 // Small deterministic hash so the scatter is stable between renders and resizes.
 function hash(a, b, salt = 0) {
@@ -91,26 +91,38 @@ export function BrandBackdrop({ discipline = null }) {
 
   useEffect(() => {
     const layer = layerRef.current
-    if (!layer || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined
+    const tools = iconsRef.current
+    if (!layer || !tools || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined
+    const dots = layer.querySelector(".backdrop-dots")
+    const items = [...tools.children].map((node) => ({
+      node, x: Number(node.dataset.x) + 32, y: Number(node.dataset.y) + 24, near: 0,
+    }))
+    const visible = new Set()
     let frame = 0
     let pointer = null
     let offset = 0
+    let lastOffset = null
+    let lit = 0
 
     const render = () => {
       frame = 0
       offset = (window.scrollY * PARALLAX) % PERIOD
-      layer.style.setProperty("--backdrop-y", `${-offset}px`)
-      const nodes = iconsRef.current?.children
-      if (!nodes) return
+      // Move the two layers directly: a custom property on their parent would restyle every tool on every scroll frame.
+      if (offset !== lastOffset) {
+        const shift = `translate3d(0, ${-offset}px, 0)`
+        dots.style.transform = shift
+        tools.style.transform = shift
+        lastOffset = offset
+      }
+      if (!pointer && !lit) return
       let nearest = 0
-      for (const node of nodes) {
-        const x = Number(node.dataset.x) + 32
-        const y = Number(node.dataset.y) + 24 - offset
+      lit = 0
+      for (const item of items) {
         let near = 0
         let push = [0, 0]
         if (pointer) {
-          const dx = x - pointer[0]
-          const dy = y - pointer[1]
+          const dx = item.x - pointer[0]
+          const dy = item.y - offset - pointer[1]
           const distance = Math.hypot(dx, dy)
           if (distance < NEAR) {
             near = 1 - distance / NEAR
@@ -118,10 +130,15 @@ export function BrandBackdrop({ discipline = null }) {
             push = [dx * force, dy * force]
           }
         }
+        // Only tools near the pointer (or just leaving it) are touched.
+        if (near === 0 && item.near === 0) continue
+        const { node } = item
         node.style.setProperty("--near", near.toFixed(3))
-        node.classList.toggle("is-lit", near > 0)
         node.style.setProperty("--push-x", `${push[0].toFixed(1)}px`)
         node.style.setProperty("--push-y", `${push[1].toFixed(1)}px`)
+        node.classList.toggle("is-lit", near > 0)
+        item.near = near
+        if (near > 0) lit += 1
         nearest = Math.max(nearest, near)
       }
       // The cursor dot turns blue once it is right on top of a lit tool.
@@ -135,10 +152,21 @@ export function BrandBackdrop({ discipline = null }) {
     }
     const onLeave = () => { pointer = null; schedule() }
 
+    // Tools off screen pause their idle motion, and only tools you can see are picked to spark.
+    const nodeItems = new Map(items.map((item) => [item.node, item]))
+    const watcher = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        entry.target.classList.toggle("is-off", !entry.isIntersecting)
+        if (entry.isIntersecting) visible.add(nodeItems.get(entry.target))
+        else visible.delete(nodeItems.get(entry.target))
+      }
+    })
+    items.forEach((item) => watcher.observe(item.node))
+
     const spark = window.setInterval(() => {
-      const nodes = iconsRef.current?.children
-      if (!nodes?.length || document.hidden) return
-      const node = nodes[Math.floor(Math.random() * nodes.length)]
+      if (!visible.size || document.hidden) return
+      const pool = [...visible]
+      const { node } = pool[Math.floor(Math.random() * pool.length)]
       node.classList.remove("is-spark")
       void node.offsetWidth
       node.classList.add("is-spark")
@@ -151,6 +179,7 @@ export function BrandBackdrop({ discipline = null }) {
     document.documentElement.addEventListener("pointerleave", onLeave)
     return () => {
       cancelAnimationFrame(frame)
+      watcher.disconnect()
       setCursorHeat("backdrop", 0)
       window.clearInterval(spark)
       window.removeEventListener("scroll", schedule)

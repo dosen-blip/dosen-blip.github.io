@@ -38,9 +38,9 @@ export function ProjectCard({ project, className = "", headingLevel = 3 }) {
                 decoding="async"
               />
               <span className="frequency-shift-card-logo" aria-hidden="true">
-                <img className="frequency-shift-card-logo-layer frequency-shift-card-logo-ambient" src={project.cover} alt="" />
-                <img className="frequency-shift-card-logo-layer frequency-shift-card-logo-bloom" src={project.cover} alt="" />
-                <img className="frequency-shift-card-logo-layer frequency-shift-card-logo-core" src={project.cover} alt="" />
+                <img className="frequency-shift-card-logo-layer frequency-shift-card-logo-ambient" src={project.cover} alt="" loading="lazy" decoding="async" />
+                <img className="frequency-shift-card-logo-layer frequency-shift-card-logo-bloom" src={project.cover} alt="" loading="lazy" decoding="async" />
+                <img className="frequency-shift-card-logo-layer frequency-shift-card-logo-core" src={project.cover} alt="" loading="lazy" decoding="async" />
               </span>
             </>
           ) : <img src={project.cover} alt="" loading="lazy" decoding="async" />}
