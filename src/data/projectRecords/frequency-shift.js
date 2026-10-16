@@ -89,7 +89,7 @@ const frequencyShift = {
       title: "Cut for the announcement and the afterimage.",
       paragraphs: [
         "I edit every promotional film for Frequency Shift. Announcement pieces make the date, lineup, venue, and ticket route legible in seconds; recap edits hold onto the texture of the room after the doors close.",
-        "The Techno Special film leads this selection, pairing the live energy of GRIDWRKS with a campaign edit built to move tickets. The standalone and Frequency Shift × Solstice pieces show the wider range: vertical-first promotion and cuts driven by the room itself.",
+        "The Techno Special film leads this selection, pairing the live energy of GRIDWRKS with a campaign edit built to move tickets. The standalone and Frequency Shift × Solstice pieces show the wider range: vertical-first promotion and cuts driven by the room itself. The This Friday promo closes the set—a short, last-call announcement cut to the beat of the room.",
       ],
       slots: [
         {
@@ -120,6 +120,17 @@ const frequencyShift = {
           src: "/assets/frequency-shift/video/frequency-shift-solstice-city-at-night-master.mov",
           poster: "/assets/frequency-shift/video/frequency-shift-live-recap-poster.jpg",
           fallbackUrl: "https://frequencyshift.ca/archive/solstice/",
+        },
+        {
+          number: "04",
+          title: "Frequency Shift: This Friday",
+          venue: "GRIDWRKS",
+          description: "Announcement promo / last call before doors",
+          src: "/assets/frequency-shift/video/frequency-shift-this-friday-promo.mp4",
+          poster: "/assets/frequency-shift/video/frequency-shift-this-friday-poster.jpg",
+          fallbackUrl: "https://frequencyshift.ca/events/",
+          featured: true,
+          aspectRatio: "16 / 9",
         },
       ],
     },

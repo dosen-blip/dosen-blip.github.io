@@ -46,8 +46,8 @@ describe("project records", () => {
         expect(project.content.hero.dek).toContain("directing the identity")
         expect(project.content.hero.meta.map((item) => item.label)).toEqual(["Role", "Platform", "Output", "Period"])
         expect(project.content.hero.meta.find((item) => item.label === "Output")?.value).toBe("Web Development / Video Editing")
-        expect(project.content.motion.slots).toHaveLength(3)
-        expect(project.content.motion.slots.filter((slot) => slot.src)).toHaveLength(3)
+        expect(project.content.motion.slots).toHaveLength(4)
+        expect(project.content.motion.slots.filter((slot) => slot.src)).toHaveLength(4)
         expect(project.content.motion.slots[0]).toMatchObject({
           title: "Frequency Shift: Techno Special",
           featured: true,

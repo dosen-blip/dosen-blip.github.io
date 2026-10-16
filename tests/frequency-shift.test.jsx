@@ -61,15 +61,16 @@ describe("Frequency Shift project page", () => {
       <MemoryRouter><FrequencyShiftDetail project={frequencyShift} /></MemoryRouter>,
     )
 
-    expect(container.querySelectorAll(".fs-motion-card")).toHaveLength(3)
+    expect(container.querySelectorAll(".fs-motion-card")).toHaveLength(4)
     expect(container.querySelector(".fs-motion-card")).toHaveClass("fs-motion-card-featured")
     expect(container.querySelectorAll(".fs-motion-card-pending")).toHaveLength(0)
     const videos = [...container.querySelectorAll("video")]
-    expect(videos).toHaveLength(3)
+    expect(videos).toHaveLength(4)
     expect(videos.map((video) => video.getAttribute("src"))).toEqual([
       "/assets/frequency-shift/video/frequency-shift-techno-special-master.mp4",
       "/assets/frequency-shift/video/frequency-shift-gridwrks-master.mov",
       "/assets/frequency-shift/video/frequency-shift-solstice-city-at-night-master.mov",
+      "/assets/frequency-shift/video/frequency-shift-this-friday-promo.mp4",
     ])
     for (const video of videos) {
       expect(video.controls).toBe(true)
