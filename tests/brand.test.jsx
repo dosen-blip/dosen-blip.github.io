@@ -70,14 +70,14 @@ describe("home page", () => {
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Matia Dosen")
     expect(container.querySelector(".hero-descriptor")).toHaveTextContent("Web, Motion & UX designer.")
 
-    const cards = [...container.querySelectorAll(".discipline-card")]
-    expect(cards.map((card) => card.getAttribute("href"))).toEqual(["/web", "/motion", "/ux"])
-    expect(cards.map((card) => card.querySelector("source").getAttribute("src"))).toEqual([
-      "/assets/brand/reveals/web-decode.mp4",
-      "/assets/brand/reveals/motion-pen-tool.mp4",
-      "/assets/brand/reveals/ux-responsive.mp4",
-    ])
-    for (const card of cards) expect(card.querySelector("button")).toBeNull()
+    // Each discipline is a glass folder of its projects; the lit link in its fan leads to its page. No video preview on the home page.
+    const folders = [...container.querySelectorAll(".discipline-folder")]
+    expect(folders.map((folder) => folder.querySelector(".gf-crown").getAttribute("href"))).toEqual(["/web", "/motion", "/ux"])
+    expect(folders.map((folder) => folder.querySelector(".gf-title").textContent)).toEqual(disciplines.map((discipline) => discipline.title))
+    expect(folders.map((folder) => [...folder.querySelectorAll(".gf-sheet")].map((sheet) => sheet.getAttribute("href")))).toEqual(
+      disciplines.map((discipline) => projectsFor(discipline.id).map((project) => `/projects/${project.slug}`).reverse()),
+    )
+    expect(container.querySelector(".home-disciplines video")).toBeNull()
   })
 })
 
@@ -111,7 +111,7 @@ describe("server markup", () => {
     expect(html).toContain('id="md-wordmark"')
     expect(html).toContain("hero-lockup")
     expect(html).not.toContain("is-playing")
-    expect(html).toContain("/assets/brand/reveals/web-decode-still.jpg")
+    expect(html).not.toContain("/assets/brand/reveals/")
     expect(html).not.toContain("opacity:0")
   })
 })

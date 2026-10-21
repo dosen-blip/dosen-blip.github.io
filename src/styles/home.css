@@ -150,61 +150,77 @@
 
 .home-disciplines { padding-top: clamp(64px, 7vw, 112px); }
 
+/* Three glass folders on the desk, each with its copy beneath. The folder scales to its column (see useFolderWidth). */
 .discipline-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(16px, 2vw, 28px);
+  gap: clamp(32px, 4vw, 56px) clamp(16px, 2vw, 28px);
   list-style: none;
 }
-.discipline-grid > li { display: flex; }
-
-.discipline-card {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  width: 100%;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  color: var(--ink);
-  transition: transform var(--mid) var(--ease-out), border-color var(--fast) ease, box-shadow var(--mid) ease;
-}
-.discipline-card .stage { border: 0; border-bottom: 1px solid var(--line); border-radius: 0; }
-.discipline-card:hover {
-  border-color: var(--line-strong);
-  box-shadow: 0 18px 48px -28px rgb(23 25 22 / .35);
-  transform: translateY(-3px);
-}
-
-.discipline-card-copy {
+.discipline-folder {
   display: grid;
   align-content: start;
-  gap: 10px;
-  padding: clamp(20px, 2vw, 28px);
+  gap: 16px;
+  min-width: 0;
 }
-.discipline-card-copy h3 { font-size: var(--title-sm); }
-.discipline-meta { color: var(--soft); font-size: var(--text-sm); }
-.discipline-meta code { color: var(--accent-strong); font-family: var(--font-mono); font-size: .9em; }
-.discipline-card-copy > p:not(.discipline-meta) { color: var(--body); }
-.discipline-count {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 8px;
-  font-size: var(--text-sm);
-  font-weight: 500;
+.discipline-folder-stage {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
 }
-.discipline-count svg {
-  width: 18px;
-  height: 18px;
-  fill: none;
-  stroke: var(--accent-strong);
-  stroke-width: 1.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transition: transform var(--mid) var(--ease-out);
+/* The folder's open state rises above its own box; keep the row from clipping it. */
+.discipline-folder .gf-root { z-index: 1; }
+.discipline-folder:has(.gf-root[data-open]) { z-index: 2; }
+
+/* The Frequency Shift sheet: its project-card treatment at sheet scale (272 × 184 stage units). */
+.fs-sheet {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  background: #020102;
 }
-.discipline-card:hover .discipline-count svg { transform: translateX(4px); }
+.fs-sheet-backdrop {
+  position: absolute;
+  inset: -4%;
+  width: 108%;
+  height: 108%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 48%;
+  filter: blur(3px) brightness(.68) saturate(1.02) contrast(1.04);
+  transform: scale(1.025);
+  transition: filter 620ms ease, transform 900ms var(--ease);
+}
+/* The mark sits high on the sheet so its glow reaches the strip that shows while the sheet is in the stack. */
+.fs-sheet-logo {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: start center;
+  padding-top: 30px;
+}
+.fs-sheet-logo-layer {
+  grid-area: 1 / 1;
+  width: 40%;
+  height: auto;
+  aspect-ratio: 1;
+  max-width: none;
+  object-fit: contain;
+  transition: opacity 420ms ease, filter 520ms ease, transform 720ms var(--ease);
+}
+.fs-sheet-logo-ambient { opacity: .42; filter: blur(16px) saturate(1.6); transform: scale(1.25); }
+.fs-sheet-logo-bloom {
+  opacity: .58;
+  filter: blur(3px) drop-shadow(0 0 4px rgba(235, 115, 193, .94)) drop-shadow(0 0 14px rgba(197, 72, 240, .78));
+}
+.fs-sheet-logo-core {
+  z-index: 2;
+  filter: brightness(1.36) drop-shadow(0 0 1px #fff5fb) drop-shadow(0 0 4px rgba(235, 115, 193, .96)) drop-shadow(0 0 12px rgba(197, 72, 240, .58));
+}
+.gf-sheet:is(:hover, :focus-visible) .fs-sheet-backdrop { filter: blur(2px) brightness(.78) saturate(1.08) contrast(1.06); transform: scale(1.055); }
+.gf-sheet:is(:hover, :focus-visible) .fs-sheet-logo-core { animation: frequency-shift-card-tube-flicker 820ms linear both; }
 
 /* ---------- Selected work ---------- */
 
@@ -260,10 +276,8 @@
 .home-clients li { color: var(--ink); font-family: var(--font-display); font-size: 1.125rem; font-weight: 500; letter-spacing: -.01em; }
 
 @media (max-width: 1099.98px) {
-  .discipline-grid { grid-template-columns: 1fr; }
-  .discipline-card { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); grid-template-rows: none; }
-  .discipline-card .stage { border-bottom: 0; border-right: 1px solid var(--line); }
-  .discipline-card .stage-screen { height: 100%; aspect-ratio: auto; min-height: 220px; }
+  .discipline-grid { gap: clamp(28px, 4vw, 40px) 16px; }
+  .discipline-folder { gap: 14px; }
 }
 
 @media (max-width: 809.98px) {
@@ -324,9 +338,8 @@
   }
   .home-disciplines { padding-top: 56px; }
   .selection-frame { display: none; }
-  .discipline-card { grid-template-columns: 1fr; }
-  .discipline-card .stage { border-right: 0; border-bottom: 1px solid var(--line); }
-  .discipline-card .stage-screen { height: auto; min-height: 0; aspect-ratio: 16 / 9; }
+  .discipline-grid { grid-template-columns: 1fr; gap: 40px; }
+  .discipline-folder-stage { justify-content: flex-start; }
   .home-work-grid { grid-template-columns: 1fr; }
   .home-project-featured .project-card-media { min-height: 0; aspect-ratio: 16 / 10; }
   .home-proof-card { grid-template-columns: 1fr; }
