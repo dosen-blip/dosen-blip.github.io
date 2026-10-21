@@ -25,7 +25,7 @@ const frequencyShift = {
       ],
     },
     overview: {
-      eyebrow: "01 / The role",
+      eyebrow: "02 / The role",
       title: "One role across the whole series.",
       paragraphs: [
         "Frequency Shift is an Ottawa house series built around the dancefloor—solo nights, partner takeovers, and a two-stage festival, each with its own room and energy.",
@@ -34,7 +34,7 @@ const frequencyShift = {
       annotation: "For the love of house.",
     },
     creative: {
-      eyebrow: "02 / Creative direction",
+      eyebrow: "03 / Creative direction",
       title: "A visual system built to move between rooms.",
       paragraphs: [
         "Each night asks for a different rhythm—from the first solo GRIDWRKS event to collaborations at City At Night and Frequency Fest at Club SAW. The system starts with bold type, saturated colour, the FS mark, and fast, high-contrast motion, then flexes around each partner, lineup, and room.",
@@ -85,11 +85,11 @@ const frequencyShift = {
       },
     ],
     motion: {
-      eyebrow: "03 / Motion and promotion",
+      eyebrow: "01 / Motion and promotion",
       title: "Cut for the announcement and the afterimage.",
       paragraphs: [
         "I edit every promotional film for Frequency Shift. Announcement pieces make the date, lineup, venue, and ticket route legible in seconds; recap edits hold onto the texture of the room after the doors close.",
-        "The Techno Special film leads this selection, pairing the live energy of GRIDWRKS with a campaign edit built to move tickets. The standalone and Frequency Shift × Solstice pieces show the wider range: vertical-first promotion and cuts driven by the room itself. The This Friday promo closes the set—a short, last-call announcement cut to the beat of the room.",
+        "The Techno Special film leads this selection, pairing the live energy of GRIDWRKS with a campaign edit built to move tickets. The standalone and Frequency Shift × Solstice pieces show the wider range: vertical-first promotion and cuts driven by the room itself. The This Friday promo sits alongside it—a short, last-call announcement cut to the beat of the room.",
       ],
       slots: [
         {
@@ -105,24 +105,6 @@ const frequencyShift = {
         },
         {
           number: "02",
-          title: "Frequency Shift at GRIDWRKS",
-          venue: "GRIDWRKS",
-          description: "Standalone event film",
-          src: "/assets/frequency-shift/video/frequency-shift-gridwrks-master.mov",
-          poster: "/assets/frequency-shift/video/frequency-shift-campaign-teaser-poster.jpg",
-          fallbackUrl: "https://frequencyshift.ca/archive/frequency-shift-005/",
-        },
-        {
-          number: "03",
-          title: "Frequency Shift × Solstice",
-          venue: "City At Night",
-          description: "Collaboration / live-event film",
-          src: "/assets/frequency-shift/video/frequency-shift-solstice-city-at-night-master.mov",
-          poster: "/assets/frequency-shift/video/frequency-shift-live-recap-poster.jpg",
-          fallbackUrl: "https://frequencyshift.ca/archive/solstice/",
-        },
-        {
-          number: "04",
           title: "Frequency Shift: This Friday",
           venue: "GRIDWRKS",
           description: "Announcement promo / last call before doors",
@@ -131,6 +113,24 @@ const frequencyShift = {
           fallbackUrl: "https://frequencyshift.ca/events/",
           featured: true,
           aspectRatio: "16 / 9",
+        },
+        {
+          number: "03",
+          title: "Frequency Shift at GRIDWRKS",
+          venue: "GRIDWRKS",
+          description: "Standalone event film",
+          src: "/assets/frequency-shift/video/frequency-shift-gridwrks-master.mov",
+          poster: "/assets/frequency-shift/video/frequency-shift-campaign-teaser-poster.jpg",
+          fallbackUrl: "https://frequencyshift.ca/archive/frequency-shift-005/",
+        },
+        {
+          number: "04",
+          title: "Frequency Shift × Solstice",
+          venue: "City At Night",
+          description: "Collaboration / live-event film",
+          src: "/assets/frequency-shift/video/frequency-shift-solstice-city-at-night-master.mov",
+          poster: "/assets/frequency-shift/video/frequency-shift-live-recap-poster.jpg",
+          fallbackUrl: "https://frequencyshift.ca/archive/solstice/",
         },
       ],
     },

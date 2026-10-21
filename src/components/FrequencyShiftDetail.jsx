@@ -294,6 +294,8 @@ export function FrequencyShiftDetail({ project }) {
   const { content } = project
   const related = project.relatedSlugs.map(getProject).filter(Boolean)
   const liveLabel = project.liveUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")
+  const landscapeFilms = content.motion.slots.filter((item) => item.featured)
+  const verticalFilms = content.motion.slots.filter((item) => !item.featured)
 
   return (
     <article className="frequency-shift-page page-wrap">
@@ -332,6 +334,25 @@ export function FrequencyShiftDetail({ project }) {
           ))}
         </dl>
       </header>
+
+      <CinematicReveal className="fs-section fs-motion" aria-labelledby="fs-motion-title">
+        <div className="fs-motion-films" role="group" aria-label="Selected Frequency Shift video work">
+          <div className="fs-motion-primary">
+            {landscapeFilms.map((item) => <MotionCard key={item.number} item={item} />)}
+          </div>
+          <div className="fs-motion-secondary-heading">
+            <p>Vertical cuts</p>
+            <span>{String(verticalFilms.length).padStart(2, "0")} promos</span>
+          </div>
+          <div className="fs-motion-secondary">
+            {verticalFilms.map((item) => <MotionCard key={item.number} item={item} />)}
+          </div>
+        </div>
+        <div className="fs-section-intro">
+          <SectionHeading eyebrow={content.motion.eyebrow} title={content.motion.title} id="fs-motion-title" />
+          <Narrative paragraphs={content.motion.paragraphs} />
+        </div>
+      </CinematicReveal>
 
       <CinematicReveal className="fs-section fs-overview" aria-labelledby="fs-overview-title">
         <div className="fs-overview-layout">
@@ -381,16 +402,6 @@ export function FrequencyShiftDetail({ project }) {
               </div>
             </a>
           ))}
-        </div>
-      </CinematicReveal>
-
-      <CinematicReveal className="fs-section fs-motion" aria-labelledby="fs-motion-title">
-        <div className="fs-section-intro">
-          <SectionHeading eyebrow={content.motion.eyebrow} title={content.motion.title} id="fs-motion-title" />
-          <Narrative paragraphs={content.motion.paragraphs} />
-        </div>
-        <div className="fs-motion-grid" aria-label="Selected Frequency Shift video work" tabIndex="0">
-          {content.motion.slots.map((item) => <MotionCard key={item.number} item={item} />)}
         </div>
       </CinematicReveal>
 

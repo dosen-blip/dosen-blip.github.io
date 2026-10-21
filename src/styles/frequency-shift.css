@@ -567,17 +567,7 @@
 }
 
 .fs-overview {
-  z-index: 1;
   background: var(--fs-bg);
-}
-
-.fs-overview::before {
-  content: "";
-  position: absolute;
-  inset: -20svh 0 auto;
-  height: 20svh;
-  pointer-events: none;
-  background: linear-gradient(180deg, transparent, var(--fs-bg));
 }
 
 .fs-overview-layout,
@@ -749,9 +739,26 @@
 }
 
 .fs-motion {
+  z-index: 1;
+  padding-top: clamp(40px, 4.5vw, 64px);
   background:
     radial-gradient(circle at 9% 8%, rgba(255, 22, 143, .14), transparent 24%),
     var(--fs-bg);
+}
+
+.fs-motion::before {
+  content: "";
+  position: absolute;
+  inset: -20svh 0 auto;
+  height: 20svh;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, var(--fs-bg));
+}
+
+.fs-motion .fs-section-intro {
+  margin-top: clamp(64px, 7vw, 108px);
+  padding-top: clamp(28px, 3vw, 40px);
+  border-top: 1px solid var(--fs-line);
 }
 
 .fs-motion .fs-section-heading {
@@ -762,23 +769,48 @@
   font-size: clamp(44px, 5vw, 74px);
 }
 
-.fs-motion-grid {
+.fs-motion-primary {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 360px));
-  justify-content: center;
-  gap: clamp(20px, 4vw, 64px);
-  margin-top: clamp(56px, 5.5vw, 82px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 2.2vw, 32px);
+}
+
+.fs-motion-secondary-heading {
+  margin-top: clamp(44px, 4.5vw, 64px);
+  padding-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  border-top: 1px solid var(--fs-line);
+}
+
+.fs-motion-secondary-heading p,
+.fs-motion-secondary-heading span {
+  color: var(--fs-soft);
+  font-size: 10px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.fs-motion-secondary-heading p {
+  margin: 0;
+  color: var(--fs-ink);
+}
+
+.fs-motion-secondary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 300px));
+  gap: clamp(16px, 2.2vw, 32px);
+  margin-top: 28px;
+}
+
+.fs-motion-secondary .fs-motion-copy h3 {
+  font-size: clamp(17px, 1.5vw, 21px);
 }
 
 .fs-motion-card {
   min-width: 0;
   transition: transform .45s var(--fs-ease);
-}
-
-.fs-motion-card-featured {
-  width: min(100%, 960px);
-  grid-column: 1 / -1;
-  justify-self: center;
 }
 
 .fs-motion-media,
@@ -1368,27 +1400,42 @@
     flex-basis: min(68vw, 250px);
   }
 
-  .fs-motion-grid {
-    display: flex;
-    justify-content: flex-start;
-    gap: 14px;
+  .fs-motion {
+    padding-top: 36px;
+  }
+
+  .fs-motion .fs-section-intro {
     margin-top: 56px;
-    margin-right: -20px;
-    padding: 0 20px 14px 0;
-    overflow-x: auto;
-    scroll-padding-inline: 0 20px;
-    scroll-snap-type: x mandatory;
-    scrollbar-color: var(--fs-pink) rgba(255, 255, 255, .08);
-    scrollbar-width: thin;
+    padding-top: 24px;
   }
 
-  .fs-motion-card {
-    flex: 0 0 min(82vw, 330px);
-    scroll-snap-align: start;
+  .fs-motion-primary {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
   }
 
-  .fs-motion-card-featured {
-    flex-basis: min(88vw, 620px);
+  .fs-motion-secondary-heading {
+    margin-top: 44px;
+  }
+
+  .fs-motion-secondary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 22px;
+  }
+
+  .fs-motion-secondary .fs-motion-copy {
+    grid-template-columns: 26px minmax(0, 1fr);
+    gap: 8px;
+    padding-top: 12px;
+  }
+
+  .fs-motion-secondary .fs-motion-copy h3 {
+    font-size: 15px;
+  }
+
+  .fs-motion-secondary .fs-motion-copy p {
+    margin: 6px 0 3px;
   }
 
   .fs-web {

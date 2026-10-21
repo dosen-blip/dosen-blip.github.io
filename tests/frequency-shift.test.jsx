@@ -56,7 +56,32 @@ describe("Frequency Shift project page", () => {
     )
   })
 
-  it("leads with the supplied Techno Special master and has no pending media card", () => {
+  it("opens with the video block and keeps the remaining sections in their original order", () => {
+    const { container } = render(
+      <MemoryRouter><FrequencyShiftDetail project={frequencyShift} /></MemoryRouter>,
+    )
+
+    const sections = [...container.querySelectorAll(".fs-section")]
+    expect(sections.map((section) => section.className)).toEqual([
+      "fs-section fs-motion",
+      "fs-section fs-overview",
+      "fs-section fs-creative",
+      "fs-section fs-web",
+      "fs-section fs-room",
+      "fs-section fs-closing",
+      "fs-section fs-related",
+    ])
+    expect(container.querySelector(".fs-hero + .fs-section")).toHaveClass("fs-motion")
+
+    const motion = sections[0]
+    const films = motion.querySelector(".fs-motion-films")
+    expect(films.compareDocumentPosition(motion.querySelector("#fs-motion-title"))).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+    expect(motion).toHaveTextContent("01 / Motion and promotion")
+    expect(sections[1]).toHaveTextContent("02 / The role")
+    expect(sections[2]).toHaveTextContent("03 / Creative direction")
+  })
+
+  it("leads with the two landscape films and demotes the vertical pair beneath them", () => {
     const { container } = render(
       <MemoryRouter><FrequencyShiftDetail project={frequencyShift} /></MemoryRouter>,
     )
@@ -64,13 +89,25 @@ describe("Frequency Shift project page", () => {
     expect(container.querySelectorAll(".fs-motion-card")).toHaveLength(4)
     expect(container.querySelector(".fs-motion-card")).toHaveClass("fs-motion-card-featured")
     expect(container.querySelectorAll(".fs-motion-card-pending")).toHaveLength(0)
+
+    const primary = [...container.querySelectorAll(".fs-motion-primary .fs-motion-card")]
+    const secondary = [...container.querySelectorAll(".fs-motion-secondary .fs-motion-card")]
+    expect(primary).toHaveLength(2)
+    expect(secondary).toHaveLength(2)
+    expect(primary.every((card) => card.classList.contains("fs-motion-card-featured"))).toBe(true)
+    expect(secondary.some((card) => card.classList.contains("fs-motion-card-featured"))).toBe(false)
+    expect(primary.map((card) => card.querySelector(".fs-motion-media").style.getPropertyValue("--fs-motion-ratio"))).toEqual(["16 / 9", "16 / 9"])
+    expect(secondary.map((card) => card.querySelector(".fs-motion-media").style.getPropertyValue("--fs-motion-ratio"))).toEqual(["", ""])
+    expect(primary[1].compareDocumentPosition(secondary[0])).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+    expect(container.querySelector(".fs-motion-secondary-heading")).toHaveTextContent("02 promos")
+
     const videos = [...container.querySelectorAll("video")]
     expect(videos).toHaveLength(4)
     expect(videos.map((video) => video.getAttribute("src"))).toEqual([
       "/assets/frequency-shift/video/frequency-shift-techno-special-master.mp4",
+      "/assets/frequency-shift/video/frequency-shift-this-friday-promo.mp4",
       "/assets/frequency-shift/video/frequency-shift-gridwrks-master.mov",
       "/assets/frequency-shift/video/frequency-shift-solstice-city-at-night-master.mov",
-      "/assets/frequency-shift/video/frequency-shift-this-friday-promo.mp4",
     ])
     for (const video of videos) {
       expect(video.controls).toBe(true)
