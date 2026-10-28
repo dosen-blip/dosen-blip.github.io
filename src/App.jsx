@@ -1,13 +1,15 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { flushSync } from "react-dom"
 import { Routes, Route, useLocation } from "react-router-dom"
-import { ReactLenis } from "lenis/react"
+import { ReactLenis, useLenis } from "lenis/react"
 import { SiteShell } from "./components/SiteShell"
-import { RouteScrollReset } from "./components/RouteScrollReset"
+import { TransitionOverlay } from "./components/TransitionOverlay"
 import { ProjectDetail } from "./components/ProjectDetail"
 import { FrequencyShiftDetail } from "./components/FrequencyShiftDetail"
 import { getProject } from "./data/projects"
 import { knownRoutes } from "./data/routes"
-import { markHydrated } from "./utils/hydration"
+import { transition } from "./transitions/transitionStore"
+import { markHydrated, mountedAfterHydration } from "./utils/hydration"
 import { useReducedMotion } from "./utils/useReducedMotion"
 import HomePage from "./pages/HomePage"
 import AboutPage from "./pages/AboutPage"
@@ -21,8 +23,12 @@ import "./styles/base.css"
 import "./styles/shell.css"
 import "./styles/components.css"
 
-function ProjectRoute() {
-  const slug = useLocation().pathname.split("/").filter(Boolean).at(-1)
+function normalizePath(pathname) {
+  return pathname !== "/" ? pathname.replace(/\/$/, "") : "/"
+}
+
+function ProjectRoute({ pathname }) {
+  const slug = pathname.split("/").filter(Boolean).at(-1)
   const project = getProject(slug)
   if (!project) return <NotFoundPage />
   return project.layout === "frequencyShift"
@@ -30,17 +36,65 @@ function ProjectRoute() {
     : <ProjectDetail project={project} />
 }
 
-export function App() {
-  const reduced = useReducedMotion()
+function resetScroll(lenis) {
+  window.scrollTo(0, 0)
+  lenis?.scrollTo(0, { immediate: true, force: true })
+}
+
+/**
+ * The pages, rendered against the route that is on screen rather than the one in the address bar.
+ * A click changes the URL at once (the header follows it), but the content waits: the old page stays until the wipe
+ * has covered it, the swap and scroll reset happen under cover, and the new page is uncovered.
+ * Reduced motion, anything before hydration, and the same page asked for again swap immediately.
+ */
+function Pages({ reduced }) {
   const location = useLocation()
-  useEffect(() => { markHydrated() }, [])
-  const normalizedPath = location.pathname !== "/" ? location.pathname.replace(/\/$/, "") : "/"
-  if (!knownRoutes.includes(normalizedPath)) return <NotFoundPage />
-  const content = (
+  const lenis = useLenis()
+  // `settle` is what to do with the scroll position once an immediate swap has rendered.
+  const [view, setView] = useState(() => ({ location, settle: null }))
+  const displayed = view.location
+
+  if (location !== displayed) {
+    if (location.pathname === displayed.pathname) setView({ location, settle: "top" })
+    else if (reduced || !mountedAfterHydration()) setView({ location, settle: "reset" })
+  }
+
+  useEffect(() => {
+    if (view.settle === "top") {
+      // The current nav item again, say: no wipe, just back to the top.
+      if (lenis) lenis.scrollTo(0)
+      else window.scrollTo(0, 0)
+    } else if (view.settle === "reset") {
+      resetScroll(lenis)
+    }
+  }, [view, lenis])
+
+  useEffect(() => {
+    if (location === displayed || location.pathname === displayed.pathname || reduced || !mountedAfterHydration()) return
+    transition.navigate(() => {
+      flushSync(() => setView({ location, settle: null }))
+      resetScroll(lenis)
+    })
+  }, [location, displayed, lenis, reduced])
+
+  // Nothing scrolls while the screen is covered.
+  useEffect(() => {
+    if (!lenis) return undefined
+    const stopOnHide = transition.on("hidestart", () => lenis.stop())
+    const startOnShow = transition.on("showend", () => lenis.start())
+    return () => {
+      stopOnHide()
+      startOnShow()
+    }
+  }, [lenis])
+
+  const pathname = normalizePath(displayed.pathname)
+  if (!knownRoutes.includes(pathname)) return <><TransitionOverlay /><NotFoundPage /></>
+  return (
     <>
-      <RouteScrollReset />
+      <TransitionOverlay />
       <SiteShell>
-        <Routes>
+        <Routes location={displayed}>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/projects" element={<ProjectsPage />} />
@@ -49,11 +103,17 @@ export function App() {
           <Route path="/ux" element={<DisciplinePage key="ux" id="ux" />} />
           <Route path="/stack" element={<StackPage />} />
           <Route path="/contact" element={<ContactPage />} />
-          <Route path="/projects/:slug" element={<ProjectRoute />} />
+          <Route path="/projects/:slug" element={<ProjectRoute pathname={pathname} />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </SiteShell>
     </>
   )
+}
+
+export function App() {
+  const reduced = useReducedMotion()
+  useEffect(() => { markHydrated() }, [])
+  const content = <Pages reduced={reduced} />
   return reduced ? content : <ReactLenis root options={{ lerp: 0.1, smoothWheel: true }}>{content}</ReactLenis>
 }

@@ -44,6 +44,7 @@ Verified interaction images:
 - `Reveal`: starts 48px below rest, fades in with a spring, and runs once. SSR content remains visible before hydration.
 - Reduced motion: entrance transforms are removed; Lenis is not mounted; CSS transition/animation durations collapse.
 - Smooth scroll: `ReactLenis` with `lerp: 0.1` and smooth wheel when reduced motion is off.
+- Page transitions: `App.jsx` renders routes against the page on screen, not the address bar. A navigation covers the page with the canvas wipe (`src/transitions/wipe.js`, 0.55 s), swaps content and resets scroll under cover, then uncovers it (0.7 s). Lenis is stopped for the duration. Reduced motion and same-page navigations swap immediately. Tests: `tests/page-transitions.test.jsx`, `tests/transition-store.test.js`, `tests/wipe.test.js`.
 - CTA arrow: two diagonal arrow layers exchange positions within a clipped 14px window.
 - Project cards: media padding collapses from 12px to 1px and the image scales to `1.015` on hover.
 - YouTube blocks: poster first; click swaps to a `youtube-nocookie.com` iframe without autoplay.

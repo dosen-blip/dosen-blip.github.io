@@ -591,3 +591,14 @@
   .end-card-links > div:last-child { grid-column: 1 / -1; }
   .end-card-base { flex-wrap: wrap; }
 }
+
+/* The wipe between pages (TransitionOverlay.jsx): above the header and menu, below the cursor and skip link. */
+.transition-overlay {
+  position: fixed;
+  z-index: 90;
+  top: -1px;
+  left: -1px;
+  display: none;
+  pointer-events: none;
+}
+.transition-overlay.is-active { display: block; pointer-events: auto; }

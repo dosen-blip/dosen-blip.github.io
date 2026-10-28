@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { WORDMARK_ANCHORS, WORDMARK_SHAPES } from "../brand/paths"
 import { DESCRIPTOR } from "../data/site"
 import { mountedAfterHydration } from "../utils/hydration"
+import { transition } from "../transitions/transitionStore"
 
 const DRAW_START = 150
 const DRAW_STAGGER = 55
@@ -37,11 +38,17 @@ function NeonFilter({ id, tube, halo, spill }) {
  * On every page load (html[data-intro]) and on every return to home within the app, the pen draws
  * each shape of the wordmark, dropping anchors as it goes, then the ink fills in and the selection box snaps on.
  * The server markup is the finished lockup, so nothing is hidden without JavaScript or with reduced motion.
+ * Arriving by a page transition, the pen waits until the wipe has uncovered the page.
  */
 export function HeroLockup() {
-  const [play] = useState(mountedAfterHydration)
+  const [play, setPlay] = useState(() => mountedAfterHydration() && !transition.active)
   const [size, setSize] = useState(null)
   const ref = useRef(null)
+
+  useEffect(() => {
+    if (play || !mountedAfterHydration() || !transition.active) return undefined
+    return transition.on("showend", () => setPlay(true))
+  }, [play])
 
   useEffect(() => {
     const node = ref.current

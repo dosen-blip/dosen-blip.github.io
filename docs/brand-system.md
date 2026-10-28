@@ -49,4 +49,5 @@ Dark mode follows the system until the header toggle sets `data-theme` (remember
 - Selection handles (blue outline, square handles) snap onto project cards on hover, sit on the About portrait, and frame the hero lockup with its live size.
 - Arrow links swap their arrow; card arrows rotate into a filled blue circle.
 - Backdrop tools drift slowly, parallax at 0.22× scroll, and lean away from the cursor with a hint of blue. Discipline pages lean on their own tools.
+- Page changes play on a black stage (`src/transitions/`, `TransitionOverlay.jsx`): the address changes at once, a beige bar sweeps in from the diagonal and shrinks to the centre over the old page, the new page is swapped in and scrolled to the top under cover, and the bar zooms back out. The same page asked for again just scrolls to the top. The home lockup waits for the reveal before the pen draws.
 - Everything respects `prefers-reduced-motion`: reveals show their final frame, splashes are off, the backdrop is still.

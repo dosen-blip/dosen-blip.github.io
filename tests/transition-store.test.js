@@ -1,0 +1,70 @@
+import { afterEach, describe, expect, it, vi } from "vitest"
+import { HIDE_DURATION, SHOW_DURATION, transition } from "../src/transitions/transitionStore"
+
+afterEach(() => transition.reset())
+
+describe("transition store", () => {
+  it("covers the page, swaps under cover, then uncovers it", () => {
+    const events = []
+    const swap = vi.fn(() => events.push("swap-callback"))
+    for (const name of ["hidestart", "swap", "showend"]) transition.on(name, () => events.push(name))
+
+    transition.navigate(swap)
+    expect(transition.phase).toBe("hiding")
+    expect(events).toEqual(["hidestart"])
+
+    transition.step(HIDE_DURATION / 2)
+    expect(transition.cover).toBeCloseTo(.5)
+    expect(swap).not.toHaveBeenCalled()
+
+    transition.step(HIDE_DURATION / 2)
+    expect(transition.cover).toBe(1)
+    expect(swap).toHaveBeenCalledOnce()
+    expect(transition.phase).toBe("showing")
+    expect(events).toEqual(["hidestart", "swap-callback", "swap"])
+
+    transition.step(SHOW_DURATION)
+    expect(transition.cover).toBe(0)
+    expect(transition.phase).toBe("idle")
+    expect(events.at(-1)).toBe("showend")
+  })
+
+  it("lets a later request replace an earlier one while still covering", () => {
+    const first = vi.fn()
+    const second = vi.fn()
+    transition.navigate(first)
+    transition.step(HIDE_DURATION / 3)
+    transition.navigate(second)
+    transition.step(HIDE_DURATION)
+    expect(first).not.toHaveBeenCalled()
+    expect(second).toHaveBeenCalledOnce()
+  })
+
+  it("covers the page again from where it is when interrupted while uncovering", () => {
+    const hidestart = vi.fn()
+    transition.on("hidestart", hidestart)
+    transition.navigate(() => {})
+    transition.step(HIDE_DURATION)
+    transition.step(SHOW_DURATION / 2)
+    const midway = transition.cover
+    expect(midway).toBeCloseTo(.5)
+
+    const swap = vi.fn()
+    transition.navigate(swap)
+    expect(transition.phase).toBe("hiding")
+    expect(transition.cover).toBe(midway)
+    expect(hidestart).toHaveBeenCalledOnce()
+    transition.step(HIDE_DURATION)
+    expect(swap).toHaveBeenCalledOnce()
+    expect(transition.phase).toBe("showing")
+  })
+
+  it("draws a frame as soon as a transition starts and on every step", () => {
+    const watch = vi.fn()
+    transition.watchFrames(watch)
+    transition.navigate(() => {})
+    expect(watch).toHaveBeenCalledOnce()
+    transition.step(.1)
+    expect(watch).toHaveBeenCalledTimes(2)
+  })
+})
