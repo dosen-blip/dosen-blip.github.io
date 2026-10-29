@@ -1,15 +1,17 @@
 // The cut for project cards and folder sheets: the design tool's selection box takes over.
 //
 // Hiding, the blue selection frame snaps onto what was clicked, its handles drag out to the edges of the screen like
-// a resize, the size label counts up to the screen size, and the inside fills with stage black.
-// Showing, the black clears while the frame shrinks onto the new page's hero (its title, reveal or neon wordmark),
-// holds there for a beat with that element's size, then lets go.
+// a resize, and the size label counts up to the screen size. The card's own picture comes with it, so the bridge is
+// the project's image filling the screen (stage black when there is no picture).
+// Showing, the picture fades off the new page while the frame shrinks onto its hero (its title, reveal or neon
+// wordmark), holds there for a beat with that element's size, then lets go.
 
 import { clamp01, easeInOutCubic, easeOutCubic, lerp } from "./ease"
 
 export const FRAME_TIMING = { hide: .7, show: 1 }
 const HANDLE = 10
 const LABEL_GAP = 10
+const SCRIM = .28 // stage black laid over the picture by the time it fills the screen, so the frame reads on it
 const INSET = 16 // targets are kept this far inside the screen so the handles never fall off it
 
 // What the frame lands on after the swap, in order of preference: an explicit marker, then each page type's hero.
@@ -86,15 +88,53 @@ export function selectionFrame(phase, cover, { from, target, width, height }) {
   }
 }
 
+/** Source and destination boxes to draw an image of iw × ih into `rect` the way CSS object-fit would, centred. */
+export function fitImage(iw, ih, rect, fit = "cover") {
+  const scale = fit === "contain" ? Math.min(rect.width / iw, rect.height / ih) : Math.max(rect.width / iw, rect.height / ih)
+  if (fit === "contain") {
+    const width = iw * scale
+    const height = ih * scale
+    return {
+      source: { x: 0, y: 0, width: iw, height: ih },
+      dest: { x: rect.x + (rect.width - width) / 2, y: rect.y + (rect.height - height) / 2, width, height },
+    }
+  }
+  const width = rect.width / scale
+  const height = rect.height / scale
+  return { source: { x: (iw - width) / 2, y: (ih - height) / 2, width, height }, dest: rect }
+}
+
+function drawPicture(ctx, media, rect, alpha, scrim, stage) {
+  const { image, fit, background } = media
+  ctx.globalAlpha = alpha
+  if (background) {
+    ctx.fillStyle = background
+    ctx.fillRect(rect.x, rect.y, rect.width, rect.height)
+  }
+  const { source, dest } = fitImage(image.naturalWidth, image.naturalHeight, rect, fit)
+  ctx.drawImage(image, source.x, source.y, source.width, source.height, dest.x, dest.y, dest.width, dest.height)
+  if (scrim > 0) {
+    ctx.globalAlpha = alpha * scrim
+    ctx.fillStyle = stage
+    ctx.fillRect(rect.x, rect.y, rect.width, rect.height)
+  }
+}
+
 /** Draw one frame of the selection cut. The canvas overhangs the viewport by 1px on each side (see shell.css). */
-export function drawSelection(ctx, { width, height, dpr, frame, colors }) {
+export function drawSelection(ctx, { width, height, dpr, frame, colors, media, phase, cover }) {
   const { rect, fill, chrome } = frame
   ctx.setTransform(dpr, 0, 0, dpr, dpr, dpr)
   ctx.globalAlpha = 1
   ctx.shadowBlur = 0
   ctx.clearRect(-1, -1, width + 2, height + 2)
 
-  if (fill > 0) {
+  if (media) {
+    // Hiding, the picture is the card's, grown with the frame and fully opaque from the start, so it begins exactly
+    // as the card looks. Showing, it stays full screen and fades off the new page while the frame moves on.
+    const screen = { x: -1, y: -1, width: width + 2, height: height + 2 }
+    if (phase === "hiding") drawPicture(ctx, media, cover >= 1 ? screen : rect, 1, SCRIM * cover, colors.stage)
+    else if (fill > 0) drawPicture(ctx, media, screen, fill, SCRIM, colors.stage)
+  } else if (fill > 0) {
     ctx.globalAlpha = fill
     ctx.fillStyle = colors.stage
     const full = rect.width >= width && rect.height >= height

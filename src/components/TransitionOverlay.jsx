@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react"
 import { transition } from "../transitions/transitionStore"
 import { useTransitionPhase } from "../transitions/useTransitionPhase"
-import { drawDots } from "../transitions/dots"
+import { cutTime, drawDots } from "../transitions/dots"
+import { drawPen } from "../transitions/pen"
 import { centreRect, clipRect, drawSelection, findTarget, selectionFrame } from "../transitions/frame"
 
 const DPR_MAX = 1.5
@@ -25,8 +26,9 @@ function readColors() {
 
 /**
  * The canvas that covers the page between routes. It draws one of two cuts, chosen per navigation:
- * the dot grid (transitions/dots.js) by default, or the selection box (transitions/frame.js) when the click
- * came from a project card or folder sheet. It only shows while a transition runs and is drawn straight from
+ * the dot grid pulse (transitions/dots.js) with the pen drawing my name in its bridge (transitions/pen.js) by
+ * default, or the selection box filled with the card's picture (transitions/frame.js) when the click came from a
+ * project card or folder sheet. It only shows while a transition runs and is drawn straight from
  * the store's frame loop, so nothing re-renders in React per frame.
  */
 export function TransitionOverlay() {
@@ -69,9 +71,11 @@ export function TransitionOverlay() {
       const { cover, phase, options } = transition
       if (options.style === "frame") {
         const frame = selectionFrame(phase, cover, { from, target: target || centreRect(width, height), width, height })
-        drawSelection(ctx, { width, height, dpr, frame, colors })
+        drawSelection(ctx, { width, height, dpr, frame, colors, media: options.origin?.media, phase, cover })
       } else {
-        drawDots(ctx, { width, height, dpr, cover, phase, origin: options.origin, scrollY: window.scrollY, colors })
+        const time = cutTime(cover, phase, options)
+        const bridge = (context) => drawPen(context, { width, height, dpr, time })
+        drawDots(ctx, { width, height, dpr, cover, phase, origin: options.origin, scrollY: window.scrollY, colors, bridge })
       }
     }
 

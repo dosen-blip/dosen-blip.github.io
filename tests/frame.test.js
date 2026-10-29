@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { centreRect, clipRect, findTarget, lerpRect, selectionFrame } from "../src/transitions/frame"
+import { centreRect, clipRect, findTarget, fitImage, lerpRect, selectionFrame } from "../src/transitions/frame"
 
 const card = { x: 100, y: 200, width: 300, height: 200 }
 const title = { x: 40, y: 120, width: 500, height: 80 }
@@ -37,5 +37,17 @@ describe("selection box cut", () => {
     heading.getBoundingClientRect = () => ({ left: 40, top: 900, width: 500, height: 80 })
     expect(findTarget(document, 1000, 600)).toEqual(centreRect(1000, 600))
     document.body.innerHTML = ""
+  })
+
+  it("fits the card's picture into the frame the way the card does", () => {
+    const frame = { x: 0, y: 0, width: 400, height: 200 }
+    expect(fitImage(800, 800, frame, "cover")).toEqual({
+      source: { x: 0, y: 200, width: 800, height: 400 },
+      dest: frame,
+    })
+    expect(fitImage(800, 800, frame, "contain")).toEqual({
+      source: { x: 0, y: 0, width: 800, height: 800 },
+      dest: { x: 100, y: 0, width: 200, height: 200 },
+    })
   })
 })

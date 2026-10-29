@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { CELL, EDGE, REACH, dotSize, drawDots, waveFront, waveOrigin } from "../src/transitions/dots"
+import { CELL, DOT_TIMING, EDGE, PULSE, REACH, cutTime, dotSize, drawDots, waveFront, waveOrigin } from "../src/transitions/dots"
 
 const colors = { stage: "#0c0c0f", accent: "#386dff" }
 
@@ -71,5 +71,31 @@ describe("dot grid cut", () => {
     expect(arcs.length).toBeGreaterThan(0)
     expect(arcs.every(([, , , radius]) => radius > 0 && radius <= REACH)).toBe(true)
     expect(arcs.some(([, , , radius]) => radius < EDGE * REACH)).toBe(true)
+  })
+
+  it("holds the screen covered after the swap, then lets the trailing edge go", () => {
+    const heldUntil = 1 - PULSE.hold / DOT_TIMING.show
+    expect(dotSize(heldUntil + .01, "showing", 0)).toBe(1)
+    expect(dotSize(heldUntil - .1, "showing", 0)).toBeLessThan(1)
+  })
+
+  it("counts time across both halves of the cut", () => {
+    expect(cutTime(0, "hiding")).toBe(0)
+    expect(cutTime(1, "hiding")).toBeCloseTo(DOT_TIMING.hide)
+    expect(cutTime(1, "showing")).toBeCloseTo(DOT_TIMING.hide)
+    expect(cutTime(0, "showing")).toBeCloseTo(DOT_TIMING.hide + DOT_TIMING.show)
+  })
+
+  it("draws the bridge inside the black, clipped to it, and over a covered screen", () => {
+    const mid = fakeContext()
+    const bridge = []
+    drawDots(mid.ctx, { width: 300, height: 200, dpr: 1, cover: .6, phase: "hiding", origin: { x: 0, y: 0 }, colors, bridge: () => bridge.push("drawn") })
+    const order = mid.calls.map(([name]) => name).filter((name) => ["fill", "clip", "save", "restore"].includes(name))
+    expect(order.slice(0, 4)).toEqual(["fill", "save", "clip", "restore"])
+    expect(bridge).toEqual(["drawn"])
+
+    const full = fakeContext()
+    drawDots(full.ctx, { width: 300, height: 200, dpr: 1, cover: 1, phase: "showing", colors, bridge: () => bridge.push("full") })
+    expect(bridge).toEqual(["drawn", "full"])
   })
 })
