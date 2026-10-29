@@ -24,11 +24,10 @@ describe("dot grid cut", () => {
     expect(REACH).toBeGreaterThan(Math.hypot(CELL, CELL) / 2)
   })
 
-  it("starts the wave at the click while hiding and at the middle while showing", () => {
-    expect(waveOrigin(1000, 600, "hiding", { x: 100, y: 50 })).toMatchObject({ x: 100, y: 50 })
-    expect(waveOrigin(1000, 600, "showing", { x: 100, y: 50 })).toMatchObject({ x: 500, y: 300 })
-    expect(waveOrigin(1000, 600, "hiding", null)).toMatchObject({ x: 500, y: 300, reach: Math.hypot(500, 300) })
-    expect(waveOrigin(1000, 600, "hiding", { x: 0, y: 0 }).reach).toBeCloseTo(Math.hypot(1000, 600))
+  it("starts the pulse at the click, or the middle of the screen without one", () => {
+    expect(waveOrigin(1000, 600, { x: 100, y: 50 })).toMatchObject({ x: 100, y: 50 })
+    expect(waveOrigin(1000, 600, null)).toMatchObject({ x: 500, y: 300, reach: Math.hypot(500, 300) })
+    expect(waveOrigin(1000, 600, { x: 0, y: 0 }).reach).toBeCloseTo(Math.hypot(1000, 600))
   })
 
   it("grows dots near the origin first and closes everything at full cover", () => {
@@ -38,10 +37,18 @@ describe("dot grid cut", () => {
     expect(dotSize(1, "hiding", 1)).toBe(1)
   })
 
-  it("shrinks dots near the middle first when showing", () => {
+  it("empties dots near the origin first when showing", () => {
     expect(dotSize(1, "showing", 0)).toBe(1)
     expect(dotSize(.6, "showing", 0)).toBeLessThan(dotSize(.6, "showing", .8))
     expect(dotSize(0, "showing", 1)).toBe(0)
+  })
+
+  it("is a band, not a blackout: near the click the page is back while the far side is still covered", () => {
+    expect(dotSize(.4, "showing", 0)).toBe(0)
+    expect(dotSize(.4, "showing", 1)).toBe(1)
+    // Partway through hiding, the click has closed and the far corner has not been reached.
+    expect(dotSize(.5, "hiding", 0)).toBe(1)
+    expect(dotSize(.5, "hiding", 1)).toBe(0)
   })
 
   it("reports how far the hiding wave has travelled", () => {

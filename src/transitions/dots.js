@@ -1,23 +1,28 @@
-// The default cut: the backdrop's own dot grid swallows the page.
+// The default cut: a pulse runs through the backdrop's own dot grid.
 //
-// Hiding, a wave runs out from the click: each dot of the grid swells as the wave passes until neighbours merge into
-// solid stage black. Dots that have only just started growing are lit blue, so a blue ring leads the wave.
-// Showing, the dots shrink back in a wave from the middle of the screen and the new page shows through the gaps.
-// The overlay's dots sit exactly on the backdrop's dots, so the cut reads as the page's own surface closing.
+// One ring travels out from the click. Its leading edge swells each dot of the grid until neighbours merge into stage
+// black; its trailing edge, a moment behind, shrinks them away again with the new page already underneath. Both
+// edges are lit blue (dots that are still small), so the cut reads as a blue-rimmed band of black sweeping across the
+// screen rather than a fade to black and back. The screen is only completely covered for an instant: the moment the
+// leading edge reaches the farthest corner is the moment the content swaps and the trailing edge leaves the click.
+// The overlay's dots sit exactly on the backdrop's dots, so the cut reads as the page's own surface rippling.
 
 import { clamp01, easeInOutCubic } from "./ease"
 
 export const CELL = 30 // the backdrop's dot grid (--grid in tokens.css)
 export const GRID_PARALLAX = .22 // the backdrop grid moves at this share of the scroll
 export const REACH = CELL * .72 // a dot this big overlaps its diagonal neighbours, so the grid closes completely
-export const WAVE = .55 // share of the cut the wave spends crossing the screen; the rest is each dot growing
-export const EDGE = .4 // dots still smaller than this share of full size are drawn blue
-export const DOT_TIMING = { hide: .6, show: .75 }
+export const EDGE = .4 // dots smaller than this share of full size are drawn blue: the pulse's two rims
 
-/** Where the wave starts and how far it has to travel to reach the farthest corner. */
-export function waveOrigin(width, height, phase, origin) {
-  const x = phase === "hiding" && origin ? origin.x : width / 2
-  const y = phase === "hiding" && origin ? origin.y : height / 2
+// Seconds. `close` and `open`: how long each edge of the pulse takes to cross the screen. `grow` and `shrink`: how
+// long one dot takes to fill or empty as an edge passes. The black band any one spot sees lasts about `close`.
+export const PULSE = { close: .3, grow: .18, open: .36, shrink: .2 }
+export const DOT_TIMING = { hide: PULSE.close + PULSE.grow, show: PULSE.open + PULSE.shrink }
+
+/** Where the pulse starts (the click, or the middle of the screen) and how far it has to travel to the farthest corner. */
+export function waveOrigin(width, height, origin) {
+  const x = origin ? origin.x : width / 2
+  const y = origin ? origin.y : height / 2
   const reach = Math.max(
     Math.hypot(x, y),
     Math.hypot(width - x, y),
@@ -27,16 +32,19 @@ export function waveOrigin(width, height, phase, origin) {
   return { x, y, reach: reach || 1 }
 }
 
-/** How big a dot is, 0 to 1 of REACH, at `n` (its distance from the wave origin over the wave's reach). */
+/** How big a dot is, 0 to 1 of REACH, at `n` (its distance from the pulse origin over the pulse's reach). */
 export function dotSize(cover, phase, n) {
-  const progress = easeInOutCubic(phase === "hiding" ? cover : 1 - cover)
-  const local = clamp01((progress - n * WAVE) / (1 - WAVE))
-  return phase === "hiding" ? local : 1 - local
+  if (phase === "hiding") {
+    const time = cover * DOT_TIMING.hide
+    return easeInOutCubic(clamp01((time - n * PULSE.close) / PULSE.grow))
+  }
+  const time = (1 - cover) * DOT_TIMING.show
+  return 1 - easeInOutCubic(clamp01((time - n * PULSE.open) / PULSE.shrink))
 }
 
-/** How far from the origin the hiding wave has reached, in px: dots beyond it have not started to grow. */
+/** How far from the origin the pulse's leading edge has reached, in px: dots beyond it have not started to grow. */
 export function waveFront(cover, wave) {
-  return clamp01(easeInOutCubic(cover) / WAVE) * wave.reach
+  return clamp01(cover * DOT_TIMING.hide / PULSE.close) * wave.reach
 }
 
 /** Draw one frame of the dot cut. The canvas overhangs the viewport by 1px on each side (see shell.css). */
@@ -50,7 +58,7 @@ export function drawDots(ctx, { width, height, dpr, cover, phase, origin, scroll
     return
   }
 
-  const wave = waveOrigin(width, height, phase, origin)
+  const wave = waveOrigin(width, height, origin)
   // Rows line up with the backdrop's dots, which sit at 15px into each cell and drift up with the scroll.
   const shift = CELL / 2 - ((scrollY * GRID_PARALLAX) % CELL)
   const columns = Math.ceil(width / CELL) + 1

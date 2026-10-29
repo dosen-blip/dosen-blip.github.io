@@ -198,7 +198,7 @@ export function BrandBackdrop({ discipline = null }) {
     const stopWave = transition.watchFrames(() => {
       const { phase, cover, options } = transition
       if (phase === "hiding" && options.style === "dots") {
-        const origin = waveOrigin(window.innerWidth, window.innerHeight, phase, options.origin)
+        const origin = waveOrigin(window.innerWidth, window.innerHeight, options.origin)
         wave = { x: origin.x, y: origin.y, front: waveFront(cover, origin) }
       } else {
         wave = null
