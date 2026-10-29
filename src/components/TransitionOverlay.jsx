@@ -1,12 +1,33 @@
 import { useEffect, useRef } from "react"
 import { transition } from "../transitions/transitionStore"
 import { useTransitionPhase } from "../transitions/useTransitionPhase"
-import { DPR_MAX, drawWipe, wipeFrame } from "../transitions/wipe"
+import { drawDots } from "../transitions/dots"
+import { centreRect, clipRect, drawSelection, findTarget, selectionFrame } from "../transitions/frame"
+
+const DPR_MAX = 1.5
+
+/** The brand colours the cuts draw with, read when a cut starts so they follow the theme. */
+function readColors() {
+  const style = getComputedStyle(document.documentElement)
+  const read = (name, fallback) => style.getPropertyValue(name).trim() || fallback
+  const neonOn = Number(read("--neon-on", "0")) > 0
+  return {
+    stage: read("--stage", "#0c0c0f"),
+    accent: read("--accent", "#386dff"),
+    line: read("--neon-core", "#386dff"),
+    handle: read("--bg", "#f7f5ed"),
+    label: read("--accent-strong", "#2b5ce6"),
+    labelText: read("--on-accent", "#fff"),
+    mono: read("--font-mono", "monospace"),
+    glow: neonOn ? `rgb(${read("--neon-rgb", "92 136 255")} / .85)` : null,
+  }
+}
 
 /**
- * The canvas that covers the page between routes (see transitions/wipe.js for what it draws).
- * It only exists in the DOM while a transition runs, and is drawn straight from the store's frame loop,
- * so nothing re-renders in React per frame.
+ * The canvas that covers the page between routes. It draws one of two cuts, chosen per navigation:
+ * the dot grid (transitions/dots.js) by default, or the selection box (transitions/frame.js) when the click
+ * came from a project card or folder sheet. It only shows while a transition runs and is drawn straight from
+ * the store's frame loop, so nothing re-renders in React per frame.
  */
 export function TransitionOverlay() {
   const ref = useRef(null)
@@ -19,6 +40,9 @@ export function TransitionOverlay() {
     let width = 0
     let height = 0
     let dpr = 1
+    let colors = null
+    let from = null
+    let target = null
 
     const resize = () => {
       width = window.innerWidth
@@ -29,19 +53,38 @@ export function TransitionOverlay() {
       canvas.style.width = `${width + 2}px`
       canvas.style.height = `${height + 2}px`
     }
+    const start = () => {
+      colors = readColors()
+      const rect = transition.options.origin?.rect
+      from = (rect && clipRect(rect, width, height)) || centreRect(width, height)
+      target = null
+    }
+    // Under the cover the new page is on screen and scrolled to the top: measure what the frame will land on.
+    const measure = () => {
+      if (transition.options.style === "frame") target = findTarget(document, width, height)
+    }
     const draw = () => {
       if (!transition.active) return
-      const { cover, phase } = transition
-      canvas.style.opacity = wipeFrame(width, height, cover, phase).opacity
-      drawWipe(ctx, { width, height, dpr, cover, phase })
+      if (!colors) start()
+      const { cover, phase, options } = transition
+      if (options.style === "frame") {
+        const frame = selectionFrame(phase, cover, { from, target: target || centreRect(width, height), width, height })
+        drawSelection(ctx, { width, height, dpr, frame, colors })
+      } else {
+        drawDots(ctx, { width, height, dpr, cover, phase, origin: options.origin, scrollY: window.scrollY, colors })
+      }
     }
 
     resize()
     window.addEventListener("resize", resize)
-    const stopWatching = transition.watchFrames(draw)
+    const stops = [
+      transition.on("hidestart", start),
+      transition.on("swap", measure),
+      transition.watchFrames(draw),
+    ]
     return () => {
       window.removeEventListener("resize", resize)
-      stopWatching()
+      stops.forEach((stop) => stop())
     }
   }, [])
 

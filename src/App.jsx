@@ -9,6 +9,9 @@ import { FrequencyShiftDetail } from "./components/FrequencyShiftDetail"
 import { getProject } from "./data/projects"
 import { knownRoutes } from "./data/routes"
 import { transition } from "./transitions/transitionStore"
+import { takeOrigin, trackClicks } from "./transitions/origin"
+import { DOT_TIMING } from "./transitions/dots"
+import { FRAME_TIMING } from "./transitions/frame"
 import { markHydrated, mountedAfterHydration } from "./utils/hydration"
 import { useReducedMotion } from "./utils/useReducedMotion"
 import HomePage from "./pages/HomePage"
@@ -46,6 +49,8 @@ function resetScroll(lenis) {
  * A click changes the URL at once (the header follows it), but the content waits: the old page stays until the wipe
  * has covered it, the swap and scroll reset happen under cover, and the new page is uncovered.
  * Reduced motion, anything before hydration, and the same page asked for again swap immediately.
+ * A click on a project card or folder sheet cuts with the selection box grown out of it; everything else, including
+ * the back button, cuts with the dot grid, spreading from where you clicked.
  */
 function Pages({ reduced }) {
   const location = useLocation()
@@ -69,12 +74,25 @@ function Pages({ reduced }) {
     }
   }, [view, lenis])
 
+  useEffect(() => trackClicks(), [])
+
+  // The app puts every page at the top under the cover itself; the browser restoring a scroll position on back and
+  // forward would jump the old page before the cover reaches it.
+  useEffect(() => {
+    if (!("scrollRestoration" in window.history)) return undefined
+    const previous = window.history.scrollRestoration
+    window.history.scrollRestoration = "manual"
+    return () => { window.history.scrollRestoration = previous }
+  }, [])
+
   useEffect(() => {
     if (location === displayed || location.pathname === displayed.pathname || reduced || !mountedAfterHydration()) return
+    const origin = takeOrigin()
+    const style = origin?.rect ? "frame" : "dots"
     transition.navigate(() => {
       flushSync(() => setView({ location, settle: null }))
       resetScroll(lenis)
-    })
+    }, { style, origin, ...(style === "frame" ? FRAME_TIMING : DOT_TIMING) })
   }, [location, displayed, lenis, reduced])
 
   // Nothing scrolls while the screen is covered.
@@ -93,7 +111,7 @@ function Pages({ reduced }) {
   return (
     <>
       <TransitionOverlay />
-      <SiteShell>
+      <SiteShell pathname={displayed.pathname}>
         <Routes location={displayed}>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />

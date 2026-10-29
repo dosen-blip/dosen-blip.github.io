@@ -35,7 +35,7 @@ src/entry-server.jsx
 | Card behavior | `src/components/ProjectCard.jsx` |
 | CTA arrow behavior | `src/components/ArrowLink.jsx` |
 | Scroll entrance behavior | `src/components/Reveal.jsx` |
-| Page transitions (store, wipe, overlay) | `src/transitions/`, `src/components/TransitionOverlay.jsx` |
+| Page transitions (store, click origin, dot and selection cuts, overlay) | `src/transitions/`, `src/components/TransitionOverlay.jsx` |
 | SEO generation | `src/entry-server.jsx`, `src/utils/seo.js` |
 | Contact submission contract | `src/pages/ContactPage.jsx` |
 | Build/prerender | `scripts/prerender.mjs` |

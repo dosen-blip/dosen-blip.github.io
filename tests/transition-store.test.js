@@ -67,4 +67,19 @@ describe("transition store", () => {
     transition.step(.1)
     expect(watch).toHaveBeenCalledTimes(2)
   })
+
+  it("keeps the options of the cut that is running when a later click arrives", () => {
+    transition.navigate(() => {}, { style: "frame", hide: .2, show: .3, origin: { x: 1, y: 2, rect: null } })
+    expect(transition.options).toMatchObject({ style: "frame", hide: .2, show: .3 })
+    transition.navigate(() => {}, { style: "dots" })
+    expect(transition.options.style).toBe("frame")
+
+    transition.step(.2)
+    expect(transition.phase).toBe("showing")
+    transition.step(.3)
+    expect(transition.phase).toBe("idle")
+
+    transition.navigate(() => {})
+    expect(transition.options).toMatchObject({ style: "dots", origin: null, hide: HIDE_DURATION, show: SHOW_DURATION })
+  })
 })

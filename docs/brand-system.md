@@ -49,5 +49,8 @@ Dark mode follows the system until the header toggle sets `data-theme` (remember
 - Selection handles (blue outline, square handles) snap onto project cards on hover, sit on the About portrait, and frame the hero lockup with its live size.
 - Arrow links swap their arrow; card arrows rotate into a filled blue circle.
 - Backdrop tools drift slowly, parallax at 0.22× scroll, and lean away from the cursor with a hint of blue. Discipline pages lean on their own tools.
-- Page changes play on a black stage (`src/transitions/`, `TransitionOverlay.jsx`): the address changes at once, a beige bar sweeps in from the diagonal and shrinks to the centre over the old page, the new page is swapped in and scrolled to the top under cover, and the bar zooms back out. The same page asked for again just scrolls to the top. The home lockup waits for the reveal before the pen draws.
+- Page changes cut through stage black (`src/transitions/`, `TransitionOverlay.jsx`). The address changes at once; the old page, header and backdrop stay until the screen is covered, the new page is swapped in and scrolled to the top under cover, then uncovered. Two cuts:
+  - Dot grid (default, and the back button): the backdrop's own dots swell in a wave from the click, led by a ring of blue dots, until they merge into black; backdrop tools ahead of the wave are pushed along and lit. The new page shows through as the dots shrink back from the centre, and a few of its tools spark.
+  - Selection box (project cards and folder sheets): the blue selection frame snaps onto what was clicked, drags out to the screen edges with a live size label while filling with black, then shrinks onto the new page's title, neon wordmark or reveal and lets go.
+  The same page asked for again just scrolls to the top. The home lockup and header splash play as the page is uncovered.
 - Everything respects `prefers-reduced-motion`: reveals show their final frame, splashes are off, the backdrop is still.

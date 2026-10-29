@@ -153,10 +153,15 @@ function EndCard() {
   )
 }
 
-export function SiteShell({ children }) {
+/**
+ * `pathname` is the page on screen. During a page transition the address bar is already on the next page while the
+ * old one is still showing, so the header, backdrop and end card follow the page, not the URL.
+ */
+export function SiteShell({ children, pathname: shown }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const buttonRef = useRef(null)
-  const { pathname } = useLocation()
+  const location = useLocation()
+  const pathname = shown ?? location.pathname
   const discipline = disciplineForPath(pathname, projectDisciplines)
   const isHome = pathname === "/"
   // The Frequency Shift case study is a dark page; the header reverses to match it.

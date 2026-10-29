@@ -2,7 +2,7 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { Link, MemoryRouter, useLocation } from "react-router-dom"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { App } from "../src/App"
-import { HIDE_DURATION, SHOW_DURATION, transition } from "../src/transitions/transitionStore"
+import { transition } from "../src/transitions/transitionStore"
 import { markHydrated } from "../src/utils/hydration"
 
 const lenis = vi.hoisted(() => ({ scrollTo: vi.fn(), start: vi.fn(), stop: vi.fn() }))
@@ -61,20 +61,47 @@ describe("page transitions", () => {
     expect(screen.getByTestId("address")).toHaveTextContent("/about")
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(/work in/i)
     expect(transition.phase).toBe("hiding")
+    expect(transition.options.style).toBe("dots")
     expect(lenis.stop).toHaveBeenCalledOnce()
     expect(document.querySelector(".transition-overlay")).toHaveClass("is-active")
     expect(window.scrollTo).not.toHaveBeenCalled()
 
-    act(() => transition.step(HIDE_DURATION))
+    act(() => transition.step(transition.options.hide))
     expect(screen.getByRole("heading", { level: 1 })).not.toHaveTextContent(/work in/i)
     expect(window.scrollTo).toHaveBeenCalledWith(0, 0)
     expect(lenis.scrollTo).toHaveBeenCalledWith(0, { immediate: true, force: true })
     expect(lenis.start).not.toHaveBeenCalled()
 
-    act(() => transition.step(SHOW_DURATION))
+    act(() => transition.step(transition.options.show))
     expect(transition.phase).toBe("idle")
     expect(lenis.start).toHaveBeenCalledOnce()
     expect(document.querySelector(".transition-overlay")).not.toHaveClass("is-active")
+  })
+
+  it("keeps the header on the page being shown until the swap", () => {
+    mount("/contact", { reduced: false })
+    const contact = () => screen.getAllByRole("link", { name: "Contact" })[0]
+    expect(contact()).toHaveAttribute("aria-current", "page")
+
+    fireEvent.click(screen.getByRole("link", { name: "Go to About" }))
+    expect(contact()).toHaveAttribute("aria-current", "page")
+
+    act(() => transition.step(transition.options.hide))
+    expect(contact()).not.toHaveAttribute("aria-current")
+  })
+
+  it("cuts with the selection box when a project card is clicked", () => {
+    mount("/projects", { reduced: false })
+    const card = document.querySelector("a.project-card")
+    const title = card.querySelector("h2, h3").textContent
+
+    fireEvent.click(card, { clientX: 40, clientY: 60, detail: 1 })
+    expect(transition.options.style).toBe("frame")
+    expect(transition.options.origin).toMatchObject({ x: 40, y: 60 })
+    expect(transition.options.origin.rect).toBeTruthy()
+
+    act(() => transition.step(transition.options.hide))
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(title)
   })
 
   it("swaps immediately, with no wipe, under reduced motion", () => {
