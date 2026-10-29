@@ -17,6 +17,14 @@ export const projectIndex = [
     disciplines: ["web", "motion"],
   },
   {
+    slug: "instinct-groove",
+    title: "Instinct Groove",
+    category: "Web development · WebGL",
+    cover: "/assets/instinct/card-room.webp",
+    mediaBackground: "#030504",
+    disciplines: ["web"],
+  },
+  {
     slug: "trendless",
     title: "Trendless",
     category: "UX · Algonquin team project",

@@ -8,6 +8,7 @@ import beatportRedesign from "./projectRecords/beatport-redesign"
 import toldyaTennis from "./projectRecords/toldya-tennis"
 import videoProduction from "./projectRecords/video-production"
 import frequencyShift from "./projectRecords/frequency-shift"
+import instinctGroove from "./projectRecords/instinct-groove"
 
 /**
  * Shared project-detail records. Every record contains route metadata, localized
@@ -17,6 +18,7 @@ import frequencyShift from "./projectRecords/frequency-shift"
 export const projects = [
   videoProduction,
   frequencyShift,
+  instinctGroove,
   trendless,
   animaticRemastered,
   sevenDueDates,

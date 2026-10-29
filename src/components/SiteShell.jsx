@@ -159,8 +159,8 @@ export function SiteShell({ children }) {
   const { pathname } = useLocation()
   const discipline = disciplineForPath(pathname, projectDisciplines)
   const isHome = pathname === "/"
-  // The Frequency Shift case study is a dark page; the header reverses to match it.
-  const night = pathname === "/projects/frequency-shift"
+  // The Frequency Shift and Instinct Groove case studies are dark pages; the header reverses to match them.
+  const night = pathname === "/projects/frequency-shift" || pathname === "/projects/instinct-groove"
 
   useEffect(() => {
     document.documentElement.classList.toggle("menu-open", menuOpen)

@@ -1,0 +1,157 @@
+/* Instinct Groove card art: plates baked from the live wall. The room, the sign's light on its own layer
+   (plus-lighter, so room + sign gives back the lit frame), a wider bloom of that light, and fireflies in front. */
+.ig-card-art {
+  --ig-tx: 0;
+  --ig-ty: 0;
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  isolation: isolate;
+  background: #030504;
+}
+
+.ig-card-wall {
+  position: absolute;
+  inset: -5%;
+  display: block;
+  transform:
+    translate3d(calc(var(--ig-tx) * -1.6%), calc(var(--ig-ty) * -1.6%), 0)
+    scale(1.02);
+  transition: transform 1.1s cubic-bezier(.16, 1, .3, 1);
+}
+
+.ig-card-art .ig-card-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  border-radius: 0;
+  transform: none;
+  transition: opacity .6s ease, filter .6s ease;
+}
+
+.ig-card-room {
+  filter: brightness(.94);
+}
+
+.ig-card-sign {
+  mix-blend-mode: plus-lighter;
+}
+
+/* the haze around the sign: its own light, spread and soft, lifted when the lamp is pointed at. Screen, not
+   plus-lighter: Chrome blows a blurred plus-lighter layer out to white in patches. */
+.ig-card-bloom {
+  mix-blend-mode: screen;
+  opacity: .22;
+  filter: blur(14px) saturate(1.2);
+}
+
+.ig-card-flies {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+  transform: translate3d(calc(var(--ig-tx) * 2.4%), calc(var(--ig-ty) * 2.4%), 0);
+  transition: transform 1.1s cubic-bezier(.16, 1, .3, 1);
+}
+
+.ig-card-fly {
+  --ig-fly-color: 140 255 184;
+  position: absolute;
+  width: var(--ig-fly-size);
+  height: var(--ig-fly-size);
+  border-radius: 50%;
+  background: rgb(var(--ig-fly-color));
+  box-shadow: 0 0 6px 1px rgb(var(--ig-fly-color) / .8), 0 0 18px 4px rgb(var(--ig-fly-color) / .28);
+  mix-blend-mode: plus-lighter;
+  opacity: .5;
+  animation: ig-fly-drift var(--ig-fly-period) ease-in-out var(--ig-fly-delay) infinite alternate;
+}
+
+.ig-card-fly--blink {
+  --ig-fly-color: 196 255 92;
+  animation:
+    ig-fly-drift var(--ig-fly-period) ease-in-out var(--ig-fly-delay) infinite alternate,
+    ig-fly-blink calc(var(--ig-fly-period) * .42) ease-in-out var(--ig-fly-delay) infinite;
+}
+
+@keyframes ig-fly-drift {
+  0% { translate: 0 0; }
+  33% { translate: 14px -9px; }
+  66% { translate: -6px -17px; }
+  100% { translate: 10px 6px; }
+}
+
+/* a soft swell rather than a snap, as in the scene */
+@keyframes ig-fly-blink {
+  0%, 100% { opacity: .1; }
+  22% { opacity: .95; }
+  44% { opacity: .2; }
+}
+
+/* Pointed at: the lamp behind the letters stutters and comes back up, its haze swells and the wall leans in. */
+:is(.project-card, .gf-sheet):is(:hover, :focus-visible) .ig-card-sign {
+  animation: ig-lamp-stutter 1.1s linear both;
+}
+
+:is(.project-card, .gf-sheet):is(:hover, :focus-visible) .ig-card-bloom {
+  opacity: .42;
+  animation: ig-lamp-stutter 1.1s linear both;
+}
+
+:is(.project-card, .gf-sheet):is(:hover, :focus-visible) .ig-card-room {
+  filter: brightness(1.04);
+}
+
+:is(.project-card, .gf-sheet):is(:hover, :focus-visible) .ig-card-wall {
+  transform:
+    translate3d(calc(var(--ig-tx) * -1.6%), calc(var(--ig-ty) * -1.6%), 0)
+    scale(1.05);
+}
+
+:is(.project-card, .gf-sheet):is(:hover, :focus-visible) .ig-card-fly {
+  opacity: .85;
+}
+
+/* the failing lamp: dead, a couple of failed strikes, catches, a dip, then the steady hum */
+@keyframes ig-lamp-stutter {
+  0%, 4% { opacity: 1; }
+  6% { opacity: .1; }
+  10% { opacity: .78; }
+  13% { opacity: .06; }
+  19% { opacity: .55; }
+  21% { opacity: .12; }
+  30% { opacity: 1; }
+  44% { opacity: .62; }
+  56%, 100% { opacity: 1; }
+}
+
+/* The folder sheet: the sign sits high, so the strip that shows while the sheet is in the stack carries its light. */
+.ig-card-art--sheet .ig-card-wall {
+  inset: -3%;
+}
+
+.ig-card-art--sheet .ig-card-bloom {
+  opacity: .3;
+  filter: blur(8px) saturate(1.2);
+}
+
+.ig-card-art--sheet .ig-card-fly {
+  scale: .7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ig-card-wall,
+  .ig-card-flies,
+  .ig-card-art .ig-card-layer {
+    transition: none;
+  }
+
+  .ig-card-fly,
+  :is(.project-card, .gf-sheet):is(:hover, :focus-visible) :is(.ig-card-sign, .ig-card-bloom) {
+    animation: none;
+  }
+}

@@ -8,6 +8,7 @@ import { HeroLockup } from "../components/HeroLockup"
 import { ProjectCard } from "../components/ProjectCard"
 import { Reveal } from "../components/Reveal"
 import GlassFolder from "../components/GlassFolder"
+import { InstinctCardArt } from "../components/InstinctCardArt"
 import { StatusChip } from "../components/StatusChip"
 import { disciplines } from "../data/disciplines"
 import { projectIndex, projectsFor } from "../data/projectIndex"
@@ -76,6 +77,12 @@ function FrequencyShiftSheet({ project }) {
   )
 }
 
+/** Sheets that carry their project's own lit art rather than a cover image. */
+const sheetMedia = {
+  "frequency-shift": (project) => <FrequencyShiftSheet project={project} />,
+  "instinct-groove": () => <InstinctCardArt variant="sheet" />,
+}
+
 /** One discipline as a folder of its projects. Click the glass to fan the projects out; each is a link to its page. */
 function DisciplineFolder({ discipline, index }) {
   const navigate = useNavigate()
@@ -85,8 +92,8 @@ function DisciplineFolder({ discipline, index }) {
   // The first project in display order sits nearest the glass, so the fan reads front to back.
   const files = [...projects].reverse().map((project) => ({
     name: project.title,
-    ...(project.slug === "frequency-shift"
-      ? { media: <FrequencyShiftSheet project={project} /> }
+    ...(sheetMedia[project.slug]
+      ? { media: sheetMedia[project.slug](project) }
       : { image: project.cover, fit: project.mediaFit, background: project.mediaBackground }),
     href: `/projects/${project.slug}`,
   }))

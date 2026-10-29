@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Instinct plate bake</title>
+  <style>
+    html, body { margin: 0; background: #000; }
+    #host { position: relative; overflow: hidden; }
+  </style>
+</head>
+<body>
+  <!-- Dev-only (npm run bake:instinct drives it): renders still plates of the Instinct Groove wall. Not part of the build. -->
+  <div id="host"></div>
+  <script type="module">
+    import { createHero } from "/src/scenes/instinct/hero.js"
+
+    const params = new URLSearchParams(location.search)
+    const [width, height] = (params.get("size") || "1440x900").split("x").map(Number)
+    const host = document.getElementById("host")
+    Object.assign(host.style, { width: `${width}px`, height: `${height}px` })
+    // anchor=x,y,w places the wordmark on that box (container px); otherwise it is centred, focusY down the frame
+    const box = params.get("anchor")?.split(",").map(Number)
+    const anchor = box ? () => ({ x: box[0], y: box[1], w: box[2], h: box[2] * 79.7 / 581.76 }) : null
+    const focus = Number(params.get("focusY") || .485)
+    const hero = await createHero(host, { bake: true, layout: params.get("layout") || "poster", anchor, focusY: () => focus, carve: !params.has("nocarve") })
+
+    const pixels = (source) => {
+      const c = document.createElement("canvas")
+      c.width = source.width; c.height = source.height
+      const ctx = c.getContext("2d", { willReadFrequently: true })
+      ctx.drawImage(source, 0, 0)
+      return { c, ctx, data: ctx.getImageData(0, 0, c.width, c.height) }
+    }
+    // room: the room lit, sign off. lit: the same moment with the sign on. sign: lit minus room, so that
+    // room + sign (plus-lighter) gives back lit, and the sign can flicker on its own over the room.
+    window.__bake = () => {
+      const room = pixels(hero.bakeFrame({ at: 14, glow: 0 }))
+      const lit = pixels(hero.bakeFrame({ at: 14, glow: 1 }))
+      const out = new ImageData(lit.data.width, lit.data.height)
+      for (let i = 0; i < out.data.length; i += 4) {
+        for (let k = 0; k < 3; k++) out.data[i + k] = Math.max(0, lit.data.data[i + k] - room.data.data[i + k])
+        out.data[i + 3] = 255
+      }
+      room.ctx.putImageData(room.data, 0, 0)
+      const sign = document.createElement("canvas")
+      sign.width = out.width; sign.height = out.height
+      sign.getContext("2d").putImageData(out, 0, 0)
+      return { room: room.c.toDataURL("image/png"), lit: lit.c.toDataURL("image/png"), sign: sign.toDataURL("image/png"), wm: hero.view.wm }
+    }
+    window.__bakeReady = true
+
+    // ?post=<receiver>&name=card&keep=room,sign: send the plates to scripts/bake-instinct-plates.mjs
+    const receiver = params.get("post")
+    if (receiver) {
+      const plates = window.__bake()
+      for (const kind of params.get("keep").split(",")) {
+        const blob = await (await fetch(plates[kind])).blob()
+        await fetch(`${receiver}/${params.get("name")}-${kind}.png`, { method: "POST", body: blob, headers: { "Content-Type": "image/png" } })
+      }
+      document.title = "plates sent"
+    }
+  </script>
+</body>
+</html>

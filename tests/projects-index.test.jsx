@@ -15,6 +15,14 @@ describe("project index", () => {
         mediaBackground: "#020102",
         disciplines: ["web", "motion"],
       },
+      {
+        slug: "instinct-groove",
+        title: "Instinct Groove",
+        category: "Web development · WebGL",
+        cover: "/assets/instinct/card-room.webp",
+        mediaBackground: "#030504",
+        disciplines: ["web"],
+      },
       { slug: "trendless", title: "Trendless", category: "UX · Algonquin team project", cover: "/assets/trendless-cover.png", disciplines: ["ux"] },
       { slug: "animatic-remastered", title: "Animatic Remastered", category: "Motion graphics · Algonquin", cover: "/assets/animatic-cover.png", disciplines: ["motion"] },
       { slug: "seven-due-dates", title: "Seven Due Dates", category: "Video · Algonquin", cover: "/assets/seven-due-dates-cover.png", disciplines: ["motion"] },
@@ -39,7 +47,7 @@ describe("project index", () => {
     for (const project of projectIndex) {
       for (const id of project.disciplines) expect(disciplineIds).toContain(id)
     }
-    expect(projectsFor("web").map((project) => project.slug)).toEqual(["frequency-shift", "2024-chasing-greatness"])
+    expect(projectsFor("web").map((project) => project.slug)).toEqual(["frequency-shift", "instinct-groove", "2024-chasing-greatness"])
     expect(projectsFor("motion").map((project) => project.slug)).toEqual(["video-production", "frequency-shift", "animatic-remastered", "seven-due-dates"])
     expect(projectsFor("ux").map((project) => project.slug)).toEqual(["trendless", "beatport-redesign", "toldya-tennis"])
   })

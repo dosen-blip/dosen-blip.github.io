@@ -5,6 +5,7 @@ import { SiteShell } from "./components/SiteShell"
 import { RouteScrollReset } from "./components/RouteScrollReset"
 import { ProjectDetail } from "./components/ProjectDetail"
 import { FrequencyShiftDetail } from "./components/FrequencyShiftDetail"
+import { InstinctDetail } from "./components/InstinctDetail"
 import { getProject } from "./data/projects"
 import { knownRoutes } from "./data/routes"
 import { markHydrated } from "./utils/hydration"
@@ -25,9 +26,9 @@ function ProjectRoute() {
   const slug = useLocation().pathname.split("/").filter(Boolean).at(-1)
   const project = getProject(slug)
   if (!project) return <NotFoundPage />
-  return project.layout === "frequencyShift"
-    ? <FrequencyShiftDetail project={project} />
-    : <ProjectDetail project={project} />
+  if (project.layout === "frequencyShift") return <FrequencyShiftDetail project={project} />
+  if (project.layout === "instinct") return <InstinctDetail project={project} />
+  return <ProjectDetail project={project} />
 }
 
 export function App() {

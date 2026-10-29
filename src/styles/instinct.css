@@ -1,0 +1,541 @@
+/* Instinct Groove case study: the Frequency Shift structure on the Instinct wall. Black and moss, the brand green,
+   the warm white of the backlit sign, Archivo Expanded for display and Space Mono for labels, as on instinctgroove.com. */
+@font-face { font-family: "Archivo IG"; src: url("/assets/instinct/fonts/archivo-var.woff2") format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; font-style: normal; font-display: swap; }
+@font-face { font-family: "Space Mono IG"; src: url("/assets/instinct/fonts/space-mono-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+
+.instinct-page.page-wrap {
+  --ig-bg: #030504;
+  --ig-panel: #07100a;
+  --ig-panel-2: #0b150e;
+  --ig-ink: #f3f1ea;
+  --ig-muted: #b4bdb1;
+  --ig-soft: #7d897e;
+  --ig-line: rgba(255, 255, 255, .14);
+  --ig-green: #32e07a;
+  --ig-moss: #5d7d4f;
+  --ig-sign: #fff1de;
+  --ig-ease: cubic-bezier(.16, 1, .3, 1);
+  --ig-display: "Archivo IG", var(--font-display);
+  --ig-mono: "Space Mono IG", var(--font-mono);
+  padding: 0;
+  overflow: clip;
+  background: var(--ig-bg);
+  color: var(--ig-ink);
+}
+
+@supports not (overflow: clip) {
+  .instinct-page.page-wrap {
+    overflow: hidden;
+  }
+}
+
+.instinct-page p {
+  color: var(--ig-muted);
+}
+
+.instinct-page :focus-visible {
+  outline: 2px solid var(--ig-green);
+  outline-offset: 4px;
+}
+
+/* ---------- Hero: the wall ---------- */
+
+.ig-hero {
+  position: relative;
+  min-height: min(980px, max(720px, calc(100svh - var(--header-h))));
+  padding: clamp(24px, 4vw, 56px);
+  display: flex;
+  flex-direction: column;
+  isolation: isolate;
+  overflow: hidden;
+  background: #000;
+}
+
+.ig-scene,
+.ig-hero-still,
+.ig-hero-shade {
+  position: absolute;
+  inset: 0;
+}
+
+.ig-scene {
+  z-index: -3;
+}
+
+.ig-hero-still {
+  z-index: -3;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 0% 50%;
+  animation: ig-still-in 2.2s .2s ease both;
+}
+
+/* only the foot of the wall darkens, under the meta row; the sign and the ivy keep their own light */
+.ig-hero-shade {
+  z-index: -2;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, .5) 0%, transparent 14%, transparent 76%, rgba(3, 5, 4, .78) 100%);
+}
+
+.ig-hero-topline,
+.ig-hero-links {
+  display: flex;
+  align-items: center;
+}
+
+.ig-hero-topline {
+  justify-content: space-between;
+  gap: 24px;
+  animation: ig-rise-in .58s .08s var(--ig-ease) both;
+}
+
+.ig-back-link,
+.ig-source-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ig-ink);
+  font-family: var(--ig-mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.ig-back-link .ui-icon,
+.ig-source-link .ui-icon {
+  width: 15px;
+  height: 15px;
+  transition: transform .35s var(--ig-ease);
+}
+
+.ig-source-link {
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(255, 255, 255, .45);
+  transition: border-color .25s ease, color .25s ease;
+}
+
+.ig-hero-copy {
+  width: min(700px, 50%);
+  margin-top: auto;
+  padding: clamp(96px, 14vh, 168px) 0 44px;
+  animation: ig-rise-in .8s .3s var(--ig-ease) both;
+}
+
+.ig-hero-kicker,
+.ig-eyebrow {
+  margin: 0 0 22px;
+  color: var(--ig-green) !important;
+  font-family: var(--ig-mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.ig-hero-wordmark {
+  margin: 0 0 32px;
+}
+
+/* the box the scene carves the wordmark into; over the still the page letters it here */
+.ig-wordmark-slot {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 581.76 / 79.7;
+}
+
+.ig-wordmark-sign {
+  position: absolute;
+  inset: 0;
+  display: block;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ig-wordmark-sign > span {
+  position: absolute;
+  inset: 0;
+  display: block;
+  -webkit-mask: var(--ig-mark) center / 100% 100% no-repeat;
+  mask: var(--ig-mark) center / 100% 100% no-repeat;
+}
+
+.ig-wordmark-sign--face {
+  filter:
+    drop-shadow(0 0 1px rgba(255, 246, 232, .95))
+    drop-shadow(0 0 9px rgba(255, 226, 180, .5))
+    drop-shadow(0 0 28px rgba(255, 214, 160, .26));
+}
+
+.ig-wordmark-sign--face > span {
+  background: linear-gradient(180deg, #fffaf3 0%, var(--ig-sign) 55%, #f0d2a8 100%);
+}
+
+.ig-wordmark-sign--haze {
+  filter: blur(22px);
+}
+
+.ig-wordmark-sign--haze > span {
+  background: rgba(255, 224, 176, .55);
+}
+
+.ig-hero[data-scene="still"] .ig-wordmark-sign--face {
+  animation: ig-sign-strike 2.6s .5s linear both;
+}
+
+.ig-hero[data-scene="still"] .ig-wordmark-sign--haze {
+  animation: ig-sign-strike-haze 2.6s .5s linear both;
+}
+
+.ig-hero-dek {
+  max-width: 40ch;
+  margin: 0;
+  color: var(--ig-ink) !important;
+  font-size: clamp(16px, 1.45vw, 20px);
+  line-height: 1.5;
+}
+
+.ig-hero-meta {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  border-top: 1px solid rgba(255, 255, 255, .42);
+  animation: ig-rise-in .7s .48s var(--ig-ease) both;
+}
+
+.ig-hero-meta div {
+  min-width: 0;
+  padding: 16px 18px 0 0;
+  border-right: 1px solid rgba(255, 255, 255, .22);
+}
+
+.ig-hero-meta div + div {
+  padding-left: 18px;
+}
+
+.ig-hero-meta div:last-child {
+  border-right: 0;
+}
+
+.ig-hero-meta dt,
+.ig-hero-meta dd {
+  font-family: var(--ig-mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.ig-hero-meta dt {
+  margin-bottom: 7px;
+  color: rgba(255, 255, 255, .62);
+}
+
+.ig-hero-meta dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--ig-ink);
+}
+
+@keyframes ig-rise-in {
+  from { opacity: 0; transform: translate3d(0, 22px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes ig-still-in {
+  0%, 30% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* the lamp behind the letters: dead, a few failed strikes, then it catches (the scene's Flicker boot, compressed) */
+@keyframes ig-sign-strike {
+  0%, 10% { opacity: 0; }
+  12% { opacity: .5; }
+  15% { opacity: .04; }
+  24% { opacity: .82; }
+  27% { opacity: .08; }
+  33% { opacity: .38; }
+  36% { opacity: .05; }
+  52% { opacity: .6; }
+  70%, 100% { opacity: 1; }
+}
+
+@keyframes ig-sign-strike-haze {
+  0%, 10% { opacity: 0; }
+  12% { opacity: .2; }
+  15% { opacity: 0; }
+  24% { opacity: .34; }
+  27% { opacity: .02; }
+  52% { opacity: .26; }
+  70%, 100% { opacity: .42; }
+}
+
+/* ---------- The build: the one section under the hero ---------- */
+
+.ig-section {
+  position: relative;
+  padding: clamp(78px, 7vw, 108px) clamp(24px, 5.2vw, 76px);
+}
+
+.ig-section-heading h2 {
+  max-width: 920px;
+  margin: 0;
+  color: var(--ig-ink);
+  font-family: var(--ig-display);
+  font-size: clamp(34px, 4.2vw, 62px);
+  font-stretch: 125%;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  line-height: .98;
+  text-transform: uppercase;
+}
+
+.ig-narrative {
+  max-width: 640px;
+}
+
+.ig-narrative p {
+  font-size: clamp(16px, 1.2vw, 18px);
+  line-height: 1.62;
+}
+
+.ig-narrative p + p {
+  margin-top: 22px;
+}
+
+.ig-build {
+  background:
+    linear-gradient(180deg, rgba(93, 125, 79, .07), transparent 45%),
+    var(--ig-bg);
+}
+
+.ig-build-intro {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(14px, 2vw, 28px);
+}
+
+.ig-build-intro .ig-section-heading {
+  grid-column: 1 / 7;
+}
+
+.ig-build-intro .ig-narrative {
+  grid-column: 7 / 13;
+  padding-top: clamp(40px, 4vw, 64px);
+}
+
+.ig-build-link {
+  grid-column: 7 / 13;
+  justify-self: start;
+  margin-top: clamp(32px, 3vw, 44px);
+}
+
+.instinct-page .ig-cta {
+  color: var(--ig-ink);
+}
+
+.instinct-page .ig-cta:hover > span:first-child {
+  color: var(--ig-green);
+}
+
+/* ---------- Related ---------- */
+
+.ig-related {
+  border-top: 1px solid var(--ig-line);
+  background: var(--ig-panel);
+}
+
+.ig-related-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--ig-line);
+}
+
+.ig-related-heading .ig-eyebrow {
+  margin: 0;
+}
+
+.ig-related-heading h2 {
+  margin: 0;
+  color: var(--ig-ink);
+  font-family: var(--ig-display);
+  font-size: clamp(34px, 4.6vw, 64px);
+  font-stretch: 125%;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+}
+
+.ig-related-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 38px;
+}
+
+.ig-related-card {
+  min-width: 0;
+  color: var(--ig-ink);
+}
+
+.ig-related-image {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid var(--ig-line);
+  background: #0e1610;
+}
+
+.ig-related-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .5s var(--ig-ease);
+}
+
+.ig-related-copy {
+  position: relative;
+  padding: 15px 30px 0 0;
+}
+
+.ig-related-copy h3 {
+  margin: 7px 0 0;
+  color: var(--ig-ink);
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.ig-related-copy .ui-icon {
+  position: absolute;
+  top: 15px;
+  right: 0;
+  width: 17px;
+  height: 17px;
+  transition: transform .35s var(--ig-ease);
+}
+
+.ig-related-all {
+  margin-top: 42px;
+}
+
+@media (hover: hover) {
+  .ig-source-link:hover,
+  .ig-source-link:focus-visible {
+    border-color: var(--ig-green);
+    color: var(--ig-green);
+  }
+
+  .ig-back-link:hover .ui-icon {
+    transform: translateX(-3px);
+  }
+
+  .ig-source-link:hover .ui-icon,
+  .ig-related-card:hover .ig-related-copy .ui-icon {
+    transform: translate(2px, -2px);
+  }
+
+  .ig-related-card:hover .ig-related-image img {
+    transform: scale(1.04);
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .ig-hero-copy {
+    width: min(640px, 60%);
+  }
+}
+
+@media (max-width: 809.98px) {
+  .ig-hero {
+    min-height: calc(100svh - var(--header-h));
+    padding: 20px;
+  }
+
+  .ig-hero-still {
+    object-position: 62% 50%;
+  }
+
+  .ig-hero-copy {
+    width: 100%;
+    padding: 120px 0 34px;
+  }
+
+  .ig-hero-kicker {
+    max-width: 32ch;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  .ig-hero-wordmark {
+    margin-bottom: 26px;
+  }
+
+  .ig-hero-dek {
+    font-size: 15px;
+  }
+
+  .ig-hero-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ig-hero-meta div {
+    padding: 11px 8px 11px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .22);
+  }
+
+  .ig-hero-meta div + div {
+    padding-left: 0;
+  }
+
+  .ig-hero-meta div:nth-child(2n) {
+    padding-left: 9px;
+    border-right: 0;
+  }
+
+  .ig-section {
+    padding: 76px 20px;
+  }
+
+  .ig-build-intro {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ig-build-intro .ig-section-heading,
+  .ig-build-intro .ig-narrative,
+  .ig-build-link {
+    grid-column: 1;
+  }
+
+  .ig-build-intro .ig-narrative {
+    padding-top: 30px;
+  }
+
+  .ig-related-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ig-hero-topline,
+  .ig-hero-copy,
+  .ig-hero-meta,
+  .ig-hero-still {
+    animation: none;
+  }
+
+  .ig-hero[data-scene="still"] .ig-wordmark-sign--face,
+  .ig-hero[data-scene="still"] .ig-wordmark-sign--haze {
+    animation: none;
+  }
+
+  .ig-hero[data-scene="still"] .ig-wordmark-sign--face {
+    opacity: 1;
+  }
+
+  .ig-hero[data-scene="still"] .ig-wordmark-sign--haze {
+    opacity: .42;
+  }
+}

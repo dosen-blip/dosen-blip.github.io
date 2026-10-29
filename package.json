@@ -11,6 +11,7 @@
     "capture": "node scripts/capture-reference.mjs",
     "capture:interactions": "node scripts/capture-interactions.mjs",
     "vendor:assets": "node scripts/vendor-assets.mjs",
+    "bake:instinct": "node scripts/bake-instinct-plates.mjs",
     "build": "vite build && vite build --ssr src/entry-server.jsx --outDir .prerender && node scripts/prerender.mjs",
     "serve": "node scripts/serve-dist.mjs",
     "crawl": "node scripts/crawl-dist.mjs",
@@ -21,7 +22,8 @@
     "lenis": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "react-router-dom": "latest"
+    "react-router-dom": "latest",
+    "three": "0.170.0"
   },
   "devDependencies": {
     "@eslint/js": "latest",

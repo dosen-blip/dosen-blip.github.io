@@ -5,7 +5,7 @@ import { projectIndex } from "../src/data/projectIndex"
 import { projects } from "../src/data/projects"
 
 describe("project records", () => {
-  it("completes all ten index records in route order", () => {
+  it("completes all eleven index records in route order", () => {
     expect(projects.map((project) => project.slug)).toEqual(projectIndex.map((project) => project.slug))
   })
 
@@ -71,6 +71,23 @@ describe("project records", () => {
           expect(post.src.startsWith("/assets/frequency-shift/photos/")).toBe(true)
           expect(post.href).toMatch(/^https:\/\/www\.instagram\.com\/p\//)
           expect(fs.existsSync(path.join(process.cwd(), "public", post.src))).toBe(true)
+        }
+        continue
+      }
+
+      if (project.layout === "instinct") {
+        expect(project.liveUrl).toBe("https://instinctgroove.com/")
+        expect(project.content.hero.meta.map((item) => item.label)).toEqual(["Role", "Platform", "Output", "Period"])
+        expect(project.content.build.paragraphs.length).toBeGreaterThan(0)
+        for (const image of [project.content.hero.still, project.seo.image]) {
+          expect(fs.existsSync(path.join(process.cwd(), "public", image))).toBe(true)
+        }
+        // the live scene's textures and SVGs, and the plates the cards and the folder sheet are built from
+        for (const name of ["concrete-dark.webp", "concrete-light.webp", "leaf-atlas.webp", "leaf-atlas.json", "wordmark.svg", "octopus.svg"]) {
+          expect(fs.existsSync(path.join(process.cwd(), "public/assets/instinct/scene", name))).toBe(true)
+        }
+        for (const plate of ["card-room", "card-sign", "card-lit", "sheet-room", "sheet-sign", "hero-room"]) {
+          expect(fs.existsSync(path.join(process.cwd(), "public/assets/instinct", `${plate}.webp`))).toBe(true)
         }
         continue
       }

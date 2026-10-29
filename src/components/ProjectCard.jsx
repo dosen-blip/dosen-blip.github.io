@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import { ArrowUpRightIcon } from "./Icons"
 import { DisciplineTags } from "./Tags"
+import { InstinctCardArt } from "./InstinctCardArt"
 import "../styles/project-card-fs.css"
 
 /** Selection handles, as in a design tool, that snap onto a card when you point at it. */
@@ -11,6 +12,7 @@ export function SelectionHandles() {
 export function ProjectCard({ project, className = "", headingLevel = 3 }) {
   const Heading = `h${headingLevel}`
   const isFrequencyShift = project.slug === "frequency-shift"
+  const isInstinct = project.slug === "instinct-groove"
   const mediaClassName = [
     "project-card-media",
     project.mediaFit === "contain" ? "project-card-media-fit-contain" : "",
@@ -18,6 +20,7 @@ export function ProjectCard({ project, className = "", headingLevel = 3 }) {
   const cardClassName = [
     "project-card",
     isFrequencyShift ? "project-card-frequency-shift" : "",
+    isInstinct ? "project-card-instinct" : "",
     className,
   ].filter(Boolean).join(" ")
 
@@ -43,7 +46,7 @@ export function ProjectCard({ project, className = "", headingLevel = 3 }) {
                 <img className="frequency-shift-card-logo-layer frequency-shift-card-logo-core" src={project.cover} alt="" loading="lazy" decoding="async" />
               </span>
             </>
-          ) : <img src={project.cover} alt="" loading="lazy" decoding="async" />}
+          ) : isInstinct ? <InstinctCardArt /> : <img src={project.cover} alt="" loading="lazy" decoding="async" />}
         </div>
         <SelectionHandles />
       </div>
