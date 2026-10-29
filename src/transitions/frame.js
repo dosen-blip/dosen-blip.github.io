@@ -4,11 +4,12 @@
 // a resize, and the size label counts up to the screen size. The card's own picture comes with it, so the bridge is
 // the project's image filling the screen (stage black when there is no picture).
 // Showing, the picture fades off the new page while the frame shrinks onto its hero (its title, reveal or neon
-// wordmark), holds there for a beat with that element's size, then lets go.
+// wordmark), holds there for a beat with that element's size, then lets go. The hero is measured on every frame:
+// it is rising into place as the frame arrives, so the frame rides it and lands where it settles.
 
 import { clamp01, easeInOutCubic, easeOutCubic, lerp } from "./ease"
 
-export const FRAME_TIMING = { hide: .7, show: 1 }
+export const FRAME_TIMING = { hide: .7, show: 1, uncoverAt: 0 }
 const HANDLE = 10
 const LABEL_GAP = 10
 const SCRIM = .28 // stage black laid over the picture by the time it fills the screen, so the frame reads on it
@@ -55,16 +56,25 @@ function measure(element) {
   return element.getBoundingClientRect()
 }
 
-/** The new page's hero, measured once it is on screen under the cover. */
-export function findTarget(root, width, height) {
+/** Where `element` is now, cut to the screen, or null when it is off screen. */
+export function measureTarget(element, width, height) {
+  const { left, top, width: w, height: h } = measure(element)
+  return clipRect({ x: left, y: top, width: w, height: h }, width, height, INSET)
+}
+
+/** The new page's hero: the first of TARGETS that is on screen once the page has mounted under the cover. */
+export function findTargetElement(root, width, height) {
   for (const selector of TARGETS) {
     const element = root.querySelector(selector)
-    if (!element) continue
-    const { left, top, width: w, height: h } = measure(element)
-    const rect = clipRect({ x: left, y: top, width: w, height: h }, width, height, INSET)
-    if (rect) return rect
+    if (element && measureTarget(element, width, height)) return element
   }
-  return centreRect(width, height)
+  return null
+}
+
+/** Where the frame lands: the hero if there is one on screen, otherwise a box in the middle. */
+export function findTarget(root, width, height) {
+  const element = findTargetElement(root, width, height)
+  return (element && measureTarget(element, width, height)) || centreRect(width, height)
 }
 
 /**

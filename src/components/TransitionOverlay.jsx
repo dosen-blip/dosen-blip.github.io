@@ -3,7 +3,7 @@ import { transition } from "../transitions/transitionStore"
 import { useTransitionPhase } from "../transitions/useTransitionPhase"
 import { cutTime, drawDots } from "../transitions/dots"
 import { drawPen } from "../transitions/pen"
-import { centreRect, clipRect, drawSelection, findTarget, selectionFrame } from "../transitions/frame"
+import { centreRect, clipRect, drawSelection, findTargetElement, measureTarget, selectionFrame } from "../transitions/frame"
 
 const DPR_MAX = 1.5
 
@@ -44,7 +44,7 @@ export function TransitionOverlay() {
     let dpr = 1
     let colors = null
     let from = null
-    let target = null
+    let target = null // the new page's hero element, found under the cover
 
     const resize = () => {
       width = window.innerWidth
@@ -61,16 +61,17 @@ export function TransitionOverlay() {
       from = (rect && clipRect(rect, width, height)) || centreRect(width, height)
       target = null
     }
-    // Under the cover the new page is on screen and scrolled to the top: measure what the frame will land on.
+    // Under the cover the new page is on screen and scrolled to the top: find what the frame will land on.
     const measure = () => {
-      if (transition.options.style === "frame") target = findTarget(document, width, height)
+      if (transition.options.style === "frame") target = findTargetElement(document, width, height)
     }
     const draw = () => {
       if (!transition.active) return
       if (!colors) start()
       const { cover, phase, options } = transition
       if (options.style === "frame") {
-        const frame = selectionFrame(phase, cover, { from, target: target || centreRect(width, height), width, height })
+        const landing = (phase === "showing" && target && measureTarget(target, width, height)) || centreRect(width, height)
+        const frame = selectionFrame(phase, cover, { from, target: landing, width, height })
         drawSelection(ctx, { width, height, dpr, frame, colors, media: options.origin?.media, phase, cover })
       } else {
         const time = cutTime(cover, phase, options)

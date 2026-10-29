@@ -19,6 +19,15 @@ function Address() {
   return <output data-testid="address">{useLocation().pathname}</output>
 }
 
+const observers = new Set()
+
+/** Report every observed element as on screen, as a browser would once the new page has rendered. */
+function intersectAll() {
+  for (const observer of [...observers]) {
+    for (const node of observer.nodes) observer.callback([{ isIntersecting: true, target: node }])
+  }
+}
+
 function mount(path, { reduced }) {
   window.matchMedia = (query) => ({
     matches: query.includes("prefers-reduced-motion") ? reduced : false,
@@ -41,7 +50,15 @@ beforeEach(() => {
   vi.stubGlobal("requestAnimationFrame", vi.fn(() => 1))
   vi.stubGlobal("cancelAnimationFrame", vi.fn())
   class Observer { observe() {} unobserve() {} disconnect() {} }
-  vi.stubGlobal("IntersectionObserver", Observer)
+  // Intersection observers can be fired by hand: each remembers its callback and elements.
+  class Intersections {
+    constructor(callback) { this.callback = callback; this.nodes = []; observers.add(this) }
+    observe(node) { this.nodes.push(node) }
+    unobserve() {}
+    disconnect() { observers.delete(this) }
+  }
+  observers.clear()
+  vi.stubGlobal("IntersectionObserver", Intersections)
   vi.stubGlobal("ResizeObserver", Observer)
 })
 
@@ -76,6 +93,27 @@ describe("page transitions", () => {
     expect(transition.phase).toBe("idle")
     expect(lenis.start).toHaveBeenCalledOnce()
     expect(document.querySelector(".transition-overlay")).not.toHaveClass("is-active")
+  })
+
+  it("holds the new page's entrances until the cut opens, then lets them rise", () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] })
+    mount("/stack", { reduced: false })
+    fireEvent.click(screen.getByRole("link", { name: "Go to About" }))
+    act(() => transition.step(transition.options.hide))
+    const hero = document.querySelector(".about-hero")
+    expect(hero).toHaveClass("reveal-pending")
+
+    // The section is on screen but still covered: it must not start rising unseen.
+    act(() => intersectAll())
+    act(() => vi.advanceTimersByTime(2000))
+    expect(hero).not.toHaveClass("reveal-in")
+    expect(transition.covering).toBe(true)
+
+    act(() => transition.step(transition.options.uncoverAt + .01))
+    expect(transition.covering).toBe(false)
+    act(() => vi.advanceTimersByTime(1000))
+    expect(hero).toHaveClass("reveal-in")
+    vi.useRealTimers()
   })
 
   it("keeps the header on the page being shown until the swap", () => {

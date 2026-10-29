@@ -19,7 +19,7 @@ export const EDGE = .4 // dots smaller than this share of full size are drawn bl
 // long one dot takes to fill or empty as an edge passes. `hold`: how long the screen stays covered after the swap,
 // the bridge the pen draws in. The black any one spot sees lasts about `close` + `hold`.
 export const PULSE = { close: .3, grow: .18, hold: .26, open: .36, shrink: .2 }
-export const DOT_TIMING = { hide: PULSE.close + PULSE.grow, show: PULSE.hold + PULSE.open + PULSE.shrink }
+export const DOT_TIMING = { hide: PULSE.close + PULSE.grow, show: PULSE.hold + PULSE.open + PULSE.shrink, uncoverAt: PULSE.hold }
 
 /** Seconds since the cut started, from where the cover is (with the durations it is running at). */
 export function cutTime(cover, phase, timing = DOT_TIMING) {

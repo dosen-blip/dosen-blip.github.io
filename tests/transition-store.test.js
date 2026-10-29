@@ -82,4 +82,41 @@ describe("transition store", () => {
     transition.navigate(() => {})
     expect(transition.options).toMatchObject({ style: "dots", origin: null, hide: HIDE_DURATION, show: SHOW_DURATION })
   })
+
+  it("marks when the cover starts opening, after any hold, and what is still covered until then", () => {
+    const events = []
+    transition.on("uncover", () => events.push(["uncover", transition.cover]))
+    let coveredDuringSwap = null
+    transition.navigate(() => { coveredDuringSwap = transition.covering }, { hide: .5, show: 1, uncoverAt: .25 })
+    expect(transition.covering).toBe(true)
+
+    transition.step(.5)
+    expect(coveredDuringSwap).toBe(true)
+    expect(transition.phase).toBe("showing")
+    expect(events).toEqual([])
+
+    transition.step(.2)
+    expect(transition.covering).toBe(true)
+    transition.step(.1)
+    expect(events).toHaveLength(1)
+    expect(transition.covering).toBe(false)
+
+    transition.step(1)
+    expect(transition.phase).toBe("idle")
+    expect(events).toHaveLength(1)
+  })
+
+  it("uncovers at the swap when there is no hold, and again after an interrupted cut swaps", () => {
+    let uncovers = 0
+    transition.on("uncover", () => { uncovers += 1 })
+    transition.navigate(() => {}, { hide: .5, show: 1 })
+    transition.step(.5)
+    expect(uncovers).toBe(1)
+
+    transition.step(.3)
+    transition.navigate(() => {})
+    expect(transition.phase).toBe("hiding")
+    transition.step(1)
+    expect(uncovers).toBe(2)
+  })
 })

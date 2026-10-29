@@ -10,6 +10,7 @@ import { getProject } from "./data/projects"
 import { knownRoutes } from "./data/routes"
 import { transition } from "./transitions/transitionStore"
 import { takeOrigin, trackClicks } from "./transitions/origin"
+import { trackIntent } from "./transitions/prefetch"
 import { DOT_TIMING } from "./transitions/dots"
 import { FRAME_TIMING } from "./transitions/frame"
 import { markHydrated, mountedAfterHydration } from "./utils/hydration"
@@ -75,6 +76,7 @@ function Pages({ reduced }) {
   }, [view, lenis])
 
   useEffect(() => trackClicks(), [])
+  useEffect(() => trackIntent(), [])
 
   // The app puts every page at the top under the cover itself; the browser restoring a scroll position on back and
   // forward would jump the old page before the cover reaches it.
