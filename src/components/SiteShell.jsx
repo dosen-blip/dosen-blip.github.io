@@ -11,6 +11,7 @@ import { NeonCursor } from "./NeonCursor"
 import { BrandSprite, MDMark, Wordmark } from "./Wordmark"
 import { ThemeToggle } from "./ThemeToggle"
 import { StatusChip } from "./StatusChip"
+import { useUncovered } from "../transitions/arrival"
 
 function isActive(item, pathname) {
   return item.matches.some((path) => pathname === path || pathname.startsWith(`${path}/`))
@@ -153,14 +154,21 @@ function EndCard() {
   )
 }
 
-export function SiteShell({ children }) {
+/**
+ * `pathname` is the page on screen. During a page transition the address bar is already on the next page while the
+ * old one is still showing, so the header, backdrop and end card follow the page, not the URL.
+ */
+export function SiteShell({ children, pathname: shown }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const buttonRef = useRef(null)
-  const { pathname } = useLocation()
+  const location = useLocation()
+  const pathname = shown ?? location.pathname
   const discipline = disciplineForPath(pathname, projectDisciplines)
   const isHome = pathname === "/"
   // The Frequency Shift and Instinct Groove case studies are dark pages; the header reverses to match them.
   const night = pathname === "/projects/frequency-shift" || pathname === "/projects/instinct-groove"
+  // The header's splash plays as a page transition opens, not under its cover.
+  const uncovered = useUncovered()
 
   useEffect(() => {
     document.documentElement.classList.toggle("menu-open", menuOpen)
@@ -204,7 +212,7 @@ export function SiteShell({ children }) {
       <header className={`site-header${menuOpen ? " is-menu-open" : ""}${night ? " is-night" : ""}${heroInView && !menuOpen ? " is-hero-in-view" : ""}`} id="top">
         <div className="page site-header-inner">
           <Link to="/" className="header-logo" aria-label="Matia Dosen, home" onClick={closeMenu}>
-            <Wordmark key={pathname} splash={isHome ? null : discipline} />
+            <Wordmark key={uncovered ? pathname : `${pathname}-covered`} splash={isHome || !uncovered ? null : discipline} />
           </Link>
           <NavLinks pathname={pathname} className="header-nav" />
           <div className="header-actions">

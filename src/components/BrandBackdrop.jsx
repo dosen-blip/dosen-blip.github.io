@@ -3,17 +3,22 @@ import { ToolIcon } from "../brand/ToolIcon"
 import { toolNames } from "../brand/toolNames"
 import { getDiscipline } from "../data/disciplines"
 import { setCursorHeat } from "../utils/cursorHeat"
+import { transition } from "../transitions/transitionStore"
+import { GRID_PARALLAX, waveFront, waveOrigin } from "../transitions/dots"
 
 const CELL_X = 120
 const CELL_Y = 120
 const ROWS_PER_TILE = 4
 const PERIOD = CELL_Y * ROWS_PER_TILE // the pattern repeats every 480px, a multiple of the 30px dot grid
-const PARALLAX = .22
+const PARALLAX = GRID_PARALLAX // the page transition's dots line up with these
 const NEAR = 220
 const PHONE = 810
 const TOUCH = .62 // how near (0 to 1) the pointer must be before a tool starts tinting the cursor
 const SPARK_EVERY = 900 // ms between icons lighting up blue
 const SPARK_EVERY_PHONE = 600 // phones have no hover glow, so they spark more often
+const SHOVE_BAND = 180 // tools this far ahead of a page transition's dot wave get pushed along by it
+const SHOVE = 34 // px, at the wave front
+const LANDING_SPARKS = 5 // tools that light up as a new page is uncovered
 
 // Small deterministic hash so the scatter is stable between renders and resizes.
 function hash(a, b, salt = 0) {
@@ -103,6 +108,7 @@ export function BrandBackdrop({ discipline = null }) {
     let offset = 0
     let lastOffset = null
     let lit = 0
+    let wave = null
 
     const render = () => {
       frame = 0
@@ -114,11 +120,12 @@ export function BrandBackdrop({ discipline = null }) {
         tools.style.transform = shift
         lastOffset = offset
       }
-      if (!pointer && !lit) return
+      if (!pointer && !lit && !wave) return
       let nearest = 0
       lit = 0
       for (const item of items) {
         let near = 0
+        let shove = 0
         let push = [0, 0]
         if (pointer) {
           const dx = item.x - pointer[0]
@@ -130,15 +137,28 @@ export function BrandBackdrop({ discipline = null }) {
             push = [dx * force, dy * force]
           }
         }
-        // Only tools near the pointer (or just leaving it) are touched.
-        if (near === 0 && item.near === 0) continue
+        // A page transition's dot wave pushes the tools just ahead of it outwards and lights them as it passes.
+        if (wave) {
+          const dx = item.x - wave.x
+          const dy = item.y - offset - wave.y
+          const distance = Math.hypot(dx, dy) || 1
+          const ahead = distance - wave.front
+          if (ahead > -40 && ahead < SHOVE_BAND) {
+            shove = 1 - Math.max(0, ahead) / SHOVE_BAND
+            push = [push[0] + dx / distance * shove * SHOVE, push[1] + dy / distance * shove * SHOVE]
+          }
+        }
+        // Only tools near the pointer or the wave (or just leaving them) are touched.
+        if (near === 0 && shove === 0 && item.near === 0 && !item.shoved) continue
         const { node } = item
-        node.style.setProperty("--near", near.toFixed(3))
+        const glow = Math.max(near, shove * .8)
+        node.style.setProperty("--near", glow.toFixed(3))
         node.style.setProperty("--push-x", `${push[0].toFixed(1)}px`)
         node.style.setProperty("--push-y", `${push[1].toFixed(1)}px`)
-        node.classList.toggle("is-lit", near > 0)
+        node.classList.toggle("is-lit", glow > 0)
         item.near = near
-        if (near > 0) lit += 1
+        item.shoved = shove > 0
+        if (glow > 0) lit += 1
         nearest = Math.max(nearest, near)
       }
       // The cursor dot turns blue once it is right on top of a lit tool.
@@ -163,7 +183,7 @@ export function BrandBackdrop({ discipline = null }) {
     })
     items.forEach((item) => watcher.observe(item.node))
 
-    const spark = window.setInterval(() => {
+    const sparkOne = () => {
       if (!visible.size || document.hidden) return
       const pool = [...visible]
       const { node } = pool[Math.floor(Math.random() * pool.length)]
@@ -171,7 +191,23 @@ export function BrandBackdrop({ discipline = null }) {
       void node.offsetWidth
       node.classList.add("is-spark")
       window.setTimeout(() => node.classList.remove("is-spark"), 1600)
-    }, window.innerWidth < PHONE ? SPARK_EVERY_PHONE : SPARK_EVERY)
+    }
+    const spark = window.setInterval(sparkOne, window.innerWidth < PHONE ? SPARK_EVERY_PHONE : SPARK_EVERY)
+
+    // Follow a page transition: track its dot wave while it covers, and spark a few tools as the new page lands.
+    const stopWave = transition.watchFrames(() => {
+      const { phase, cover, options } = transition
+      if (phase === "hiding" && options.style === "dots") {
+        const origin = waveOrigin(window.innerWidth, window.innerHeight, options.origin)
+        wave = { x: origin.x, y: origin.y, front: waveFront(cover, origin) }
+      } else {
+        wave = null
+      }
+      schedule()
+    })
+    const stopLanding = transition.on("showend", () => {
+      for (let count = 0; count < LANDING_SPARKS; count += 1) window.setTimeout(sparkOne, count * 90)
+    })
 
     render()
     window.addEventListener("scroll", schedule, { passive: true })
@@ -182,6 +218,8 @@ export function BrandBackdrop({ discipline = null }) {
       watcher.disconnect()
       setCursorHeat("backdrop", 0)
       window.clearInterval(spark)
+      stopWave()
+      stopLanding()
       window.removeEventListener("scroll", schedule)
       window.removeEventListener("pointermove", onPointer)
       document.documentElement.removeEventListener("pointerleave", onLeave)

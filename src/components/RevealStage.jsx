@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react"
+import { afterUncover } from "../transitions/arrival"
 
 function ReplayIcon() {
   return (
@@ -43,10 +44,12 @@ export function RevealStage({ discipline, trigger = "view", priority = false, cl
       video.preload = "auto"
     }, { rootMargin: "600px 0px" })
     loader.observe(stage)
+    // Arriving by a page transition, the reveal starts just before the cut opens over the stage, not unseen under it.
+    let cancelWait = () => {}
     const observer = new IntersectionObserver(([entry]) => {
       if (!entry.isIntersecting) return
       observer.disconnect()
-      play()
+      cancelWait = afterUncover(stage, play, { lead: .12 })
     }, { threshold: .45 })
     observer.observe(stage)
 
@@ -60,6 +63,7 @@ export function RevealStage({ discipline, trigger = "view", priority = false, cl
     return () => {
       loader.disconnect()
       observer.disconnect()
+      cancelWait()
       video.removeEventListener("playing", onPlaying)
       video.removeEventListener("ended", onEnded)
       stage.removeEventListener("pointerenter", onEnter)
