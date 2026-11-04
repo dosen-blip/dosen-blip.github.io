@@ -146,4 +146,11 @@ describe("transition store", () => {
     expect(seen.at(-1)).toBe("showend")
     stops.forEach((stop) => stop())
   })
+
+  it("shows a wave as running to whatever mounts in its swap", () => {
+    let during = null
+    transition.navigate(() => { during = { active: transition.active, covering: transition.covering } }, { wave: true })
+    expect(during).toEqual({ active: true, covering: true })
+  })
 })
+

@@ -97,6 +97,21 @@
 }
 .gc:is(:hover, :focus-within) .gc-glow { opacity: 1; animation: gf-strike .45s linear; }
 
+/* The glass catches the light once as something on it settles: the same stutter as a hover, then it fades. */
+.gc.is-struck .gc-layers > .gc-glow {
+  -webkit-mask-image: none;
+  mask-image: none;
+  animation: gc-strike 1.6s linear;
+}
+@keyframes gc-strike {
+  0% { opacity: 0; }
+  6% { opacity: calc(var(--neon-on, 0) + (1 - var(--neon-on, 0)) * .25); }
+  12% { opacity: calc(var(--neon-on, 0) * .15 + (1 - var(--neon-on, 0)) * .5); }
+  18% { opacity: calc(var(--neon-on, 0) * .9 + (1 - var(--neon-on, 0)) * .75); }
+  25%, 40% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
 /* The folder strokes its rim 2.4 wide and clips the outer half away, which leaves 1.2 */
 .gc-layers > .gc-rim {
   padding: 1.2px;

@@ -109,6 +109,7 @@
     --neon-rgb: 92 136 255;
     --neon-core: #e6ecff;
     --neon-pen: url(#hero-neon);
+    --neon-title: url(#title-neon);
     --neon-anchor: url(#hero-neon-anchor);
   }
 }
@@ -137,6 +138,7 @@
   --neon-rgb: 92 136 255;
   --neon-core: #e6ecff;
   --neon-pen: url(#hero-neon);
+  --neon-title: url(#title-neon);
   --neon-anchor: url(#hero-neon-anchor);
 }
 

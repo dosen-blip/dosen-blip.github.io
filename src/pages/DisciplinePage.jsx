@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import { ArrowLink } from "../components/ArrowLink"
+import { DisciplineTitle } from "../components/DisciplineTitle"
 import GlassCard from "../components/GlassCard"
 import { ProjectCard } from "../components/ProjectCard"
 import { Reveal } from "../components/Reveal"
@@ -116,11 +117,11 @@ export default function DisciplinePage({ id }) {
   return (
     <div className={`discipline discipline--${id}`}>
       <section className="page discipline-hero" aria-labelledby="discipline-heading">
-        <div className="discipline-hero-copy">
+        <GlassCard look={id} className="discipline-hero-copy">
           <p className="eyebrow"><Link to="/projects">Work</Link> <span aria-hidden="true">/</span> {discipline.label}</p>
-          <h1 id="discipline-heading" className="page-title">{discipline.title}</h1>
+          <DisciplineTitle id="discipline-heading" kind={id} title={discipline.title} />
           <p className="lede">{discipline.intro}</p>
-        </div>
+        </GlassCard>
       </section>
 
       <Reveal as="section" className="page section" aria-labelledby="discipline-projects">

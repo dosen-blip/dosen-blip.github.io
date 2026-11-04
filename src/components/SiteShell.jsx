@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { useLenis } from "lenis/react"
-import { navItems } from "../data/routes"
+import { disciplineRoutes, navItems } from "../data/routes"
 import { DESCRIPTOR, DOSEN_URL, EMAIL, asset, socialLinks } from "../data/site"
 import { disciplineForPath, disciplines } from "../data/disciplines"
 import { projectDisciplines } from "../data/projectIndex"
@@ -163,6 +163,8 @@ export function SiteShell({ children, pathname: shown }) {
   const pathname = shown ?? location.pathname
   const discipline = disciplineForPath(pathname, projectDisciplines)
   const isHome = pathname === "/"
+  // A discipline page's own title builds itself, so the header stays still there.
+  const isDisciplinePage = disciplineRoutes.includes(pathname)
   // The Frequency Shift and Instinct Groove case studies are dark pages; the header reverses to match them.
   const night = pathname === "/projects/frequency-shift" || pathname === "/projects/instinct-groove"
   // The header's splash plays as a page transition opens, not under its cover.
@@ -210,7 +212,7 @@ export function SiteShell({ children, pathname: shown }) {
       <header className={`site-header${menuOpen ? " is-menu-open" : ""}${night ? " is-night" : ""}${heroInView && !menuOpen ? " is-hero-in-view" : ""}`} id="top">
         <div className="page site-header-inner">
           <Link to="/" className="header-logo" aria-label="Matia Dosen, home" onClick={closeMenu}>
-            <Wordmark key={uncovered ? pathname : `${pathname}-covered`} splash={isHome || !uncovered ? null : discipline} />
+            <Wordmark key={uncovered ? pathname : `${pathname}-covered`} splash={isHome || isDisciplinePage || !uncovered ? null : discipline} />
           </Link>
           <NavLinks pathname={pathname} className="header-nav" />
           <div className="header-actions">

@@ -2,7 +2,7 @@
 
 This is Matia Dosen's portfolio at `https://matiadosen.com`: React, Vite, plain CSS, prerendered to static files and hosted on GitHub Pages.
 
-Last brought up to date on 2026-11-04, at commit `25e6dd3`. If the code and these docs disagree, the code is right: fix the doc.
+Last brought up to date on 2026-11-04. If the code and these docs disagree, the code is right: fix the doc.
 
 ## Source of truth, in order
 

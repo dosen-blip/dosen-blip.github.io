@@ -9,7 +9,7 @@
 | `/` | `HomePage.jsx` | Hero, one glass folder per discipline, selected work |
 | `/about` | `AboutPage.jsx` | Intro and portrait, What I do, Experience, Education, Tools and Music cards |
 | `/projects` | `ProjectsPage.jsx` | Work: every project, with discipline filters |
-| `/web`, `/motion`, `/ux` | `DisciplinePage.jsx` | Title and intro, the discipline's projects, an extra (Live sites, Selected films, Process), next-discipline links |
+| `/web`, `/motion`, `/ux` | `DisciplinePage.jsx` | Building title and intro on a glass pane, the discipline's projects, an extra (Live sites, Selected films, Process), next-discipline links |
 | `/stack` | `StackPage.jsx` | Tools: 13 cards in AI Systems & Agents, Design & Development, Creative Production. Linked from About and the footer, not the header |
 | `/contact` | `ContactPage.jsx` | Form and details |
 
@@ -38,6 +38,8 @@ Lead with what Matia makes, then who for, in the order HintonX, Hinton Publishin
 - **Home:** "Designer and video editor in Ottawa. I design and build websites and apps, and film and edit video for HintonX, Hinton Publishing and Frequency Shift."
 - **Descriptor:** `DESCRIPTOR` in `site.js`, "Web, Motion & UX designer".
 - **Music:** Matia DJs and produces as DOSEN, on a separate site, `https://dosen.ca`.
+
+Renaming a discipline: run `scripts/title-outlines.py` if the new title has a letter not in `src/brand/titleGlyphs.js`. A test fails until you do.
 
 ## Writing copy
 

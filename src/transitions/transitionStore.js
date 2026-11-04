@@ -123,8 +123,10 @@ export const transition = {
       options = { ...defaults(), ...next }
       if (phase === "idle") emit("hidestart")
       cover = 1
-      swapNow()
+      // Before the swap, so what mounts in it can see that a cut is running.
+      uncovered = false
       setPhase("showing")
+      swapNow()
       maybeUncover()
       drawFrame()
       schedule()

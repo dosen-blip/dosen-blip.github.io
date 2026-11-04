@@ -18,6 +18,7 @@ These come from Matia's feedback on the site. Check against them before adding a
 - **Reuse before inventing.** New effects are built from what the site already has. A stamped-sprite glow was rejected for looking like "some kind of weird png"; the version that stayed copies the lit backdrop tools. New cards use `GlassCard`, not a look-alike.
 - **Take away padding.** Spec rows and label grids that only classify things read as padding, and so do status pills, client lists and side notes. All of these were removed tonight. Add one only if it tells the reader something new.
 - **One link per destination.** Put a call to action where the reader expects it, and make it obvious. A link belongs on a card only if it follows from that card: Education has none.
+- **Motion never holds up the page.** A "matia dosen" sequence between pages was removed for being too long. Entrances run alongside the content, about a second at most, and end in plain text.
 - **Plain copy.** See "Writing copy" in `docs/ai-handoff/03_CONTENT_AND_ROUTES.md`.
 - **Own pages keep their own brand.** Frequency Shift and Instinct Groove use their own type and colour, and the portfolio's cards don't apply there.
 
@@ -54,7 +55,11 @@ Dark mode follows the system until the header toggle sets `data-theme` (remember
   - `motion` (Pen Tool): stroke draws every shape, then the ink fills.
   - `web` (Decode): the name resolves letter by letter out of code characters.
   - `ux` (Responsive): two lines inside a breakpoint frame, then it reflows to one.
-- The header picks the splash from the route (`disciplineForPath`); the end card always draws with the pen when it scrolls into view.
+- The header picks the splash from the route (`disciplineForPath`), on project pages only: home has its own pen, and discipline pages have their building title. The end card always draws with the pen when it scrolls into view.
+- `DisciplineTitle` (`src/components/DisciplineTitle.jsx`) gives each discipline page's title the same three ideas, shown on the word itself once the page transition's pulse has finished, in about 1.3s and without moving or holding up anything else:
+  - Motion graphics: the lit pen draws each letter and drops a few anchors, then the ink comes in through a frosted stage.
+  - Web development: lit code characters scramble over each letter, which locks in from left to right.
+  - UX design: the title sits on two lines in a lit selection frame with a live size label, reflows onto one line, and the frame lets go.
 - `HeroLockup` is the full-size lockup on the home page. On every page load (`html[data-intro]`, unless reduced motion) and any return to home inside the app, the pen draws each shape, drops anchors, fills, then the selection box snaps on. Server markup is always the finished mark.
 - `RevealStage` plays the After Effects renders (`public/assets/brand/reveals/*.mp4`) on a black stage in a browser frame, with the final frame as a still for reduced motion, blocked autoplay and after the video ends. It is removed from the discipline pages for now, so no page renders it; the component, its CSS, the videos and the `video` and `reveal` fields in `disciplines` remain.
 
@@ -62,7 +67,7 @@ Dark mode follows the system until the header toggle sets `data-theme` (remember
 
 Cards and folders share one material: generated art behind frosted glass, with a sheen, a tint, a highlight that follows the cursor, a rim and an edge glow that lights on hover.
 
-- `GlassCard` (`src/components/GlassCard.jsx`, `src/styles/glass-card.css`) is the site's card: About, Contact, Tools, the discipline pages and the project detail rail. `as` sets the root element and `look` picks the art. The tint is heavier than a folder's so text stays legible, at 4.5:1 or better against the brightest art, in both themes. How to use it: `docs/ai-handoff/02_VISUAL_AND_INTERACTIONS.md`.
+- `GlassCard` (`src/components/GlassCard.jsx`, `src/styles/glass-card.css`) is the site's card: About, Contact, Tools, the discipline pages (including the hero pane their title builds on, which holds a mild pool of blue shaped per discipline and catches the light once as the title settles) and the project detail rail. `as` sets the root element and `look` picks the art. The tint is heavier than a folder's so text stays legible, at 4.5:1 or better against the brightest art, in both themes. How to use it: `docs/ai-handoff/02_VISUAL_AND_INTERACTIONS.md`.
 - `src/data/glassLooks.js` holds the three looks, `web`, `motion` and `ux`, shared with the folders. Web and UX follow the theme; Motion is smoked glass in both. `src/components/glassArt.jsx` paints the art and `src/components/useGlassPointer.js` feeds the cursor.
 - `GlassFolder` (`src/components/GlassFolder.jsx`, `src/styles/glass-folder.css`) is the home page's discipline card. Its key is one arrow, a real link (`action="link"`) to the discipline page. `action="add"` gives the plus key, and there is no menu.
 - Not on glass, on purpose: `ProjectCard` (image cards with the selection handles below), the Frequency Shift and Instinct pages, and the footer end card, which stays black because it moves. The mobile menu's discipline pills haven't been converted.
@@ -77,7 +82,7 @@ Cards and folders share one material: generated art behind frosted glass, with a
 
 - Header: wordmark · Work · About · Contact · DOSEN (separate music site) · theme toggle.
 - Home: hero, the three discipline folders, selected work.
-- `/web`, `/motion`, `/ux`: one page per discipline, each opening on its title and intro, listing its projects (`disciplines` in `src/data/projectIndex.js`) and its own extra (live sites, films, process).
+- `/web`, `/motion`, `/ux`: one page per discipline, each opening on its title and intro on a pane of that discipline's glass, listing its projects (`disciplines` in `src/data/projectIndex.js`) and its own extra (live sites, films, process).
 - `/projects` is Work: every project, with discipline filters. Print and book work carries no discipline tag.
 - `/about`: leads with what Matia makes, then who for, in the same order as the home blurb. Then What I do, Experience, and short Education, Tools and Music cards.
 - `/stack` (Tools) is linked from About and the footer rather than the header.

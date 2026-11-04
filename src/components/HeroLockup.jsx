@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { WORDMARK_ANCHORS, WORDMARK_SHAPES } from "../brand/paths"
 import { DESCRIPTOR } from "../data/site"
+import { NeonFilter } from "./NeonFilter"
 import { mountedAfterHydration } from "../utils/hydration"
 import { transition } from "../transitions/transitionStore"
 import { afterUncover } from "../transitions/arrival"
@@ -8,31 +9,6 @@ import { afterUncover } from "../transitions/arrival"
 const DRAW_START = 150
 const DRAW_STAGGER = 55
 const DRAW_LENGTH = 700
-
-/**
- * Dark mode's LED light for the pen, in wordmark units so it scales with the art.
- * Three blurs of the line, each tinted blue and boosted (a thin line blurs to almost nothing):
- * a tight tube around the white-hot core, a halo, and a wide spill of light, with the line itself on top.
- */
-function NeonFilter({ id, tube, halo, spill }) {
-  const layers = [["tube", .3, tube], ["halo", 1.1, halo], ["spill", 3.4, spill]]
-  return (
-    <filter id={id} filterUnits="userSpaceOnUse" x="-20" y="-20" width="244" height="72" colorInterpolationFilters="sRGB">
-      <feFlood className="neon-flood" result="blue" />
-      {layers.map(([name, blur, gain]) => [
-        <feGaussianBlur key={`${name}-blur`} in="SourceAlpha" stdDeviation={blur} />,
-        <feComponentTransfer key={`${name}-gain`} result={`${name}-alpha`}><feFuncA type="linear" slope={gain} /></feComponentTransfer>,
-        <feComposite key={name} in="blue" in2={`${name}-alpha`} operator="in" result={name} />,
-      ])}
-      <feMerge>
-        <feMergeNode in="spill" />
-        <feMergeNode in="halo" />
-        <feMergeNode in="tube" />
-        <feMergeNode in="SourceGraphic" />
-      </feMerge>
-    </filter>
-  )
-}
 
 /**
  * The full-size lockup: my name, then the line under it.

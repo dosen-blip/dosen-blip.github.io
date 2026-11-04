@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server"
 import { MemoryRouter } from "react-router-dom"
 import { afterEach, describe, expect, it } from "vitest"
 import { App } from "../src/App"
+import { TITLE_GLYPHS } from "../src/brand/titleGlyphs"
 import { SiteShell } from "../src/components/SiteShell"
 import { disciplineForPath, disciplines } from "../src/data/disciplines"
 import { projectDisciplines, projectsFor } from "../src/data/projectIndex"
@@ -30,10 +31,9 @@ describe("discipline routing", () => {
 
 describe("site header", () => {
   it.each([
-    ["/web", "web"],
-    ["/motion", "motion"],
+    ["/projects/frequency-shift", "web"],
     ["/projects/video-production", "motion"],
-    ["/ux", "ux"],
+    ["/projects/trendless", "ux"],
   ])("plays the %s splash on the header wordmark", (path, splash) => {
     const { container } = shellAt(path)
     const logo = container.querySelector(".header-logo .wordmark")
@@ -42,7 +42,7 @@ describe("site header", () => {
   })
 
   it("leaves the wordmark still where the page has no single discipline", () => {
-    for (const path of ["/", "/about", "/contact", "/projects/novak-books"]) {
+    for (const path of ["/", "/about", "/contact", "/projects/novak-books", "/web", "/motion", "/ux"]) {
       const { container, unmount } = shellAt(path)
       expect(container.querySelector(".header-logo .wordmark")).not.toHaveAttribute("data-splash")
       unmount()
@@ -86,6 +86,14 @@ describe("discipline pages", () => {
     const { container } = render(<MemoryRouter><DisciplinePage id={id} /></MemoryRouter>)
     expect(screen.getByRole("heading", { level: 1, name: discipline.title })).toBeInTheDocument()
     expect(screen.getByText(discipline.intro)).toBeInTheDocument()
+
+    // The hero is a pane of that discipline's glass, and the title is real text with reduced motion on (as in tests/setup.js).
+    const heading = screen.getByRole("heading", { level: 1 })
+    expect(heading.closest(".gc")).toHaveAttribute("data-look", id)
+    expect(heading.querySelector(".title-build")).toBeNull()
+    expect(heading).not.toHaveAttribute("data-state")
+    // Every letter of the title has an outline for the build.
+    for (const char of discipline.title.replace(/ /g, "")) expect(TITLE_GLYPHS[char]).toBeTruthy()
 
     // The reveal stage is off these pages for now, and the aside is gone.
     expect(container.querySelector(".stage")).toBeNull()
