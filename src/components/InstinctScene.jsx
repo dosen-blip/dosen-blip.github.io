@@ -24,9 +24,10 @@ function boxWithin(node, ancestor) {
 /**
  * The Instinct Groove wall behind the case-study hero: the lab's WebGL scene, with the carved wordmark landing on
  * `slotRef` so it lines up with the copy around it. Reports its state through `onMode`: "loading", "live" once the
- * first frame is drawn, or "still" when the page should letter the wordmark over the baked plate instead.
+ * first frame is drawn, or "still" when the page should letter the wordmark over the baked plate instead. `moreRef` is
+ * the part of the stage below the first screen: the wall carries on behind it at the same scale.
  */
-export function InstinctScene({ slotRef, onMode }) {
+export function InstinctScene({ slotRef, moreRef, onMode }) {
   const hostRef = useRef(null)
   const onModeRef = useRef(onMode)
 
@@ -50,6 +51,7 @@ export function InstinctScene({ slotRef, onMode }) {
       .then(({ createHero }) => createHero(host, {
         layout: "case",
         anchor: () => (slotRef.current ? boxWithin(slotRef.current, stage) : null),
+        frameHeight: () => stage.clientHeight - (moreRef.current?.offsetHeight ?? 0),
         pointerTarget: stage,
         onStart: () => report("live"),
         signal: controller.signal,
@@ -64,7 +66,7 @@ export function InstinctScene({ slotRef, onMode }) {
         report("still")
       })
     return () => controller.abort()
-  }, [slotRef])
+  }, [slotRef, moreRef])
 
   return <div ref={hostRef} className="ig-scene" aria-hidden="true" />
 }

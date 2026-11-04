@@ -41,8 +41,9 @@
 /* ---------- Hero: the wall ---------- */
 
 .ig-hero {
+  --ig-more: clamp(420px, 70svh, 720px); /* the wall below the first screen, behind the blurb */
   position: relative;
-  min-height: min(980px, max(720px, calc(100svh - var(--header-h))));
+  min-height: calc(min(980px, max(720px, calc(100svh - var(--header-h)))) + var(--ig-more));
   padding: clamp(24px, 4vw, 56px);
   display: flex;
   flex-direction: column;
@@ -62,22 +63,54 @@
   z-index: -3;
 }
 
+.ig-hero-more {
+  flex: none;
+  min-height: var(--ig-more);
+  padding-top: clamp(40px, 7vh, 88px);
+}
+
+.ig-about {
+  width: min(700px, 50%);
+}
+
+.ig-about-kicker {
+  margin: 0 0 22px;
+  color: var(--ig-green);
+  font-family: var(--ig-mono);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.ig-about p {
+  max-width: 54ch;
+  margin: 0 0 18px;
+  color: var(--ig-ink);
+  font-size: clamp(15px, 1.15vw, 17px);
+  line-height: 1.6;
+}
+
 .ig-hero-still {
   z-index: -3;
   width: 100%;
-  height: 100%;
+  /* the still only covers the first screen, and fades out over the dark below it */
+  height: calc(100% - var(--ig-more));
   max-width: none;
+  -webkit-mask-image: linear-gradient(#000 80%, transparent);
+  mask-image: linear-gradient(#000 80%, transparent);
   object-fit: cover;
   object-position: 0% 50%;
   animation: ig-still-in 2.2s .2s ease both;
 }
 
-/* only the foot of the wall darkens, under the meta row; the sign and the ivy keep their own light */
+/* only the very top and foot of the wall darken; the sign and the ivy keep their own light */
 .ig-hero-shade {
   z-index: -2;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(0, 0, 0, .5) 0%, transparent 14%, transparent 76%, rgba(3, 5, 4, .78) 100%);
+    linear-gradient(180deg, rgba(0, 0, 0, .5) 0, transparent 130px, transparent calc(100% - 220px), rgba(3, 5, 4, .78) 100%);
 }
 
 .ig-hero-topline,
@@ -124,8 +157,7 @@
   animation: ig-rise-in .8s .3s var(--ig-ease) both;
 }
 
-.ig-hero-kicker,
-.ig-eyebrow {
+.ig-hero-kicker {
   margin: 0 0 22px;
   color: var(--ig-green) !important;
   font-family: var(--ig-mono);
@@ -197,47 +229,6 @@
   line-height: 1.5;
 }
 
-.ig-hero-meta {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin: 0;
-  border-top: 1px solid rgba(255, 255, 255, .42);
-  animation: ig-rise-in .7s .48s var(--ig-ease) both;
-}
-
-.ig-hero-meta div {
-  min-width: 0;
-  padding: 16px 18px 0 0;
-  border-right: 1px solid rgba(255, 255, 255, .22);
-}
-
-.ig-hero-meta div + div {
-  padding-left: 18px;
-}
-
-.ig-hero-meta div:last-child {
-  border-right: 0;
-}
-
-.ig-hero-meta dt,
-.ig-hero-meta dd {
-  font-family: var(--ig-mono);
-  font-size: 10px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-
-.ig-hero-meta dt {
-  margin-bottom: 7px;
-  color: rgba(255, 255, 255, .62);
-}
-
-.ig-hero-meta dd {
-  margin: 0;
-  overflow-wrap: anywhere;
-  color: var(--ig-ink);
-}
-
 @keyframes ig-rise-in {
   from { opacity: 0; transform: translate3d(0, 22px, 0); }
   to { opacity: 1; transform: translate3d(0, 0, 0); }
@@ -271,155 +262,6 @@
   70%, 100% { opacity: .42; }
 }
 
-/* ---------- The build: the one section under the hero ---------- */
-
-.ig-section {
-  position: relative;
-  padding: clamp(78px, 7vw, 108px) clamp(24px, 5.2vw, 76px);
-}
-
-.ig-section-heading h2 {
-  max-width: 920px;
-  margin: 0;
-  color: var(--ig-ink);
-  font-family: var(--ig-display);
-  font-size: clamp(34px, 4.2vw, 62px);
-  font-stretch: 125%;
-  font-weight: 800;
-  letter-spacing: -.02em;
-  line-height: .98;
-  text-transform: uppercase;
-}
-
-.ig-narrative {
-  max-width: 640px;
-}
-
-.ig-narrative p {
-  font-size: clamp(16px, 1.2vw, 18px);
-  line-height: 1.62;
-}
-
-.ig-narrative p + p {
-  margin-top: 22px;
-}
-
-.ig-build {
-  background:
-    linear-gradient(180deg, rgba(93, 125, 79, .07), transparent 45%),
-    var(--ig-bg);
-}
-
-.ig-build-intro {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: clamp(14px, 2vw, 28px);
-}
-
-.ig-build-intro .ig-section-heading {
-  grid-column: 1 / 7;
-}
-
-.ig-build-intro .ig-narrative {
-  grid-column: 7 / 13;
-  padding-top: clamp(40px, 4vw, 64px);
-}
-
-.ig-build-link {
-  grid-column: 7 / 13;
-  justify-self: start;
-  margin-top: clamp(32px, 3vw, 44px);
-}
-
-.instinct-page .ig-cta {
-  color: var(--ig-ink);
-}
-
-.instinct-page .ig-cta:hover > span:first-child {
-  color: var(--ig-green);
-}
-
-/* ---------- Related ---------- */
-
-.ig-related {
-  border-top: 1px solid var(--ig-line);
-  background: var(--ig-panel);
-}
-
-.ig-related-heading {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding-bottom: 28px;
-  border-bottom: 1px solid var(--ig-line);
-}
-
-.ig-related-heading .ig-eyebrow {
-  margin: 0;
-}
-
-.ig-related-heading h2 {
-  margin: 0;
-  color: var(--ig-ink);
-  font-family: var(--ig-display);
-  font-size: clamp(34px, 4.6vw, 64px);
-  font-stretch: 125%;
-  font-weight: 800;
-  letter-spacing: -.02em;
-  text-transform: uppercase;
-}
-
-.ig-related-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-  margin-top: 38px;
-}
-
-.ig-related-card {
-  min-width: 0;
-  color: var(--ig-ink);
-}
-
-.ig-related-image {
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  border: 1px solid var(--ig-line);
-  background: #0e1610;
-}
-
-.ig-related-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform .5s var(--ig-ease);
-}
-
-.ig-related-copy {
-  position: relative;
-  padding: 15px 30px 0 0;
-}
-
-.ig-related-copy h3 {
-  margin: 7px 0 0;
-  color: var(--ig-ink);
-  font-size: 18px;
-  font-weight: 500;
-}
-
-.ig-related-copy .ui-icon {
-  position: absolute;
-  top: 15px;
-  right: 0;
-  width: 17px;
-  height: 17px;
-  transition: transform .35s var(--ig-ease);
-}
-
-.ig-related-all {
-  margin-top: 42px;
-}
-
 @media (hover: hover) {
   .ig-source-link:hover,
   .ig-source-link:focus-visible {
@@ -431,25 +273,22 @@
     transform: translateX(-3px);
   }
 
-  .ig-source-link:hover .ui-icon,
-  .ig-related-card:hover .ig-related-copy .ui-icon {
+  .ig-source-link:hover .ui-icon {
     transform: translate(2px, -2px);
-  }
-
-  .ig-related-card:hover .ig-related-image img {
-    transform: scale(1.04);
   }
 }
 
 @media (max-width: 1199.98px) {
-  .ig-hero-copy {
+  .ig-hero-copy,
+  .ig-about {
     width: min(640px, 60%);
   }
 }
 
 @media (max-width: 809.98px) {
   .ig-hero {
-    min-height: calc(100svh - var(--header-h));
+    --ig-more: clamp(320px, 60svh, 560px);
+    min-height: calc(100svh - var(--header-h) + var(--ig-more));
     padding: 20px;
   }
 
@@ -460,6 +299,10 @@
   .ig-hero-copy {
     width: 100%;
     padding: 120px 0 34px;
+  }
+
+  .ig-about {
+    width: 100%;
   }
 
   .ig-hero-kicker {
@@ -475,53 +318,11 @@
   .ig-hero-dek {
     font-size: 15px;
   }
-
-  .ig-hero-meta {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .ig-hero-meta div {
-    padding: 11px 8px 11px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, .22);
-  }
-
-  .ig-hero-meta div + div {
-    padding-left: 0;
-  }
-
-  .ig-hero-meta div:nth-child(2n) {
-    padding-left: 9px;
-    border-right: 0;
-  }
-
-  .ig-section {
-    padding: 76px 20px;
-  }
-
-  .ig-build-intro {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .ig-build-intro .ig-section-heading,
-  .ig-build-intro .ig-narrative,
-  .ig-build-link {
-    grid-column: 1;
-  }
-
-  .ig-build-intro .ig-narrative {
-    padding-top: 30px;
-  }
-
-  .ig-related-grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 32px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .ig-hero-topline,
   .ig-hero-copy,
-  .ig-hero-meta,
   .ig-hero-still {
     animation: none;
   }

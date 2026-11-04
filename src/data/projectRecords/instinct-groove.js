@@ -16,19 +16,12 @@ const instinctGroove = {
       kicker: "Web Development / Real-time 3D",
       dek: "I design, build and run instinctgroove.com for Instinct Groove, an Ottawa minimal tech and house series, and built its 3D environment: the wall you’re looking at.",
       still: "/assets/instinct/hero-room.webp",
-      meta: [
-        { label: "Role", value: "Design & Development" },
-        { label: "Platform", value: "instinctgroove.com" },
-        { label: "Output", value: "Website / Real-time 3D" },
-        { label: "Period", value: "2026—Present" },
-      ],
     },
-    build: {
-      eyebrow: "01 / The build",
-      title: "The poster, rebuilt as a room.",
+    about: {
+      kicker: "Three.js / WebGL2 / GLSL",
       paragraphs: [
-        "The anniversary poster is a cracked concrete wall overgrown with ivy, the name cut into it and lit from behind. I rebuilt it as a real-time WebGL scene: the sign strikes on in the dark, lights the room, and the room comes up around it.",
-        "Nothing glows without a source. The letters light the concrete, the leaves and the haze; fireflies are moving lights; the ivy hangs and sways on real physics. Around it, the site is hand-built in plain JavaScript, every event, recap and artist page, and ships straight from GitHub.",
+        "The design starts from the anniversary poster: black, the brand green, heavy expanded type, and a cracked concrete wall overgrown with ivy. I built the site by hand in plain JavaScript, with no framework and no build step, so every event, recap and artist page ships straight from GitHub.",
+        "The wall is a real-time Three.js scene on WebGL2, with custom GLSL shaders for the concrete, the leaves and the light. The wordmark is carved into the wall and lit from behind, and that glow acts as an area light on the concrete, the ivy and the haze. The ivy hangs on rope physics, the fireflies are moving lights, and the haze and god rays render through HDR buffers before a final grade.",
       ],
     },
   },

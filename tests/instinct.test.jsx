@@ -9,7 +9,7 @@ import { projectIndex } from "../src/data/projectIndex"
 afterEach(cleanup)
 
 describe("Instinct Groove project page", () => {
-  it("follows the Frequency Shift hero: kicker, wordmark, dek and meta over the wall", () => {
+  it("is the wall: kicker, wordmark and dek over it, a way back and to the live site", () => {
     const { container, getByRole } = render(
       <MemoryRouter><InstinctDetail project={instinctGroove} /></MemoryRouter>,
     )
@@ -19,19 +19,21 @@ describe("Instinct Groove project page", () => {
     const copy = hero.querySelector(".ig-hero-copy")
     expect([...copy.children].map((node) => node.className)).toEqual(["ig-hero-kicker", "ig-hero-wordmark", "ig-hero-dek"])
     expect(hero.querySelector(".ig-scene")).toBeTruthy()
-    expect([...hero.querySelectorAll(".ig-hero-meta dt")].map((node) => node.textContent)).toEqual(["Role", "Platform", "Output", "Period"])
     expect(container.querySelector('a[href="https://instinctgroove.com/"]')).toBeTruthy()
   })
 
-  it("tells the build in one section under the hero, then hands over to related work", () => {
+  it("has only a blurb on how it was made under the dek, on more of the wall", () => {
     const { container, getByRole } = render(
       <MemoryRouter><InstinctDetail project={instinctGroove} /></MemoryRouter>,
     )
 
-    expect([...container.querySelectorAll(".ig-section")].map((node) => node.classList[1])).toEqual(["ig-build", "ig-related"])
-    expect(getByRole("heading", { level: 2, name: "The poster, rebuilt as a room." })).toBeTruthy()
-    expect(container.querySelector(".ig-build .ig-build-link")).toHaveAttribute("href", instinctGroove.liveUrl)
-    expect(container).not.toHaveTextContent(/lorem ipsum/i)
+    const page = container.querySelector(".instinct-page")
+    expect([...page.children].map((node) => node.className)).toEqual(["ig-hero"])
+    const more = page.querySelector(".ig-hero > .ig-hero-more")
+    expect(more).toContainElement(getByRole("heading", { level: 2, name: instinctGroove.content.about.kicker }))
+    expect(more.querySelectorAll("p").length).toBe(instinctGroove.content.about.paragraphs.length)
+    expect(more.textContent).toMatch(/Three\.js/)
+    expect(more.textContent).toMatch(/WebGL2/)
   })
 
   it("letters the wordmark over the baked still when the live scene can't run", () => {

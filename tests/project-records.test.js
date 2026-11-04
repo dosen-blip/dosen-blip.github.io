@@ -77,8 +77,6 @@ describe("project records", () => {
 
       if (project.layout === "instinct") {
         expect(project.liveUrl).toBe("https://instinctgroove.com/")
-        expect(project.content.hero.meta.map((item) => item.label)).toEqual(["Role", "Platform", "Output", "Period"])
-        expect(project.content.build.paragraphs.length).toBeGreaterThan(0)
         for (const image of [project.content.hero.still, project.seo.image]) {
           expect(fs.existsSync(path.join(process.cwd(), "public", image))).toBe(true)
         }

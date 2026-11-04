@@ -21,6 +21,7 @@ import { Flicker, Fireflies, Dust, GodRaysPass } from './fx.js';
 // Every ramp ends with zero slope and zero acceleration (smootherstep / cubic), so nothing visibly lands.
 export const INTRO = { strike: .7, caught: 2.8, roomStart: 2.9, roomEnd: 6.8, reveal: 5.4, settled: 6.4, calm: 7.6 };
 const CAM_Z = 16, BAKE_W = 4096;
+const MAX_PIXELS = 5.5e6;   // a taller wall gives up some sharpness rather than frames
 const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
 const smoother = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * t * (t * (t * 6 - 15) + 10); };
 // idle frame-rate steps (ms between frames) after `calm`: the display's own rate, then 60, 40 and 30 fps, ~0.8 s apart,
@@ -31,6 +32,8 @@ const IDLE_STEPS = [[1500, 0], [2300, 1000 / 60], [3100, 1000 / 40], [Infinity, 
  * Mounts the wall into `container` (any positioned element; the canvas fills it).
  * assets: base URL of the scene's textures and SVGs.
  * layout: the ivy, 'poster' (the lab's centred composition) or 'case' (the wordmark on the left, the ivy taking the right).
+ * frameHeight: () => px: how tall the composition is framed for, when the container is taller. The camera pulls back so the
+ *   wall keeps its scale and the extra height shows more wall; the ivy, fireflies and dust spread across all of it.
  * anchor: () => ({ x, y, w, h }) in container px: where the wordmark should land once the camera has settled, so it
  *   lines up with the page around it. Without it the wordmark is centred, `focusY` down the frame.
  * onStart: called with the first frame, when the intro timeline starts. onSettled: called once the intro has settled.
@@ -40,7 +43,7 @@ const IDLE_STEPS = [[1500, 0], [2300, 1000 / 60], [3100, 1000 / 40], [Infinity, 
  *   page letters itself.
  * signal: an AbortSignal; aborting before the assets arrive stops the build.
  */
-export async function createHero(container, { assets = '/assets/instinct/scene/', layout: ivyLayout = 'poster', anchor = null,
+export async function createHero(container, { assets = '/assets/instinct/scene/', layout: ivyLayout = 'poster', anchor = null, frameHeight = null,
   focusY = () => .485, onStart = () => {}, onSettled = () => {}, pointerTarget = null, bake = false, carve = true, signal = null } = {}) {
   const assetUrl = (name) => `${assets}${name}`;
   const aborted = () => !!signal?.aborted;
@@ -191,25 +194,30 @@ export async function createHero(container, { assets = '/assets/instinct/scene/'
 
   // ------------------------------------------------------------------ layout
   const view = { halfW: 1, halfH: 1, wpp: 1, wm: { x: 0, y: 0, w: 1, h: 1 } };
+  let camZ = CAM_Z;
   // Where a point of the container lands on the wall (z = 0) for the settled camera looking at `lookY`.
   const settledCam = camera.clone(), ray = new THREE.Vector3();
   const onWall = (sx, sy, w, h, lookY) => {
-    settledCam.copy(camera); settledCam.position.set(0, 0, CAM_Z); settledCam.lookAt(0, lookY, 0); settledCam.updateMatrixWorld();
+    settledCam.copy(camera); settledCam.position.set(0, 0, camZ); settledCam.lookAt(0, lookY, 0); settledCam.updateMatrixWorld();
     ray.set(sx / w * 2 - 1, 1 - sy / h * 2, .5).unproject(settledCam).sub(settledCam.position).normalize();
     const t = -settledCam.position.z / ray.z;
     return { x: settledCam.position.x + ray.x * t, y: settledCam.position.y + ray.y * t };
   };
   function layout() {
     const w = container.clientWidth, h = container.clientHeight;
-    const dpr = baseDpr;
     if (!w || !h) return;
+    const dpr = bake ? baseDpr : Math.min(baseDpr, Math.sqrt(MAX_PIXELS / (w * h)));
+    renderer.setPixelRatio(dpr);
     renderer.setSize(w, h, false);
     composer.setPixelRatio(dpr);
     composer.setSize(w, h);
     camera.aspect = w / h;
     camera.fov = 30;
     camera.updateProjectionMatrix();
-    const halfH = CAM_Z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)), halfW = halfH * camera.aspect;
+    const frameH = frameHeight?.() || h, stretch = Math.max(1, h / frameH);
+    camZ = CAM_Z * stretch;
+    const halfH = camZ * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)), halfW = halfH * camera.aspect;
+    const frameHalfH = halfH / stretch;   // what the composition is proportioned to, however far the wall carries on
     let wm;
     const slot = anchor?.();
     if (slot?.w > 0) {
@@ -232,13 +240,13 @@ export async function createHero(container, { assets = '/assets/instinct/scene/'
     // the raised arms reach toward the top of the wall and the lower tentacles pass behind the sign. A sign low in the
     // frame (the case layout) would stretch it past the frame, so it keeps the poster's proportion (~.85 of the frame)
     // and its arms stop short of the top instead.
-    const octEyes = wm.y + wmScale * 1.15, octH = Math.min(halfH * 1.7, Math.max(2.5, (halfH * .97 - octEyes) / .39));
+    const octEyes = wm.y + wmScale * 1.15, octH = Math.min(frameHalfH * 1.7, Math.max(2.5, (halfH * .97 - octEyes) / .39));
     U.uOctCenter.value.set(wm.x, octEyes + octH * .39 - octH / 2);
     U.uOctSize.value.set(octH * octopus.padScale[0], octH * octopus.padScale[1]);
     wallUniforms.uDepth.value = .2 * wmScale;
     // the overhead fixture hangs just right of the sign (as in the lab); on the case layout it moves in a little further,
     // so it also reaches the ivy on the right
-    U.uTopPos.value.set(wm.x + halfW * (ivyLayout === 'case' ? .3 : .12), halfH * 1.35, 4.5);
+    U.uTopPos.value.set(wm.x + halfW * (ivyLayout === 'case' ? .3 : .12), halfH + frameHalfH * .35, 4.5);
     grade.uniforms.uRes.value.set(w * dpr, h * dpr);
 
     // static wall maps cover the view plus parallax margin
@@ -327,7 +335,7 @@ export async function createHero(container, { assets = '/assets/instinct/scene/'
     const ease = 1 - Math.exp(-dt * 2.14);   // time-based, so the camera feels the same at 30 and 60 fps
     camBase.x += (camTarget.x + Math.sin(time * .13) * .15 - camBase.x) * ease;
     camBase.y += (camTarget.y + Math.sin(time * .17) * .08 - camBase.y) * ease;
-    camera.position.set(camBase.x, camBase.y, CAM_Z - 1.4 * (1 - dolly));
+    camera.position.set(camBase.x, camBase.y, camZ - 1.4 * (1 - dolly));
     camera.lookAt(0, wm.y * .5, 0);
     camera.updateMatrixWorld();
 
