@@ -95,6 +95,24 @@ describe("page transitions", () => {
     expect(document.querySelector(".transition-overlay")).not.toHaveClass("is-active")
   })
 
+  it("renames the tab when the page swaps, not when the address changes", () => {
+    mount("/stack", { reduced: false })
+    expect(document.title).toBe("Tools · Matia Dosen")
+
+    fireEvent.click(screen.getByRole("link", { name: "Go to About" }))
+    expect(screen.getByTestId("address")).toHaveTextContent("/about")
+    expect(document.title).toBe("Tools · Matia Dosen")
+
+    act(() => transition.step(transition.options.hide))
+    expect(document.title).toBe("About · Matia Dosen")
+  })
+
+  it("renames the tab at once when motion is reduced", () => {
+    mount("/stack", { reduced: true })
+    fireEvent.click(screen.getByRole("link", { name: "Go to About" }))
+    expect(document.title).toBe("About · Matia Dosen")
+  })
+
   it("holds the new page's entrances until the cut opens, then lets them rise", () => {
     vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] })
     mount("/stack", { reduced: false })
@@ -123,9 +141,11 @@ describe("page transitions", () => {
       fireEvent.click(screen.getByRole("link", { name: "Go to About" }))
       expect(document.startViewTransition).toHaveBeenCalledOnce()
       expect(document.querySelector(".about-hero")).toBeNull() // the browser takes its picture first
+      expect(document.title).toBe("Tools · Matia Dosen")
 
       act(() => updates[0]())
       expect(document.querySelector(".about-hero")).not.toBeNull()
+      expect(document.title).toBe("About · Matia Dosen")
       expect(transition.options.wave).toBe(true)
       expect(transition.phase).toBe("showing")
       expect(document.querySelector(".transition-overlay")).toHaveClass("is-active")

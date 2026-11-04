@@ -16,6 +16,7 @@ import { DOT_TIMING, WAVE_TIMING } from "./transitions/dots"
 import { canSnapshot, cutThroughSnapshot } from "./transitions/snapshot"
 import { FRAME_TIMING } from "./transitions/frame"
 import { markHydrated, mountedAfterHydration } from "./utils/hydration"
+import { metaFor } from "./utils/seo"
 import { useReducedMotion } from "./utils/useReducedMotion"
 import HomePage from "./pages/HomePage"
 import AboutPage from "./pages/AboutPage"
@@ -62,6 +63,7 @@ function Pages({ reduced }) {
   // `settle` is what to do with the scroll position once an immediate swap has rendered.
   const [view, setView] = useState(() => ({ location, settle: null }))
   const displayed = view.location
+  const pathname = normalizePath(displayed.pathname)
 
   if (location !== displayed) {
     if (location.pathname === displayed.pathname) setView({ location, settle: "top" })
@@ -77,6 +79,12 @@ function Pages({ reduced }) {
       resetScroll(lenis)
     }
   }, [view, lenis])
+
+  // The tab names the page on screen, so it changes with the swap rather than with the address bar. Only the title: the
+  // description and share tags are for crawlers and link previews, which load each URL and get them from the prerender.
+  useEffect(() => {
+    document.title = metaFor(pathname).title
+  }, [pathname])
 
   useEffect(() => trackClicks(), [])
   useEffect(() => trackIntent(), [])
@@ -117,7 +125,6 @@ function Pages({ reduced }) {
     }
   }, [lenis])
 
-  const pathname = normalizePath(displayed.pathname)
   if (!knownRoutes.includes(pathname)) return <><TransitionOverlay /><NotFoundPage /></>
   return (
     <>
