@@ -9,7 +9,9 @@
 //
 // Each navigation can carry options for the overlay: which cut to draw (`style`), where the click happened
 // (`origin`), how long each half takes (`hide`, `show`), and how far into the show the cover actually starts to open
-// (`uncoverAt`, for cuts that hold the screen covered for a moment after the swap).
+// (`uncoverAt`, for cuts that hold the screen covered for a moment after the swap). A `wave` cut has no covered moment
+// at all: the browser has kept a snapshot of the old page (snapshot.js), so the swap runs at once and the cut is one
+// long show, with `cover` counting down from 1 as its clock.
 //
 // The new page mounts under the cover, so its entrances must not start then or they play out unseen and the page
 // arrives already still, which reads as a hard cut. `covering` is true from the start of a cut until the cover starts
@@ -55,6 +57,14 @@ function maybeUncover() {
   uncovered = true
   emit("uncover")
   notify()
+}
+
+function swapNow() {
+  const swap = pendingSwap
+  pendingSwap = null
+  uncovered = false // whatever mounts now is under the cover
+  swap?.()
+  emit("swap")
 }
 
 function drawFrame() {
@@ -108,7 +118,17 @@ export const transition = {
   /** Start a transition. `swap` runs when the screen is covered; a request made mid-transition replaces an earlier one. */
   navigate(swap, next = {}) {
     pendingSwap = swap
-    if (phase === "idle") {
+    if (next.wave) {
+      // Nothing to wait for. A wave already running just restarts from wherever the screen has got to.
+      options = { ...defaults(), ...next }
+      if (phase === "idle") emit("hidestart")
+      cover = 1
+      swapNow()
+      setPhase("showing")
+      maybeUncover()
+      drawFrame()
+      schedule()
+    } else if (phase === "idle") {
       options = { ...defaults(), ...next }
       uncovered = false
       emit("hidestart")
@@ -126,11 +146,7 @@ export const transition = {
     if (phase === "hiding") {
       cover = Math.min(1, cover + dt / options.hide)
       if (cover === 1) {
-        const swap = pendingSwap
-        pendingSwap = null
-        uncovered = false // whatever mounts now is under the cover
-        swap?.()
-        emit("swap")
+        swapNow()
         setPhase("showing")
         maybeUncover()
       }

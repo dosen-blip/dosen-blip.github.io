@@ -156,6 +156,7 @@
     0 0 22px 6px color-mix(in srgb, var(--dot-glow) calc(16% + var(--heat) * 44%), transparent);
   opacity: var(--neon-on);
   pointer-events: none;
+  view-transition-name: neon-cursor; /* stays live and on top through the dot cut's snapshot */
   transition: --heat .22s ease, scale .2s var(--ease-out), opacity var(--fast) ease;
 }
 .neon-cursor.is-over-link { scale: 1.5; }
@@ -601,4 +602,16 @@
   display: none;
   pointer-events: none;
 }
-.transition-overlay.is-active { display: block; pointer-events: auto; }
+.transition-overlay.is-active { display: block; pointer-events: auto; view-transition-name: page-cut; }
+
+/* The dot cut's wave (transitions/snapshot.js): the new page sits on the old page's snapshot, clipped from script. */
+::view-transition-old(root),
+::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-group(page-cut),
+::view-transition-image-pair(page-cut),
+::view-transition-old(page-cut),
+::view-transition-new(page-cut),
+::view-transition-group(neon-cursor),
+::view-transition-image-pair(neon-cursor),
+::view-transition-new(neon-cursor) { animation: none; }
+::view-transition-old(neon-cursor) { display: none; }

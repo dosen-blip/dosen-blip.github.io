@@ -103,17 +103,39 @@ describe("page transitions", () => {
     const hero = document.querySelector(".about-hero")
     expect(hero).toHaveClass("reveal-pending")
 
-    // The section is on screen but still covered: it must not start rising unseen.
+    // The section is on screen but the pulse's trailing edge has not reached it: it must not start rising unseen.
     act(() => intersectAll())
-    act(() => vi.advanceTimersByTime(2000))
     expect(hero).not.toHaveClass("reveal-in")
-    expect(transition.covering).toBe(true)
 
-    act(() => transition.step(transition.options.uncoverAt + .01))
-    expect(transition.covering).toBe(false)
     act(() => vi.advanceTimersByTime(1000))
     expect(hero).toHaveClass("reveal-in")
     vi.useRealTimers()
+  })
+
+  it("cuts through a snapshot where the browser can: no covered moment, and still the old cut for the selection box", async () => {
+    const updates = []
+    document.startViewTransition = vi.fn((update) => {
+      updates.push(update)
+      return { ready: new Promise(() => {}), skipTransition: vi.fn() }
+    })
+    try {
+      mount("/stack", { reduced: false })
+      fireEvent.click(screen.getByRole("link", { name: "Go to About" }))
+      expect(document.startViewTransition).toHaveBeenCalledOnce()
+      expect(document.querySelector(".about-hero")).toBeNull() // the browser takes its picture first
+
+      act(() => updates[0]())
+      expect(document.querySelector(".about-hero")).not.toBeNull()
+      expect(transition.options.wave).toBe(true)
+      expect(transition.phase).toBe("showing")
+      expect(document.querySelector(".transition-overlay")).toHaveClass("is-active")
+
+      act(() => transition.step(transition.options.show))
+      expect(transition.phase).toBe("idle")
+      expect(lenis.start).toHaveBeenCalledOnce()
+    } finally {
+      delete document.startViewTransition
+    }
   })
 
   it("keeps the header on the page being shown until the swap", () => {

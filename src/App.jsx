@@ -11,7 +11,8 @@ import { knownRoutes } from "./data/routes"
 import { transition } from "./transitions/transitionStore"
 import { takeOrigin, trackClicks } from "./transitions/origin"
 import { trackIntent } from "./transitions/prefetch"
-import { DOT_TIMING } from "./transitions/dots"
+import { DOT_TIMING, WAVE_TIMING } from "./transitions/dots"
+import { canSnapshot, cutThroughSnapshot } from "./transitions/snapshot"
 import { FRAME_TIMING } from "./transitions/frame"
 import { markHydrated, mountedAfterHydration } from "./utils/hydration"
 import { useReducedMotion } from "./utils/useReducedMotion"
@@ -48,7 +49,8 @@ function resetScroll(lenis) {
 /**
  * The pages, rendered against the route that is on screen rather than the one in the address bar.
  * A click changes the URL at once (the header follows it), but the content waits: the old page stays until the wipe
- * has covered it, the swap and scroll reset happen under cover, and the new page is uncovered.
+ * has covered it, the swap and scroll reset happen under cover, and the new page is uncovered. The dot cut skips the
+ * wait where the browser can keep a snapshot of the old page: the swap happens at once and the pulse wipes between them.
  * Reduced motion, anything before hydration, and the same page asked for again swap immediately.
  * A click on a project card or folder sheet cuts with the selection box grown out of it; everything else, including
  * the back button, cuts with the dot grid, spreading from where you clicked.
@@ -91,10 +93,16 @@ function Pages({ reduced }) {
     if (location === displayed || location.pathname === displayed.pathname || reduced || !mountedAfterHydration()) return
     const origin = takeOrigin()
     const style = origin?.rect ? "frame" : "dots"
-    transition.navigate(() => {
+    const swap = () => {
       flushSync(() => setView({ location, settle: null }))
       resetScroll(lenis)
-    }, { style, origin, ...(style === "frame" ? FRAME_TIMING : DOT_TIMING) })
+    }
+    // A wave already running has the snapshot's overlay up, so a second navigation (the back button) is a wave too.
+    if (canSnapshot() && (transition.active ? transition.options.wave : style === "dots")) {
+      cutThroughSnapshot(swap, { style: "dots", origin, ...WAVE_TIMING })
+    } else {
+      transition.navigate(swap, { style, origin, ...(style === "frame" ? FRAME_TIMING : DOT_TIMING) })
+    }
   }, [location, displayed, lenis, reduced])
 
   // Nothing scrolls while the screen is covered.

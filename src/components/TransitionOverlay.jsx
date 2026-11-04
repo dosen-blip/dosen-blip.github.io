@@ -1,8 +1,7 @@
 import { useEffect, useRef } from "react"
 import { transition } from "../transitions/transitionStore"
 import { useTransitionPhase } from "../transitions/useTransitionPhase"
-import { cutTime, drawDots } from "../transitions/dots"
-import { drawPen } from "../transitions/pen"
+import { drawDots, drawWave } from "../transitions/dots"
 import { centreRect, clipRect, drawSelection, findTargetElement, measureTarget, selectionFrame } from "../transitions/frame"
 
 const DPR_MAX = 1.5
@@ -15,6 +14,7 @@ function readColors() {
   return {
     stage: read("--stage", "#0c0c0f"),
     accent: read("--accent", "#386dff"),
+    neon: read("--neon-rgb", "92 136 255"),
     line: read("--neon-core", "#386dff"),
     handle: read("--bg", "#f7f5ed"),
     label: read("--accent-strong", "#2b5ce6"),
@@ -26,8 +26,7 @@ function readColors() {
 
 /**
  * The canvas that covers the page between routes. It draws one of two cuts, chosen per navigation:
- * the dot grid pulse (transitions/dots.js) with the pen drawing my name in its bridge (transitions/pen.js) by
- * default, or the selection box filled with the card's picture (transitions/frame.js) when the click came from a
+ * the dot grid pulse (transitions/dots.js, as one wave where the browser can keep a snapshot of the old page) by default, or the selection box filled with the card's picture (transitions/frame.js) when the click came from a
  * project card or folder sheet. It only shows while a transition runs and is drawn straight from
  * the store's frame loop, so nothing re-renders in React per frame.
  */
@@ -74,9 +73,8 @@ export function TransitionOverlay() {
         const frame = selectionFrame(phase, cover, { from, target: landing, width, height })
         drawSelection(ctx, { width, height, dpr, frame, colors, media: options.origin?.media, phase, cover })
       } else {
-        const time = cutTime(cover, phase, options)
-        const bridge = (context) => drawPen(context, { width, height, dpr, time })
-        drawDots(ctx, { width, height, dpr, cover, phase, origin: options.origin, scrollY: window.scrollY, colors, bridge })
+        const drawCut = options.wave ? drawWave : drawDots
+        drawCut(ctx, { width, height, dpr, cover, phase, origin: options.origin, scrollY: window.scrollY, colors })
       }
     }
 

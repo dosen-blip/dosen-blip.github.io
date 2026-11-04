@@ -119,4 +119,31 @@ describe("transition store", () => {
     transition.step(1)
     expect(uncovers).toBe(2)
   })
+
+  it("runs a wave with no covered moment: the swap is immediate and the cut is one show", () => {
+    const seen = []
+    const stops = ["hidestart", "swap", "uncover", "showend"].map((name) => transition.on(name, () => seen.push(name)))
+    const swap = vi.fn()
+    transition.navigate(swap, { wave: true, hide: 0, show: 1 })
+    expect(swap).toHaveBeenCalledOnce()
+    expect(transition.phase).toBe("showing")
+    expect(transition.cover).toBe(1)
+    expect(transition.covering).toBe(false)
+    expect(seen).toEqual(["hidestart", "swap", "uncover"])
+
+    transition.step(.5)
+    expect(transition.cover).toBeCloseTo(.5)
+
+    // A second navigation starts again from the top, without reversing anything.
+    const next = vi.fn()
+    transition.navigate(next, { wave: true, hide: 0, show: 1 })
+    expect(next).toHaveBeenCalledOnce()
+    expect(transition.cover).toBe(1)
+    expect(seen).toEqual(["hidestart", "swap", "uncover", "swap", "uncover"])
+
+    transition.step(1)
+    expect(transition.phase).toBe("idle")
+    expect(seen.at(-1)).toBe("showend")
+    stops.forEach((stop) => stop())
+  })
 })

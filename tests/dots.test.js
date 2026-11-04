@@ -1,27 +1,62 @@
 import { describe, expect, it } from "vitest"
-import { CELL, DOT_TIMING, EDGE, PULSE, REACH, cutTime, dotSize, drawDots, waveFront, waveOrigin } from "../src/transitions/dots"
+import { BAND_GLOW, CELL, DOT, EDGE, GRID_PARALLAX, REACH, WAVE, WAVE_TIMING, dotSize, drawDots, drawWave, revealRadius, waveDotSize, waveFront, waveHoleSize, waveOrigin } from "../src/transitions/dots"
 
-const colors = { stage: "#0c0c0f", accent: "#386dff" }
+const colors = { stage: "#0c0c0f", accent: "#386dff", neon: "92 136 255" }
 
 function fakeContext() {
   const calls = []
-  const ctx = new Proxy({}, {
+  const fills = [] // what each fill painted with, and how
+  const gradients = []
+  const createRadialGradient = (...radii) => {
+    const gradient = { radii, stops: [], addColorStop: (at, color) => gradient.stops.push([at, color]) }
+    gradients.push(gradient)
+    return gradient
+  }
+  const ctx = new Proxy({ globalCompositeOperation: "source-over", createRadialGradient }, {
     get(target, key) {
       if (key in target) return target[key]
-      return (...args) => calls.push([key, ...args, ctx.fillStyle])
+      return (...args) => {
+        if (key === "fill") fills.push({ style: ctx.fillStyle, mode: ctx.globalCompositeOperation })
+        calls.push([key, ...args, ctx.fillStyle])
+      }
     },
     set(target, key, value) {
       target[key] = value
       return true
     },
   })
-  return { ctx, calls }
+  return { ctx, calls, fills, gradients }
 }
 
 describe("dot grid cut", () => {
   it("closes the grid completely at full size", () => {
     // Four dots meet at the middle of each cell, half a diagonal away.
-    expect(REACH).toBeGreaterThan(Math.hypot(CELL, CELL) / 2)
+    expect(REACH).toBeGreaterThan(Math.hypot(DOT, DOT) / 2)
+  })
+
+  it("keeps a dot on every backdrop dot, whatever the scroll", () => {
+    for (const scrollY of [0, 40, 777]) {
+      const { ctx, calls } = fakeContext()
+      drawDots(ctx, { width: 300, height: 200, dpr: 1, cover: 0, phase: "showing", scrollY, colors })
+      const centres = calls.filter(([name]) => name === "arc").map(([, x, y]) => `${x},${y}`)
+      const y = CELL / 2 - ((scrollY * GRID_PARALLAX) % CELL) + CELL
+      expect(centres).toContain(`${CELL / 2 + CELL},${y}`)
+    }
+  })
+
+  it("leaves no part of the screen out of the grid, whatever the scroll", () => {
+    const width = 301
+    const height = 203
+    for (const scrollY of [0, 13, 40, 777]) {
+      const { ctx, calls } = fakeContext()
+      drawDots(ctx, { width, height, dpr: 1, cover: 0, phase: "showing", scrollY, colors })
+      const discs = calls.filter(([name]) => name === "arc")
+      for (let x = -1; x <= width + 1; x += 7) {
+        for (let y = -1; y <= height + 1; y += 7) {
+          expect(discs.some(([, cx, cy, radius]) => Math.hypot(x - cx, y - cy) <= radius)).toBe(true)
+        }
+      }
+    }
   })
 
   it("starts the pulse at the click, or the middle of the screen without one", () => {
@@ -37,7 +72,7 @@ describe("dot grid cut", () => {
     expect(dotSize(1, "hiding", 1)).toBe(1)
   })
 
-  it("empties dots near the origin first when showing", () => {
+  it("opens the black near the origin first when showing", () => {
     expect(dotSize(1, "showing", 0)).toBe(1)
     expect(dotSize(.6, "showing", 0)).toBeLessThan(dotSize(.6, "showing", .8))
     expect(dotSize(0, "showing", 1)).toBe(0)
@@ -73,29 +108,108 @@ describe("dot grid cut", () => {
     expect(arcs.some(([, , , radius]) => radius < EDGE * REACH)).toBe(true)
   })
 
-  it("holds the screen covered after the swap, then lets the trailing edge go", () => {
-    const heldUntil = 1 - PULSE.hold / DOT_TIMING.show
-    expect(dotSize(heldUntil + .01, "showing", 0)).toBe(1)
-    expect(dotSize(heldUntil - .1, "showing", 0)).toBeLessThan(1)
+  it("opens the trailing edge as holes onto the new page, each starting as a blue dot", () => {
+    const { ctx, calls, fills } = fakeContext()
+    drawDots(ctx, { width: 600, height: 400, dpr: 1, cover: .4, phase: "showing", origin: { x: 0, y: 0 }, colors })
+    expect(calls.find(([name]) => name === "fillRect")).toEqual(["fillRect", -1, -1, 602, 402, colors.stage])
+    expect(fills.map(({ mode }) => mode)).toEqual(["source-over", "destination-out"])
+    expect(fills[0].style).toBe(colors.accent)
+    expect(ctx.globalCompositeOperation).toBe("source-over")
+    const radii = calls.filter(([name]) => name === "arc").map(([, , , radius]) => radius)
+    expect(radii.some((radius) => radius === REACH)).toBe(true) // wide open near the click
+    expect(radii.some((radius) => radius < EDGE * REACH)).toBe(true) // just starting at the edge
   })
 
-  it("counts time across both halves of the cut", () => {
-    expect(cutTime(0, "hiding")).toBe(0)
-    expect(cutTime(1, "hiding")).toBeCloseTo(DOT_TIMING.hide)
-    expect(cutTime(1, "showing")).toBeCloseTo(DOT_TIMING.hide)
-    expect(cutTime(0, "showing")).toBeCloseTo(DOT_TIMING.hide + DOT_TIMING.show)
+  it("sets the trailing edge off from the click as soon as the content has swapped", () => {
+    expect(dotSize(1, "showing", 0)).toBe(1)
+    expect(dotSize(.98, "showing", 0)).toBeLessThan(1)
   })
 
-  it("draws the bridge inside the black, clipped to it, and over a covered screen", () => {
-    const mid = fakeContext()
-    const bridge = []
-    drawDots(mid.ctx, { width: 300, height: 200, dpr: 1, cover: .6, phase: "hiding", origin: { x: 0, y: 0 }, colors, bridge: () => bridge.push("drawn") })
-    const order = mid.calls.map(([name]) => name).filter((name) => ["fill", "clip", "save", "restore"].includes(name))
-    expect(order.slice(0, 4)).toEqual(["fill", "save", "clip", "restore"])
-    expect(bridge).toEqual(["drawn"])
+  describe("as one wave", () => {
+    const at = (time) => 1 - time / WAVE_TIMING.show
 
-    const full = fakeContext()
-    drawDots(full.ctx, { width: 300, height: 200, dpr: 1, cover: 1, phase: "showing", colors, bridge: () => bridge.push("full") })
-    expect(bridge).toEqual(["drawn", "full"])
+    it("runs ahead on the old page while the new one is already open behind it", () => {
+      const time = WAVE.travel / 2 + WAVE.grow
+      expect(waveHoleSize(time, 0)).toBe(1)
+      expect(waveDotSize(time, 1)).toBe(0)
+      expect(waveDotSize(WAVE_TIMING.show, 1)).toBe(1)
+      expect(waveHoleSize(WAVE_TIMING.show, 1)).toBe(1)
+    })
+
+    it("hides the line between the two pages in solid black, on any screen and wherever the click was", () => {
+      const screens = [[320, 568, null], [390, 844, { x: 195, y: 30 }], [1440, 900, { x: 0, y: 0 }], [2560, 1440, null]]
+      for (const [width, height, origin] of screens) {
+        const wave = waveOrigin(width, height, origin)
+        for (let time = 0; time <= WAVE_TIMING.show; time += .01) {
+          const radius = revealRadius(at(time), wave)
+          if (radius <= 0 || radius > wave.reach) continue
+          // Whichever dot is nearest a point on the line, up to half a cell's diagonal away, must be solid.
+          const nearest = Math.hypot(DOT, DOT) / 2
+          for (const distance of [radius - nearest, radius, radius + nearest]) {
+            const n = distance / wave.reach
+            expect(waveDotSize(time, n)).toBe(1)
+            expect(waveHoleSize(time, n)).toBe(0)
+          }
+        }
+      }
+    })
+
+    it("has revealed the whole screen by the end", () => {
+      const wave = waveOrigin(1440, 900, { x: 0, y: 0 })
+      expect(revealRadius(0, wave)).toBeGreaterThanOrEqual(wave.reach)
+      expect(revealRadius(1, wave)).toBe(0)
+    })
+
+    it("draws only the band: black, the light on it, blue ahead, holes punched behind, in a clean state", () => {
+      const { ctx, calls, fills } = fakeContext()
+      drawWave(ctx, { width: 1000, height: 600, dpr: 1, cover: at(.3), origin: { x: 0, y: 0 }, colors })
+      const paints = fills.map(({ style, mode }) => [typeof style === "string" ? style : "light", mode])
+      expect(paints).toEqual([
+        [colors.stage, "source-over"],
+        ["light", "source-atop"],
+        [colors.accent, "source-over"],
+        [colors.accent, "source-over"],
+        [colors.accent, "destination-out"],
+      ])
+      expect(ctx.globalCompositeOperation).toBe("source-over")
+      expect(ctx.shadowBlur).toBe(0)
+      const everyDot = (Math.ceil(1000 / DOT) + 3) * (Math.ceil(600 / DOT) + 4)
+      const big = calls.filter(([name, , , radius]) => name === "arc" && radius !== BAND_GLOW.dot)
+      expect(big.length).toBeLessThan(everyDot)
+    })
+
+    it("lights the band like a backdrop tool: only on the black, only the backdrop's own tiny dots, dark at its edges", () => {
+      const { ctx, calls, gradients } = fakeContext()
+      const time = .3
+      drawWave(ctx, { width: 1000, height: 600, dpr: 2, cover: at(time), origin: { x: 0, y: 0 }, colors })
+
+      // The wash is faint and the dots are full neon at the band's middle; both fade to nothing at its edges.
+      const [wash, dots] = gradients
+      for (const { stops } of [wash, dots]) {
+        expect(stops[0][1]).toBe(`rgb(${colors.neon} / 0)`)
+        expect(stops.at(-1)[1]).toBe(`rgb(${colors.neon} / 0)`)
+      }
+      expect(wash.stops[1][1]).toBe(`rgb(${colors.neon} / ${BAND_GLOW.wash})`)
+      expect(dots.stops[1][1]).toBe(`rgb(${colors.neon} / 1)`)
+
+      const tiny = calls.filter(([name, , , radius]) => name === "arc" && radius === BAND_GLOW.dot)
+      expect(tiny.length).toBeGreaterThan(0)
+      for (const [, x, y] of tiny) {
+        expect((x - CELL / 2) % CELL).toBe(0)
+        expect(((y - CELL / 2) % CELL + CELL) % CELL).toBe(0)
+      }
+    })
+
+    it("has no light before the band has any width", () => {
+      const { ctx, gradients } = fakeContext()
+      drawWave(ctx, { width: 300, height: 200, dpr: 1, cover: 1, colors })
+      expect(gradients).toEqual([])
+    })
+
+    it("leaves nothing on screen at the end", () => {
+      const { ctx, calls } = fakeContext()
+      drawWave(ctx, { width: 300, height: 200, dpr: 1, cover: 0, colors })
+      expect(calls.filter(([name]) => name === "arc")).toEqual([])
+    })
   })
 })
