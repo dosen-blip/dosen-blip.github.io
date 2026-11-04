@@ -48,19 +48,17 @@ export function InstinctDetail({ project }) {
         <div className="ig-hero-topline">
           <Link className="ig-back-link" to="/projects"><ArrowLeftIcon /><span>Back to Work</span></Link>
           <div className="ig-hero-links">
-            <SourceLink href={project.liveUrl}>Site</SourceLink>
+            <SourceLink href={project.liveUrl}>Visit site</SourceLink>
           </div>
         </div>
         <div className="ig-hero-copy">
-          <p className="ig-hero-kicker">{content.hero.kicker}</p>
           <HeroWordmark slotRef={slotRef} />
           <p className="ig-hero-dek">{content.hero.dek}</p>
         </div>
-        {/* More of the wall below the first screen, with a word on how it was made. */}
+        {/* More of the wall below the first screen. */}
         <div ref={moreRef} className="ig-hero-more">
           <div className="ig-about">
-            <h2 className="ig-about-kicker">{content.about.kicker}</h2>
-            {content.about.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+            <p>{content.about}</p>
           </div>
         </div>
       </header>

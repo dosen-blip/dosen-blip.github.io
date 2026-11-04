@@ -17,23 +17,25 @@ describe("Instinct Groove project page", () => {
     expect(getByRole("heading", { level: 1, name: "Instinct Groove" })).toBeTruthy()
     const hero = container.querySelector(".ig-hero")
     const copy = hero.querySelector(".ig-hero-copy")
-    expect([...copy.children].map((node) => node.className)).toEqual(["ig-hero-kicker", "ig-hero-wordmark", "ig-hero-dek"])
+    expect([...copy.children].map((node) => node.className)).toEqual(["ig-hero-wordmark", "ig-hero-dek"])
     expect(hero.querySelector(".ig-scene")).toBeTruthy()
     expect(container.querySelector('a[href="https://instinctgroove.com/"]')).toBeTruthy()
   })
 
-  it("has only a blurb on how it was made under the dek, on more of the wall", () => {
-    const { container, getByRole } = render(
+  it("has only one line under the dek, on more of the wall, and sends you to the site from the top", () => {
+    const { container, getAllByRole } = render(
       <MemoryRouter><InstinctDetail project={instinctGroove} /></MemoryRouter>,
     )
 
     const page = container.querySelector(".instinct-page")
     expect([...page.children].map((node) => node.className)).toEqual(["ig-hero"])
     const more = page.querySelector(".ig-hero > .ig-hero-more")
-    expect(more).toContainElement(getByRole("heading", { level: 2, name: instinctGroove.content.about.kicker }))
-    expect(more.querySelectorAll("p").length).toBe(instinctGroove.content.about.paragraphs.length)
-    expect(more.textContent).toMatch(/Three\.js/)
-    expect(more.textContent).toMatch(/WebGL2/)
+    expect(more).toHaveTextContent(/^I designed and built the website\.$/)
+    expect(more.querySelector("a")).toBeNull()
+    const links = getAllByRole("link", { name: /Visit site/ })
+    expect(links.length).toBe(1)
+    expect(links[0]).toHaveAttribute("href", instinctGroove.liveUrl)
+    expect(container.querySelector(".ig-hero-topline")).toContainElement(links[0])
   })
 
   it("letters the wordmark over the baked still when the live scene can't run", () => {

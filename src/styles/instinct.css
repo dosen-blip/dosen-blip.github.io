@@ -41,7 +41,7 @@
 /* ---------- Hero: the wall ---------- */
 
 .ig-hero {
-  --ig-more: clamp(420px, 70svh, 720px); /* the wall below the first screen, behind the blurb */
+  --ig-more: clamp(420px, 70svh, 720px); /* the wall below the first screen */
   position: relative;
   min-height: calc(min(980px, max(720px, calc(100svh - var(--header-h)))) + var(--ig-more));
   padding: clamp(24px, 4vw, 56px);
@@ -73,23 +73,12 @@
   width: min(700px, 50%);
 }
 
-.ig-about-kicker {
-  margin: 0 0 22px;
-  color: var(--ig-green);
-  font-family: var(--ig-mono);
-  font-size: 11px;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-}
-
 .ig-about p {
-  max-width: 54ch;
-  margin: 0 0 18px;
+  max-width: 40ch;
+  margin: 0;
   color: var(--ig-ink);
-  font-size: clamp(15px, 1.15vw, 17px);
-  line-height: 1.6;
+  font-size: clamp(16px, 1.45vw, 20px);
+  line-height: 1.5;
 }
 
 .ig-hero-still {
@@ -144,10 +133,14 @@
   transition: transform .35s var(--ig-ease);
 }
 
+/* the way out to the live site, and the one bright control on the wall */
 .ig-source-link {
-  padding-bottom: 5px;
-  border-bottom: 1px solid rgba(255, 255, 255, .45);
-  transition: border-color .25s ease, color .25s ease;
+  padding: 13px 18px;
+  background: var(--ig-green);
+  color: var(--ig-bg);
+  font-size: 12px;
+  box-shadow: 0 0 26px rgba(50, 224, 122, .38);
+  transition: background-color .25s ease, box-shadow .25s ease;
 }
 
 .ig-hero-copy {
@@ -155,15 +148,6 @@
   margin-top: auto;
   padding: clamp(96px, 14vh, 168px) 0 44px;
   animation: ig-rise-in .8s .3s var(--ig-ease) both;
-}
-
-.ig-hero-kicker {
-  margin: 0 0 22px;
-  color: var(--ig-green) !important;
-  font-family: var(--ig-mono);
-  font-size: 11px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
 }
 
 .ig-hero-wordmark {
@@ -265,8 +249,8 @@
 @media (hover: hover) {
   .ig-source-link:hover,
   .ig-source-link:focus-visible {
-    border-color: var(--ig-green);
-    color: var(--ig-green);
+    background: var(--ig-sign);
+    box-shadow: 0 0 34px rgba(255, 241, 222, .45);
   }
 
   .ig-back-link:hover .ui-icon {
@@ -303,12 +287,6 @@
 
   .ig-about {
     width: 100%;
-  }
-
-  .ig-hero-kicker {
-    max-width: 32ch;
-    margin-bottom: 16px;
-    line-height: 1.5;
   }
 
   .ig-hero-wordmark {
