@@ -39,6 +39,13 @@ describe("selection box cut", () => {
     document.body.innerHTML = ""
   })
 
+  it("lands on the title of a discipline page", () => {
+    document.body.innerHTML = `<main><div class="discipline"><section class="discipline-hero"><h1 class="page-title">Web development</h1></section></div></main>`
+    document.querySelector("h1").getBoundingClientRect = () => ({ left: 40, top: 120, width: 500, height: 80 })
+    expect(findTarget(document, 1000, 600)).toEqual(title)
+    document.body.innerHTML = ""
+  })
+
   it("fits the card's picture into the frame the way the card does", () => {
     const frame = { x: 0, y: 0, width: 400, height: 200 }
     expect(fitImage(800, 800, frame, "cover")).toEqual({

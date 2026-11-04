@@ -3,7 +3,7 @@
 // Hiding, the blue selection frame snaps onto what was clicked, its handles drag out to the edges of the screen like
 // a resize, and the size label counts up to the screen size. The card's own picture comes with it, so the bridge is
 // the project's image filling the screen (stage black when there is no picture).
-// Showing, the picture fades off the new page while the frame shrinks onto its hero (its title, reveal or neon
+// Showing, the picture fades off the new page while the frame shrinks onto its hero (its title or neon
 // wordmark), holds there for a beat with that element's size, then lets go. The hero is measured on every frame:
 // it is rising into place as the frame arrives, so the frame rides it and lands where it settles.
 
@@ -19,7 +19,6 @@ const INSET = 16 // targets are kept this far inside the screen so the handles n
 export const TARGETS = [
   "[data-transition-target]",
   ".fs-hero-neon-wordmark",
-  ".discipline-stage",
   ".detail-head .page-title",
   "main h1",
 ]

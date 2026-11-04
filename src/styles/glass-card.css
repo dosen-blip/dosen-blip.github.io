@@ -1,0 +1,119 @@
+/* Glass card: the glass folder's material on a fluid box. .gf-art, .gf-back-sheen and .gf-spec are the folder's own
+   classes (src/styles/glass-folder.css). The rest repeats its values for a box with no fixed path: the rim is a masked
+   gradient border and the glow is inset shadows.
+
+   Layers sit at z-index -1 inside the card's stacking context, so children need no wrapper or z-index.
+
+   Tint opacity is raised from the folder's .16/.5/.93 (light) and .18/.62/.94 (dark) so text reaches 4.5:1 with no credit
+   for the frost's blur. Each stop is worked against the worst pixel of that look's 480 x 320 paint: for dark text the
+   darkest (web #151614, ux #7d91cb), for light text the brightest (white, from the specular peaks) plus .gf-spec. */
+
+.gc {
+  --gf-px: 0;
+  --gf-py: 0;
+  --gf-ease: cubic-bezier(.2, .8, .2, 1);
+  --gc-a0: .66;
+  --gc-a1: .8;
+  --gc-a2: .93;
+  --ink: var(--black);
+  --body: #3d403a;
+  --soft: #3d403a;
+  --accent-strong: #16348f;
+  --on-accent: #fff;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: var(--radius-lg);
+  /* .gf-back's colours, showing until the art has painted */
+  background: linear-gradient(180deg, #f3f3f4 0%, #e3e3e6 100%);
+  box-shadow: 0 18px 44px -18px rgba(16, 18, 24, .34);
+  color: var(--ink);
+  transition: transform .35s var(--gf-ease);
+}
+.gc[data-look="ux"] { --gc-a0: .42; --gc-a1: .66; }
+:is(.gc[data-tone="dark"], [data-theme="dark"] .gc[data-tone="auto"]) {
+  --gc-a0: .8;
+  --gc-a1: .88;
+  --gc-a2: .94;
+  --ink: var(--stage-ink);
+  --body: #d0d1c9;
+  --soft: #d0d1c9;
+  --accent-strong: #b9ccff;
+  --on-accent: #0c0c0f;
+  --line: #26262c;
+  --line-strong: #34343b;
+  background: linear-gradient(180deg, #2a2a2e 0%, #121214 100%);
+  box-shadow: 0 18px 44px -18px rgba(0, 0, 0, .62);
+}
+:where(a.gc) { display: block; }
+.gc:is(a, button):hover { transform: translateY(-3px); }
+/* base.css rounds :focus-visible to 4px and comes later in the bundle */
+.gc:focus-visible { border-radius: var(--radius-lg); }
+
+.gc-layers {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.gc-layers > span {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+/* cover the card and keep the folder's 12px of overscan for the parallax */
+.gc .gc-art {
+  width: calc(100% + 24px);
+  height: calc(100% + 24px);
+}
+
+.gc-frost {
+  -webkit-backdrop-filter: blur(22px) saturate(1.5);
+  backdrop-filter: blur(22px) saturate(1.5);
+}
+
+.gc-tint {
+  background: linear-gradient(180deg, rgb(255 255 255 / var(--gc-a0)) 0%, rgb(255 255 255 / var(--gc-a1)) 42%, rgb(252 252 252 / var(--gc-a2)) 100%);
+}
+:is(.gc[data-tone="dark"], [data-theme="dark"] .gc[data-tone="auto"]) .gc-tint {
+  background: linear-gradient(180deg, rgb(18 18 20 / var(--gc-a0)) 0%, rgb(14 14 16 / var(--gc-a1)) 46%, rgb(8 8 10 / var(--gc-a2)) 100%);
+}
+:is(.gc[data-tone="dark"], [data-theme="dark"] .gc[data-tone="auto"]) .gf-spec { mix-blend-mode: screen; opacity: .16; }
+
+/* The folder's core line is unchanged. Its soft bleed is 17px wide with a 24px blur; here it is 9px with a 16px blur,
+   so at the 22px depth where text starts it stays under the 4.5:1 limit. */
+.gc-layers > .gc-glow {
+  opacity: 0;
+  box-shadow:
+    inset 0 0 1.6px 1.3px var(--neon-core, #386dff),
+    inset 0 0 6px 1.3px rgb(var(--neon-rgb, 56 109 255) / calc(var(--neon-on, 0) * .9)),
+    inset 0 0 16px 9px rgb(var(--neon-rgb, 56 109 255) / calc(.3 + var(--neon-on, 0) * .6));
+  transition: opacity .5s var(--gf-ease);
+  -webkit-mask-image: radial-gradient(300px 240px at calc(50% + var(--gf-px) * 42%) calc(50% + var(--gf-py) * 42%), #000 0%, rgb(0 0 0 / .45) 72%);
+  mask-image: radial-gradient(300px 240px at calc(50% + var(--gf-px) * 42%) calc(50% + var(--gf-py) * 42%), #000 0%, rgb(0 0 0 / .45) 72%);
+}
+.gc:is(:hover, :focus-within) .gc-glow { opacity: 1; animation: gf-strike .45s linear; }
+
+/* The folder strokes its rim 2.4 wide and clips the outer half away, which leaves 1.2 */
+.gc-layers > .gc-rim {
+  padding: 1.2px;
+  background: linear-gradient(180deg, rgb(255 255 255 / .95) 0%, rgb(255 255 255 / .35) 35%, rgb(255 255 255 / .12) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  transition: padding .3s var(--gf-ease);
+}
+:is(.gc[data-tone="dark"], [data-theme="dark"] .gc[data-tone="auto"]) .gc-rim { opacity: .55; }
+.gc:is(:focus-visible, :has(:focus-visible)) .gc-rim { padding: 2.5px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gc, .gc-layers * {
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+    animation: none !important;
+  }
+  .gc:is(a, button):hover { transform: none; }
+}

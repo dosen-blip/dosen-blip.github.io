@@ -8,7 +8,7 @@
 
 .about-intro { display: grid; justify-items: start; gap: 18px; }
 .about-descriptor { font-size: clamp(1.375rem, 1rem + 1.4vw, 2.25rem); }
-.about-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 10px; }
+.about-actions { margin-top: 10px; }
 
 /* The portrait, selected like a layer in a design file, with a collaborator's cursor on it. */
 .about-portrait { position: relative; margin: 0; }
@@ -62,17 +62,12 @@
   gap: 10px;
   height: 100%;
   padding: clamp(22px, 2.4vw, 32px);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
   color: var(--ink);
-  transition: border-color var(--fast) ease, transform var(--mid) var(--ease-out);
 }
 .about-disciplines .tool-icon { --tool-1: var(--accent); --tool-2: var(--accent); width: 56px; height: 42px; margin: -8px 0 4px -10px; }
 .about-disciplines h3 { font-size: var(--title-sm); }
 .about-disciplines p { color: var(--body); }
 .about-disciplines .path { margin-top: 6px; color: var(--accent-strong); }
-.about-disciplines a:hover { border-color: var(--ink); transform: translateY(-3px); }
 
 .experience-list { list-style: none; border-top: 1px solid var(--line); }
 .experience-list li {
@@ -91,26 +86,17 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(16px, 2vw, 28px);
 }
+/* The grid stretches the cards to equal height; the auto margin keeps the links on one line across the row. */
 .about-card {
-  display: grid;
-  align-content: start;
-  justify-items: start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 14px;
   padding: clamp(22px, 2.4vw, 32px);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  color: var(--body);
 }
 .about-card h2 { font-size: var(--title-sm); }
-.about-card > p { flex: 1; }
-.about-card--night {
-  --ink: var(--stage-ink);
-  --body: var(--stage-body);
-  --accent-strong: #6f95ff;
-  border-color: var(--stage-line);
-  background: var(--stage);
-}
+.about-card p { color: var(--body); }
+.about-card .arrow-link { margin-top: auto; }
 
 @media (max-width: 999.98px) {
   .about-disciplines, .about-more { grid-template-columns: 1fr; }

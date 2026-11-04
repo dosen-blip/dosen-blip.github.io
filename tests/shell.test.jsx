@@ -30,3 +30,11 @@ describe("mobile navigation", () => {
     expect(button).toHaveFocus()
   })
 })
+
+describe("footer", () => {
+  it("states availability as a line of text, with no status pill", () => {
+    render(<MemoryRouter><SiteShell><p>Page</p></SiteShell></MemoryRouter>)
+    expect(screen.getByText("Available for design, video and web projects.")).toBeInTheDocument()
+    expect(screen.queryByText("Available for work")).not.toBeInTheDocument()
+  })
+})

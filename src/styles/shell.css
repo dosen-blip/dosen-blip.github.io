@@ -458,7 +458,6 @@
     padding-top: 24px;
     border-top: 1px solid var(--line);
   }
-  .mobile-menu-bottom .status-chip { justify-self: start; }
   .mobile-menu-row { display: flex; align-items: center; justify-content: space-between; }
 
   .socials { display: flex; gap: 18px; }

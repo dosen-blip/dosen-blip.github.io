@@ -54,6 +54,20 @@ describe("stack page", () => {
     ]))
   })
 
+  it("makes every card a frostless glass card with mixed looks in each group", () => {
+    const { container } = render(<StackPage />)
+
+    for (const card of container.querySelectorAll(".stack-card")) {
+      expect(card.tagName).toBe("A")
+      expect(card).toHaveClass("gc", "stack-card--no-frost")
+    }
+    for (const group of container.querySelectorAll(".stack-group")) {
+      const looks = [...group.querySelectorAll(".stack-card")].map((card) => card.dataset.look)
+      expect(new Set(looks).size).toBe(3)
+      looks.slice(1).forEach((look, index) => expect(look).not.toBe(looks[index]))
+    }
+  })
+
   it("uses distinct official resources and opens every card in a new tab", () => {
     render(<StackPage />)
     const links = screen.getAllByRole("link")

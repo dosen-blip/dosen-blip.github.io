@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { StatusChip } from "../components/StatusChip"
+import GlassCard from "../components/GlassCard"
 import "../styles/contact.css"
 
 const successMessage = "Thanks—your message has been sent."
@@ -37,7 +37,7 @@ function LinkedInIcon() {
 
 function ContactDetails() {
   return (
-    <div className="contact-details">
+    <GlassCard className="contact-details" look="motion">
       <section className="contact-detail-group" aria-labelledby="contact-email-heading">
         <h2 id="contact-email-heading">Email me</h2>
         <div className="contact-detail-row">
@@ -59,7 +59,7 @@ function ContactDetails() {
           </a>
         </div>
       </section>
-    </div>
+    </GlassCard>
   )
 }
 
@@ -97,7 +97,7 @@ function ContactForm() {
       : ""
 
   return (
-    <section className="contact-form-section" aria-labelledby="contact-form-heading">
+    <GlassCard as="section" className="contact-form-section" look="ux" aria-labelledby="contact-form-heading">
       <h2 id="contact-form-heading">Get in touch</h2>
       <form className="contact-form" onSubmit={handleSubmit}>
         <div className="contact-form-row">
@@ -126,7 +126,7 @@ function ContactForm() {
           </p>
         )}
       </form>
-    </section>
+    </GlassCard>
   )
 }
 
@@ -135,7 +135,6 @@ export default function ContactPage() {
     <div className="page contact">
       <section className="contact-content" aria-labelledby="contact-heading">
         <div className="contact-intro">
-          <StatusChip />
           <h1 id="contact-heading" className="page-title">Contact</h1>
           <p className="lede">Available for design, video and web projects. Include the scope and timeline.</p>
         </div>

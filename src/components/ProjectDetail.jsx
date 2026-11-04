@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { ArrowLink } from "./ArrowLink"
+import GlassCard from "./GlassCard"
 import { ProjectCard } from "./ProjectCard"
 import { Reveal } from "./Reveal"
 import { DisciplineTags } from "./Tags"
@@ -115,15 +116,17 @@ export function ProjectDetail({ project }) {
           {body.map((block, index) => <Reveal key={`${block.type}-${index}`}><ContentBlock block={block} projectTitle={project.title} /></Reveal>)}
         </div>
         <aside className="detail-rail" aria-label="Project details">
-          <dl>
-            {meta.map((item) => (
-              <div key={item.label}>
-                <dt><span className="meta-icon" aria-hidden="true"><MetaIcon type={item.type} /></span>{item.label}</dt>
-                <dd>{item.value}</dd>
-              </div>
-            ))}
-          </dl>
-          {project.liveUrl && <ArrowLink to={project.liveUrl} external className="detail-live">Live website</ArrowLink>}
+          <GlassCard className="detail-rail-card" look={indexed?.disciplines?.[0] ?? "ux"}>
+            <dl>
+              {meta.map((item) => (
+                <div key={item.label}>
+                  <dt><span className="meta-icon" aria-hidden="true"><MetaIcon type={item.type} /></span>{item.label}</dt>
+                  <dd>{item.value}</dd>
+                </div>
+              ))}
+            </dl>
+            {project.liveUrl && <ArrowLink to={project.liveUrl} external className="detail-live">Live website</ArrowLink>}
+          </GlassCard>
         </aside>
       </div>
 

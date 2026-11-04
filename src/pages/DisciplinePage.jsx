@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom"
 import { ArrowLink } from "../components/ArrowLink"
+import GlassCard from "../components/GlassCard"
 import { ProjectCard } from "../components/ProjectCard"
 import { Reveal } from "../components/Reveal"
-import { RevealStage } from "../components/RevealStage"
 import { YouTubeBlock } from "../components/ProjectDetail"
 import { ArrowUpRightIcon } from "../components/Icons"
 import { ToolIcon } from "../brand/ToolIcon"
@@ -27,6 +27,9 @@ const uxSteps = [
   { icon: "toggle", title: "Prototype", body: "Figma wireframes and prototypes (ToldYa, HintonX)." },
   { icon: "code-tag", title: "Build", body: "Front-end build or developer handoff." },
 ]
+
+// Four steps, three looks: neighbours differ in the four, two and one column layouts.
+const stepLooks = ["ux", "web", "motion"]
 
 function MotionExtra() {
   return (
@@ -60,23 +63,20 @@ function WebExtra() {
         </div>
       </div>
       <ul className="live-list">
-        {liveSites.map((site) => (
-          <li key={site.href}>
-            {site.internal ? (
-              <Link to={site.href}>
+        {liveSites.map((site) => {
+          const link = site.internal
+            ? { as: Link, to: site.href }
+            : { as: "a", href: site.href, target: "_blank", rel: "noreferrer" }
+          return (
+            <li key={site.href}>
+              <GlassCard {...link} look="web">
                 <code>{site.label}</code>
-                <span>{site.note}</span>
+                <span className="live-note">{site.note}</span>
                 <ArrowUpRightIcon />
-              </Link>
-            ) : (
-              <a href={site.href} target="_blank" rel="noreferrer">
-                <code>{site.label}</code>
-                <span>{site.note}</span>
-                <ArrowUpRightIcon />
-              </a>
-            )}
-          </li>
-        ))}
+              </GlassCard>
+            </li>
+          )
+        })}
       </ul>
     </Reveal>
   )
@@ -93,12 +93,12 @@ function UxExtra() {
       </div>
       <ol className="ux-steps">
         {uxSteps.map((step, index) => (
-          <li key={step.title}>
+          <GlassCard as="li" key={step.title} look={stepLooks[index % stepLooks.length]}>
             <ToolIcon name={step.icon} />
             <span className="ux-step-number">{String(index + 1).padStart(2, "0")}</span>
             <h3>{step.title}</h3>
             <p>{step.body}</p>
-          </li>
+          </GlassCard>
         ))}
       </ol>
     </Reveal>
@@ -116,15 +116,10 @@ export default function DisciplinePage({ id }) {
   return (
     <div className={`discipline discipline--${id}`}>
       <section className="page discipline-hero" aria-labelledby="discipline-heading">
-        <RevealStage discipline={discipline} priority className="discipline-stage" />
         <div className="discipline-hero-copy">
           <p className="eyebrow"><Link to="/projects">Work</Link> <span aria-hidden="true">/</span> {discipline.label}</p>
           <h1 id="discipline-heading" className="page-title">{discipline.title}</h1>
           <p className="lede">{discipline.intro}</p>
-          <div className="discipline-hero-aside">
-            <p>{discipline.summary}</p>
-            <p className="discipline-fit"><strong>Typical projects</strong> {discipline.fit}</p>
-          </div>
         </div>
       </section>
 
@@ -144,11 +139,11 @@ export default function DisciplinePage({ id }) {
 
       <nav className="page section discipline-next" aria-label="Other disciplines">
         {others.map((item) => (
-          <Link key={item.id} to={item.path} className="discipline-next-link">
+          <GlassCard as={Link} key={item.id} to={item.path} look={item.id} className="discipline-next-link">
             <span className="eyebrow">Next <code>{item.path}</code></span>
             <span className="discipline-next-title">{item.title}</span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5" /></svg>
-          </Link>
+          </GlassCard>
         ))}
       </nav>
     </div>

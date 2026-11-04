@@ -1,6 +1,7 @@
 /**
  * The three things I do, in the order of the line under my name: Web, Motion & UX.
- * Each discipline has its own page, its own reveal of the wordmark, and its own set of tools in the backdrop.
+ * Each discipline has its own page and its own set of tools in the backdrop.
+ * `reveal` and `video` are its reveal of the wordmark, for RevealStage, which no page renders for now.
  */
 export const disciplines = [
   {
@@ -13,8 +14,6 @@ export const disciplines = [
     tools: ["code-tag", "code-braces", "code-arrow"],
     intro: "Websites and Shopify stores: design and front-end development.",
     craft: "Figma · Framer · Shopify · React",
-    fit: "Event sites, publisher websites and Shopify stores.",
-    summary: "Design in Figma; builds in Framer, Shopify and React. Live work includes frequencyshift.ca, instinctgroove.com, the Chasing Greatness store for Hinton Publishing and the DOSEN press kit.",
   },
   {
     id: "motion",
@@ -26,8 +25,6 @@ export const disciplines = [
     tools: ["pen-nib", "bezier-arc", "anchor-handles"],
     intro: "Video production and motion graphics: filming, editing, animation and sound.",
     craft: "Shooting · Editing · After Effects · Sound",
-    fit: "Brand films, documentaries, event promos and recaps.",
-    summary: "Documentary, brand, sports and public-sector films at HintonX since 2019, for clients including Adobe and Service Canada. Announcement and recap films for every Frequency Shift event.",
   },
   {
     id: "ux",
@@ -39,8 +36,6 @@ export const disciplines = [
     tools: ["cursor", "selection-box", "toggle"],
     intro: "App and interface design: research, wireframes and Figma prototypes.",
     craft: "Research · Wireframes · Figma prototypes",
-    fit: "Mobile apps, browser tools and website redesigns.",
-    summary: "Wireframes and prototypes for the ToldYa tennis app at HintonX. Coursework at Algonquin College includes the Trendless browser plug-in and a Beatport redesign.",
   },
 ]
 

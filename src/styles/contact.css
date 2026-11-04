@@ -17,9 +17,20 @@
 .contact-form-section,
 .contact-details {
   padding: clamp(24px, 3vw, 40px);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
+}
+/* Opaque fields, so their contrast doesn't depend on the art. The page's --bg would not follow the card's tone.
+   The status colours reach 4.5:1 on the ux look's middle tint over its darkest (light) or brightest (dark) art pixel. */
+.contact-form-section {
+  --field-bg: #fff;
+  --field-line: #85877e;
+  --status-success: #0a6b42;
+  --status-failure: #a52a1c;
+}
+:is(.contact-form-section[data-tone="dark"], [data-theme="dark"] .contact-form-section[data-tone="auto"]) {
+  --field-bg: var(--night);
+  --field-line: #6e7078;
+  --status-success: #4fd69c;
+  --status-failure: #ff9d8f;
 }
 .contact-form-section h2,
 .contact-detail-group h2 { margin-bottom: 20px; font-size: var(--title-sm); }
@@ -34,9 +45,9 @@
   width: 100%;
   min-height: 50px;
   padding: 13px 15px;
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--field-line);
   border-radius: var(--radius-sm);
-  background: var(--bg);
+  background: var(--field-bg);
   color: var(--ink);
   font-size: 1rem;
   line-height: 1.4;
@@ -73,8 +84,8 @@
 .contact-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; opacity: 0; }
 
 .contact-form-status { font-size: var(--text-sm); font-weight: 500; }
-.contact-form-status--success { color: var(--online); }
-.contact-form-status--failure { color: #c0392b; }
+.contact-form-status--success { color: var(--status-success); }
+.contact-form-status--failure { color: var(--status-failure); }
 
 .contact-details { display: grid; gap: 32px; }
 .contact-detail-group h2 { margin-bottom: 14px; }

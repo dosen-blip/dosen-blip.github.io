@@ -10,7 +10,6 @@ import { BrandBackdrop } from "./BrandBackdrop"
 import { NeonCursor } from "./NeonCursor"
 import { BrandSprite, MDMark, Wordmark } from "./Wordmark"
 import { ThemeToggle } from "./ThemeToggle"
-import { StatusChip } from "./StatusChip"
 import { useUncovered } from "../transitions/arrival"
 
 function isActive(item, pathname) {
@@ -111,7 +110,6 @@ function EndCard() {
           </div>
 
           <div className="end-card-cta">
-            <StatusChip tone="stage" />
             <p>Available for design, video and web projects.</p>
             <a className="end-card-email" href={`mailto:${EMAIL}`}>
               <span>{EMAIL}</span><ArrowUpRightIcon />
@@ -244,7 +242,6 @@ export function SiteShell({ children, pathname: shown }) {
             ))}
           </div>
           <div className="mobile-menu-bottom">
-            <StatusChip />
             <div className="mobile-menu-row">
               <DosenButton />
               <ThemeToggle />

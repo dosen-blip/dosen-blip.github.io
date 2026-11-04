@@ -15,7 +15,6 @@
   --black: #171916;
   --grey: #5f625b;
   --blue: #386dff;
-  --green: #0f9b60;
   --night: #0c0c0f;
 
   --bg: var(--beige);
@@ -32,7 +31,6 @@
   --accent-strong: #2b5ce6;
   --accent-wash: rgb(56 109 255 / .1);
   --on-accent: #fff;
-  --online: var(--green);
 
   /* Neon: in dark the blue lines burn like a lit LED (white-hot core, blue tube, light on the ground).
      --neon-on gates every glow, so light mode keeps the flat ink lines. */

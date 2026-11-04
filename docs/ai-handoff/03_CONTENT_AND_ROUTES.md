@@ -32,8 +32,8 @@ Excluded routes: `/hintonx`, `/page`, `/dj-production`, and `/page-2`.
 
 ## Page behavior summary
 
-- Home: hero and availability, three recent project records, a dedicated HintonX video-production feature, and stack teaser cards. CSS hides the third project and later stack cards on small screens.
-- About: responsive portrait, Education and Stack sections, and two Experience cards.
+- Home: hero, one glass folder per discipline, and selected work.
+- About: intro with responsive portrait, What I do, Experience, and Education, Tools and Music glass cards.
 - Projects: nine cards in the exact order defined by `projectIndex.js`.
 - Stack: expanded Design & Development, AI Systems & Agents, and Creative Production groups.
 - Contact: native required/email validation, FormSubmit default endpoint, honeypot, and fixed success/failure messages.

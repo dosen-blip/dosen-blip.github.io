@@ -1,7 +1,7 @@
 // When things on a new page should start arriving.
 //
-// The new page mounts under the cover. Its entrances (sections rising, the header splash, the home pen, a discipline's
-// reveal video) wait until the cover starts to open, then start as the cover clears the spot they sit on, so the
+// The new page mounts under the cover. Its entrances (sections rising, the header splash, the home pen) wait until the
+// cover starts to open, then start as the cover clears the spot they sit on, so the
 // motion is handed from the cut to the page instead of stopping dead when the cover leaves (Lusion's page show()).
 // With the dot pulse that means content rises in the wake of the trailing edge, nearest the click first.
 

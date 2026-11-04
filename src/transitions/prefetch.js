@@ -1,13 +1,13 @@
 // Get the next page's media ready before the click lands (Lusion prefetches the next page on hover).
 //
 // Every page's code is already in the bundle, so what a navigation can wait on is media: a hero image still decoding
-// when the page mounts under the cover holds up the frames around the swap, and a reveal video that has not loaded
-// shows its still instead of playing as the cut opens. Pointing at a link (briefly), focusing it, or pressing on it
-// fetches and decodes the images at the top of the page it leads to, and the discipline reveal video.
+// when the page mounts under the cover holds up the frames around the swap. Pointing at a link (briefly), focusing it,
+// or pressing on it fetches and decodes the images at the top of the page it leads to. No route lists a video while
+// the reveal stage is off the discipline pages.
 
 import { getProject } from "../data/projects"
 import { projectIndex, projectsFor } from "../data/projectIndex"
-import { disciplineIds, getDiscipline } from "../data/disciplines"
+import { disciplineIds } from "../data/disciplines"
 
 const INTENT_MS = 60 // pointing must rest this long, so sweeping across a menu does not fetch everything
 const PER_PAGE = 4 // images at the top of a page; the rest load as they scroll in, as now
@@ -37,10 +37,7 @@ export function mediaFor(pathname, width = typeof window === "undefined" ? 1280 
     return { images: project ? imagesIn(project, cover ? [cover] : []).slice(0, PER_PAGE) : [], videos: [] }
   }
   if (first === "projects") return { images: covers(projectIndex.slice(0, PER_PAGE)), videos: [] }
-  if (disciplineIds.includes(first)) {
-    const { video } = getDiscipline(first)
-    return { images: [`${video}-still.jpg`, ...covers(projectsFor(first).slice(0, PER_PAGE - 1))], videos: [`${video}.mp4`] }
-  }
+  if (disciplineIds.includes(first)) return { images: covers(projectsFor(first).slice(0, PER_PAGE)), videos: [] }
   if (first === "about") return { images: [width < PHONE ? "/assets/portrait-mobile.png" : "/assets/portrait-desktop.png"], videos: [] }
   return { images: [], videos: [] }
 }

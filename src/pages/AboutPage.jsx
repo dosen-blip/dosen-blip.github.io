@@ -1,16 +1,12 @@
 import { Link } from "react-router-dom"
 import { ArrowLink } from "../components/ArrowLink"
 import { ButtonLink } from "../components/ButtonLink"
+import GlassCard from "../components/GlassCard"
 import { Reveal } from "../components/Reveal"
-import { StatusChip } from "../components/StatusChip"
 import { ToolIcon } from "../brand/ToolIcon"
 import { disciplines } from "../data/disciplines"
 import { DESCRIPTOR, DOSEN_URL } from "../data/site"
 import "../styles/about.css"
-
-const education = "I’m studying Graphic Design at Algonquin College in Ottawa. Before that I studied Business Technology at Concordia University."
-
-const stack = "Figma and Framer for interfaces and websites. InDesign, Illustrator and Photoshop for books and print. After Effects for motion, Ableton for music, and Shopify for the stores I manage. I also use AI coding tools for development work."
 
 const experience = [
   {
@@ -43,9 +39,8 @@ export default function AboutPage() {
           <p className="eyebrow">About</p>
           <h1 id="about-heading" className="page-title">Hi, I&apos;m Matia.</h1>
           <p className="descriptor about-descriptor">{DESCRIPTOR}, in Ottawa.</p>
-          <p className="lede">I co-own Hinton Publishing, where I design and typeset sports books, and I’ve worked at HintonX since 2019 on apps, books and film. I also lead creative direction for Frequency Shift, an Ottawa house music series, and DJ and produce music in Ableton.</p>
+          <p className="lede">I design and build websites and apps, and film and edit video. I’ve worked at HintonX on apps, books and film since 2019, co-own Hinton Publishing, where I design and typeset sports books, and lead creative direction for Frequency Shift, an Ottawa house music series.</p>
           <div className="about-actions">
-            <StatusChip />
             <ButtonLink to="/contact">Contact</ButtonLink>
           </div>
         </div>
@@ -76,12 +71,12 @@ export default function AboutPage() {
         <ul className="about-disciplines">
           {disciplines.map((discipline) => (
             <li key={discipline.id}>
-              <Link to={discipline.path}>
+              <GlassCard as={Link} to={discipline.path} look={discipline.id}>
                 <ToolIcon name={disciplineIcons[discipline.id]} />
                 <h3>{discipline.title}</h3>
                 <p>{discipline.intro}</p>
                 <span className="path">{discipline.path}</span>
-              </Link>
+              </GlassCard>
             </li>
           ))}
         </ul>
@@ -109,21 +104,20 @@ export default function AboutPage() {
       </Reveal>
 
       <Reveal as="section" className="page section about-more">
-        <div className="about-card">
+        <GlassCard look="web" className="about-card">
           <h2>Education</h2>
-          <p>{education}</p>
-          <ArrowLink to="/projects">View work</ArrowLink>
-        </div>
-        <div className="about-card">
+          <p>Studying Graphic Design at Algonquin College in Ottawa, after Business Technology at Concordia University.</p>
+        </GlassCard>
+        <GlassCard look="ux" className="about-card">
           <h2>Tools</h2>
-          <p>{stack}</p>
+          <p>Figma and Framer for interfaces, Adobe for print and motion, Shopify for stores, Ableton for music.</p>
           <ArrowLink to="/stack">All tools</ArrowLink>
-        </div>
-        <div className="about-card about-card--night">
+        </GlassCard>
+        <GlassCard look="motion" className="about-card">
           <h2>Music</h2>
-          <p>I DJ and produce as DOSEN. Music, mixes and press kit are on a separate site.</p>
+          <p>I DJ and produce as DOSEN.</p>
           <ArrowLink to={DOSEN_URL} external>dosen.ca</ArrowLink>
-        </div>
+        </GlassCard>
       </Reveal>
     </div>
   )

@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from "react"
-import { ART_PRESETS, createArtJob, fanSlot, hashString, rng } from "./glassFolderArt"
+import { ArtCanvas } from "./glassArt"
+import { fanSlot, hashString, rng } from "./glassFolderArt"
+import { useGlassPointer } from "./useGlassPointer"
 import "../styles/glass-folder.css"
 
 /**
@@ -13,7 +15,7 @@ import "../styles/glass-folder.css"
  * - Open (click, Enter, Space): the panel falls further forward and the files rise out and fan,
  *   each one a button or link with its name on it.
  * - Add (`+`): a new file drops in, the pocket gives a little, and the count rolls over.
- * - More (`···`): a frosted menu you can drive from the keyboard.
+ * - Link (an arrow): a real link, on the same glass key, to wherever the folder's contents live in full.
  *
  * The artwork is generated, not fetched: a domain-warped noise field shaded as a liquid surface,
  * painted once per recipe into a canvas over a few frames and shared between every folder that
@@ -22,89 +24,6 @@ import "../styles/glass-folder.css"
  * Ported from the 21st.dev "Glass Folder Cards" component (TypeScript + inline CSS) to plain JSX
  * with its stylesheet in src/styles/glass-folder.css. `tone="auto"` follows the site theme.
  */
-
-
-const recipeOf = (art) => (typeof art === "string" ? ART_PRESETS[art] : art)
-
-// ---------------------------------------------------------------------------
-// One shared painter: every folder on the page queues its art here and the queue spends a few
-// milliseconds a frame, so a row of folders never janks.
-
-const artCache = new Map()
-const queue = []
-let pumping = false
-
-function pump() {
-  if (pumping) return
-  pumping = true
-  const tick = () => {
-    const until = performance.now() + 7
-    while (queue.length && performance.now() < until) {
-      const head = queue[0]
-      if (head.job.step(4)) {
-        queue.shift()
-        const c = document.createElement("canvas")
-        c.width = head.job.width
-        c.height = head.job.height
-        c.getContext("2d")?.putImageData(new ImageData(head.job.pixels, c.width, c.height), 0, 0)
-        head.done(c)
-      }
-    }
-    if (queue.length) requestAnimationFrame(tick)
-    else pumping = false
-  }
-  requestAnimationFrame(tick)
-}
-
-/** Lower priority paints first: back panels (0) before the files tucked behind glass (1). */
-function paint(recipe, seed, w, h, priority) {
-  const key = JSON.stringify([recipe, seed, w, h])
-  let p = artCache.get(key)
-  if (!p) {
-    p = new Promise((done) => {
-      // never jump the job already in progress
-      let at = queue.length
-      while (at > 1 && queue[at - 1].priority > priority) at--
-      queue.splice(at, 0, { job: createArtJob(w, h, recipe, seed), priority, done })
-      pump()
-    })
-    artCache.set(key, p)
-  }
-  return p
-}
-
-function ArtCanvas({ art, seed, w, h, density, priority, className }) {
-  const ref = useRef(null)
-  const [ready, setReady] = useState(false)
-  const key = JSON.stringify(recipeOf(art))
-  const pw = Math.round(w * density)
-  const ph = Math.round(h * density)
-
-  useEffect(() => {
-    let live = true
-    paint(JSON.parse(key), seed, pw, ph, priority).then((src) => {
-      const c = ref.current
-      if (!live || !c) return
-      c.width = src.width
-      c.height = src.height
-      c.getContext("2d")?.drawImage(src, 0, 0)
-      setReady(true)
-    })
-    return () => {
-      live = false
-    }
-  }, [key, seed, pw, ph, priority])
-
-  return (
-    <canvas
-      ref={ref}
-      aria-hidden="true"
-      className={className}
-      data-ready={ready || undefined}
-      style={{ width: w, height: h, maxWidth: "none" }}
-    />
-  )
-}
 
 // ---------------------------------------------------------------------------
 // Geometry, in the folder's own units. The stage is drawn at 340 × 272 and scaled to `width`,
@@ -149,7 +68,8 @@ const SAMPLE_FILES = [
  *   `fit: "contain"` letterboxes the image (for a logo), `background` colours the sheet behind it, and `media`
  *   is your own markup for the picture.
  * - openLink: { label, href, onSelect } — a lit link that hangs just above the fan while the folder is open.
- * - action: "add" | "more" | "none". `onAdd(files)` returns the file to add. `menu` lists extra items.
+ * - action: "add" | "link" | "none". `onAdd(files)` returns the file to add. `link` is { label, href, onSelect } for
+ *   the link key; the label is its accessible name.
  * - labelPlacement: "bottom-left" | "top-left" | "top-right".
  * - open / defaultOpen / onOpenChange, onFileSelect(file, index).
  * - width in px (the height is 0.96 × width), appear + appearDelay for the entrance.
@@ -166,7 +86,7 @@ export default function GlassFolder({
   action = "add",
   onAdd,
   onFilesChange,
-  menu = [],
+  link,
   labelPlacement = "bottom-left",
   openLink,
   open: openProp,
@@ -183,8 +103,6 @@ export default function GlassFolder({
   const rootRef = useRef(null)
   const filesRef = useRef(null)
   const hitRef = useRef(null)
-  const keyRef = useRef(null)
-  const menuRef = useRef(null)
 
   // ids survive re-renders so a newly added file is the only one that animates in
   const [items, setItems] = useState(() => initialFiles.map((file, i) => ({ id: i, file })))
@@ -201,7 +119,6 @@ export default function GlassFolder({
     },
     [openProp, onOpenChange],
   )
-  const [menuOpen, setMenuOpen] = useState(false)
   const [entered, setEntered] = useState(!appear)
 
   const k = width / W
@@ -231,61 +148,23 @@ export default function GlassFolder({
     }
   }, [appear, appearDelay])
 
-  // ---- pointer: light and parallax follow the cursor, no re-renders -------
-  useEffect(() => {
-    const el = rootRef.current
-    if (!el) return undefined
-    let raf = 0
-    let px = 0
-    let py = 0
-    const write = () => {
-      raf = 0
-      el.style.setProperty("--gf-px", px.toFixed(3))
-      el.style.setProperty("--gf-py", py.toFixed(3))
-    }
-    const move = (e) => {
-      if (e.pointerType === "touch") return
-      const r = el.getBoundingClientRect()
-      px = ((e.clientX - r.left) / r.width) * 2 - 1
-      py = ((e.clientY - r.top) / r.height) * 2 - 1
-      if (!raf) raf = requestAnimationFrame(write)
-    }
-    const leave = () => {
-      px = 0
-      py = 0
-      if (!raf) raf = requestAnimationFrame(write)
-    }
-    el.addEventListener("pointermove", move)
-    el.addEventListener("pointerleave", leave)
-    return () => {
-      el.removeEventListener("pointermove", move)
-      el.removeEventListener("pointerleave", leave)
-      cancelAnimationFrame(raf)
-    }
-  }, [])
+  useGlassPointer(rootRef)
 
   // ---- closed files are out of the tab order ------------------------------
   useEffect(() => {
     filesRef.current?.toggleAttribute("inert", !open)
   }, [open])
 
-  // ---- Escape and a press outside close whatever is open ------------------
+  // ---- Escape and a press outside close the folder ------------------------
   useEffect(() => {
-    if (!open && !menuOpen) return undefined
+    if (!open) return undefined
     const onKey = (e) => {
       if (e.key !== "Escape") return
-      if (menuOpen) {
-        setMenuOpen(false)
-        keyRef.current?.focus()
-      } else {
-        setOpen(false)
-        hitRef.current?.focus()
-      }
+      setOpen(false)
+      hitRef.current?.focus()
     }
     const onDown = (e) => {
-      const t = e.target
-      if (menuOpen && !menuRef.current?.contains(t) && !keyRef.current?.contains(t)) setMenuOpen(false)
-      if (open && !menuOpen && !rootRef.current?.contains(t)) setOpen(false)
+      if (!rootRef.current?.contains(e.target)) setOpen(false)
     }
     document.addEventListener("keydown", onKey)
     document.addEventListener("pointerdown", onDown)
@@ -293,12 +172,7 @@ export default function GlassFolder({
       document.removeEventListener("keydown", onKey)
       document.removeEventListener("pointerdown", onDown)
     }
-  }, [open, menuOpen, setOpen])
-
-  // focus the first menu item when the menu opens
-  useEffect(() => {
-    if (menuOpen) menuRef.current?.querySelector("[role=menuitem]")?.focus()
-  }, [menuOpen])
+  }, [open, setOpen])
 
   const files = items.map((item) => item.file)
 
@@ -311,25 +185,6 @@ export default function GlassFolder({
     setDropped(id)
     setBump((b) => b + 1)
     onFilesChange?.(next.map((item) => item.file))
-  }
-
-  const menuItems = [
-    { label: open ? "Close folder" : "Open folder", onSelect: () => setOpen(!open) },
-    ...menu,
-  ]
-
-  const onMenuKey = (e) => {
-    const list = Array.from(menuRef.current?.querySelectorAll("[role=menuitem]") ?? [])
-    const at = list.indexOf(document.activeElement)
-    const go = (i) => {
-      e.preventDefault()
-      list[(i + list.length) % list.length]?.focus()
-    }
-    if (e.key === "ArrowDown") go(at + 1)
-    else if (e.key === "ArrowUp") go(at - 1)
-    else if (e.key === "Home") go(0)
-    else if (e.key === "End") go(list.length - 1)
-    else if (e.key === "Tab") setMenuOpen(false)
   }
 
   // the newest files sit at the front of the stack, nearest the glass
@@ -408,10 +263,7 @@ export default function GlassFolder({
               className="gf-hit"
               aria-expanded={open}
               aria-label={(open ? "Close " : "Open ") + label + ", " + count + (count === 1 ? " item" : " items")}
-              onClick={() => {
-                setMenuOpen(false)
-                setOpen(!open)
-              }}
+              onClick={() => setOpen(!open)}
             />
             <div className="gf-label">
               <span className="gf-title">{label}</span>
@@ -509,59 +361,18 @@ export default function GlassFolder({
             </div>
           ) : null}
 
-          {action !== "none" ? (
-            <button
-              ref={keyRef}
-              type="button"
-              className={"gf-key gf-key--" + action}
-              aria-label={action === "add" ? "Add a file to " + label : "More options for " + label}
-              aria-haspopup={action === "more" ? "menu" : undefined}
-              aria-expanded={action === "more" ? menuOpen : undefined}
-              aria-controls={action === "more" ? "gf-menu-" + uid : undefined}
-              onClick={() => (action === "add" ? addFile() : setMenuOpen((m) => !m))}
-            >
-              {action === "add" ? (
-                <svg key={bump} className="gf-glyph gf-glyph--plus" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M12 4.5v15M4.5 12h15" />
-                </svg>
-              ) : (
-                <svg className="gf-glyph gf-glyph--more" viewBox="0 0 30 12" aria-hidden="true">
-                  <rect x="1" y="1.5" width="8" height="9" rx="3.4" />
-                  <rect x="11" y="1.5" width="8" height="9" rx="3.4" />
-                  <rect x="21" y="1.5" width="8" height="9" rx="3.4" />
-                </svg>
-              )}
+          {action === "add" ? (
+            <button type="button" className="gf-key gf-key--add" aria-label={"Add a file to " + label} onClick={addFile}>
+              <svg key={bump} className="gf-glyph gf-glyph--plus" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 4.5v15M4.5 12h15" />
+              </svg>
             </button>
-          ) : null}
-
-          {action === "more" ? (
-            <div
-              ref={menuRef}
-              id={"gf-menu-" + uid}
-              role="menu"
-              aria-label={label + " options"}
-              className="gf-menu"
-              data-open={menuOpen || undefined}
-              onKeyDown={onMenuKey}
-            >
-              {menuItems.map((item, i) => (
-                <button
-                  key={item.label + i}
-                  type="button"
-                  role="menuitem"
-                  tabIndex={menuOpen ? -1 : undefined}
-                  disabled={!menuOpen}
-                  className={"gf-menu-item" + (item.danger ? " gf-menu-item--danger" : "")}
-                  onClick={() => {
-                    setMenuOpen(false)
-                    keyRef.current?.focus()
-                    item.onSelect?.()
-                  }}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
+          ) : action === "link" && link ? (
+            <a className="gf-key gf-key--link" href={link.href} aria-label={link.label} onClick={(event) => link.onSelect?.(event)}>
+              <svg className="gf-glyph gf-glyph--link" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 12h14M14 7l5 5-5 5" />
+              </svg>
+            </a>
           ) : null}
         </div>
       </div>

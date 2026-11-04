@@ -82,12 +82,19 @@ describe("home page", () => {
 })
 
 describe("discipline pages", () => {
-  it.each(disciplines.map((discipline) => [discipline.id, discipline]))("%s opens on its reveal and lists its projects", (id, discipline) => {
+  it.each(disciplines.map((discipline) => [discipline.id, discipline]))("%s opens on its title and intro and lists its projects", (id, discipline) => {
     const { container } = render(<MemoryRouter><DisciplinePage id={id} /></MemoryRouter>)
     expect(screen.getByRole("heading", { level: 1, name: discipline.title })).toBeInTheDocument()
-    expect(container.querySelector(".discipline-stage source")).toHaveAttribute("src", `${discipline.video}.mp4`)
-    expect(container.querySelector(".discipline-stage .stage-still")).toHaveAttribute("src", `${discipline.video}-still.jpg`)
-    expect(screen.getByRole("button", { name: `Replay the ${discipline.reveal} reveal` })).toBeInTheDocument()
+    expect(screen.getByText(discipline.intro)).toBeInTheDocument()
+
+    // The reveal stage is off these pages for now, and the aside is gone.
+    expect(container.querySelector(".stage")).toBeNull()
+    expect(container.innerHTML).not.toContain("/assets/brand/reveals/")
+    expect(screen.queryByRole("button", { name: /reveal$/ })).toBeNull()
+    expect(screen.queryByText("Typical projects")).toBeNull()
+    expect(container.querySelector(".discipline-hero-aside")).toBeNull()
+    expect(discipline).not.toHaveProperty("summary")
+    expect(discipline).not.toHaveProperty("fit")
 
     const cards = [...container.querySelectorAll(".project-grid .project-card")]
     expect(cards.map((card) => card.getAttribute("href"))).toEqual(projectsFor(id).map((project) => `/projects/${project.slug}`))

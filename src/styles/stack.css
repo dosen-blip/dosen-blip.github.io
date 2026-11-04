@@ -31,19 +31,14 @@
 .stack-grid > li { display: flex; }
 
 .stack-card {
-  position: relative;
   display: grid;
   align-content: start;
   gap: 16px;
   width: 100%;
   padding: 24px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
-  color: var(--body);
-  transition: border-color var(--fast) ease, transform var(--mid) var(--ease-out);
 }
-.stack-card:hover { border-color: var(--ink); transform: translateY(-2px); }
+/* The page has 13 of these, so no backdrop-filter layer for each. The art is static and the tint already hides it. */
+.stack-card--no-frost .gc-frost { display: none; }
 
 .stack-card-heading { display: flex; align-items: center; gap: 14px; padding-right: 32px; }
 .stack-card-heading img {
@@ -57,7 +52,7 @@
 }
 .stack-card-heading h3 { font-size: 1.1875rem; }
 .stack-card-heading p { color: var(--soft); font-size: var(--text-xs); font-weight: 500; }
-.stack-card-description { font-size: var(--text-sm); }
+.stack-card-description { color: var(--body); font-size: var(--text-sm); }
 
 .stack-tags { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; }
 .stack-tags li {

@@ -1,4 +1,5 @@
 import "../styles/stack.css"
+import GlassCard from "../components/GlassCard"
 import { ArrowUpRightIcon } from "../components/Icons"
 
 const stackGroups = [
@@ -134,10 +135,13 @@ const stackGroups = [
 
 const orderedStackGroups = ["design", "creative", "ai"].map((id) => stackGroups.find((group) => group.id === id))
 
-function StackCard({ item }) {
+// Neighbours differ in a row, and in a column at the three-column width.
+const cardLooks = ["web", "ux", "motion", "ux", "motion", "web"]
+
+function StackCard({ item, look }) {
   return (
     <li>
-      <a className="stack-card" href={item.href} target="_blank" rel="noopener noreferrer">
+      <GlassCard as="a" className="stack-card stack-card--no-frost" look={look} href={item.href} target="_blank" rel="noopener noreferrer">
         <div className="stack-card-heading">
           <img src={item.icon} alt="" />
           <div>
@@ -150,7 +154,7 @@ function StackCard({ item }) {
           {item.tags.map((tag) => <li key={tag}>{tag}</li>)}
         </ul>
         <ArrowUpRightIcon className="external-link-icon" />
-      </a>
+      </GlassCard>
     </li>
   )
 }
@@ -166,7 +170,7 @@ function StackGroup({ group }) {
         </div>
       </header>
       <ul className="stack-grid">
-        {group.items.map((item) => <StackCard key={item.name} item={item} />)}
+        {group.items.map((item, index) => <StackCard key={item.name} item={item} look={cardLooks[index % cardLooks.length]} />)}
       </ul>
     </section>
   )

@@ -18,13 +18,25 @@ describe("contact page", () => {
     render(<ContactPage />)
 
     expect(screen.getByRole("heading", { level: 1, name: "Contact" })).toBeInTheDocument()
-    expect(screen.getByText("Available for work")).toBeInTheDocument()
+    expect(screen.queryByText("Available for work")).not.toBeInTheDocument()
+    expect(screen.getByText(/Available for design, video and web projects\./)).toBeInTheDocument()
     expect(screen.getByText("matiadosen@outlook.com").closest("a")).toBeNull()
     expect(screen.getByLabelText("Name")).toHaveAttribute("name", "Name")
     expect(screen.getByLabelText("Email")).toHaveAttribute("type", "email")
     expect(screen.getByLabelText("Message")).toHaveAttribute("placeholder", "Write a message...")
     expect(screen.getByRole("link", { name: "Instagram" })).toHaveAttribute("href", "https://www.instagram.com/matia_dosen/")
     expect(screen.getByRole("link", { name: "LinkedIn" })).toHaveAttribute("href", "https://www.linkedin.com/in/matia-dosen-719090273")
+  })
+
+  it("puts the form and the details on glass panels with different looks", () => {
+    const { container } = render(<ContactPage />)
+    const form = container.querySelector(".contact-form-section")
+    const details = container.querySelector(".contact-details")
+
+    expect(form).toHaveClass("gc")
+    expect(form).toHaveAccessibleName("Get in touch")
+    expect(details).toHaveClass("gc")
+    expect(form.dataset.look).not.toBe(details.dataset.look)
   })
 
   it("enables submission using the configured default email endpoint", () => {

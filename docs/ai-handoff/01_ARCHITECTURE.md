@@ -28,6 +28,8 @@ src/entry-server.jsx
 | Shared desktop/tablet/mobile shell | `src/components/SiteShell.jsx` |
 | Global tokens, shell, shared detail styles | `src/styles/global.css` |
 | Static pages | `src/pages/*.jsx` and matching `src/styles/*.css` |
+| Card material | `src/components/GlassCard.jsx`, `src/styles/glass-card.css`, looks in `src/data/glassLooks.js` |
+| Home page folders | `src/components/GlassFolder.jsx`, `src/styles/glass-folder.css` |
 | Project index cards | `src/data/projectIndex.js` |
 | Full project records | `src/data/projectRecords/*.js` |
 | Project record aggregation | `src/data/projects.js` |

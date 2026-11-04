@@ -26,7 +26,9 @@ Re-run `npm run crawl` after any routing, asset, SEO, or build change.
 | `seven-due-dates-record.test.js` | Seven Due Dates metadata/copy/video/order |
 | `project-detail-interactions.test.jsx` | YouTube activation and metadata visibility |
 | `contact.test.jsx` | fields, validation, disabled state, POST contract, success/failure |
-| `shell.test.jsx` | menu behavior and DOSEN structure/destination |
+| `shell.test.jsx` | menu behavior, DOSEN structure/destination, and no status pill in the footer |
+| `about.test.jsx` | About intro copy, Contact button, card links and glass looks |
+| `glass-card.test.jsx` | `GlassCard` layers and server render, `GlassFolder` link key |
 | `stack.test.jsx` | grouped stack cards and new-tab destinations |
 | `not-found.test.jsx` | 404 copy and home link |
 

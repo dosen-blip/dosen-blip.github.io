@@ -5,7 +5,7 @@ Source: `~/Desktop/Desktop Files/Design & Portfolio/dosen-matia-final-brand/` (P
 ## Principles from the sheet
 
 - My name first, then the three things I do, then the work. The full name leads; the MD mark only appears where the name can't fit (favicon, app icon, avatar, footer base).
-- Mostly beige and near-black. Black is for anything that moves (reveal stages, video posters, the footer end card, the DOSEN button, which inverts to a light pill in dark mode). Blue is for CTAs, the line under the name and one-off interactions. Green is only the "available" status dot.
+- Mostly beige and near-black. Black is for anything that moves (reveal stages, video posters, the footer end card, the DOSEN button, which inverts to a light pill in dark mode). Blue is for CTAs, the line under the name and one-off interactions.
 - Outfit for headings and the descriptor (Medium/SemiBold, Regular for the line under the name). Inter for reading. JetBrains Mono only for paths and code characters.
 - A low-opacity dot grid with tools from each field floats behind every page, a few shades off the background.
 
@@ -18,7 +18,6 @@ Source: `~/Desktop/Desktop Files/Design & Portfolio/dosen-matia-final-brand/` (P
 | `--body` | `#5f625b` grey | `#a6a89f` | Reading text |
 | `--accent` | `#386dff` | `#5a86ff` | Descriptor, outlines, handles |
 | `--accent-strong` | `#2b5ce6` | `#6f95ff` | Small blue text and filled buttons (AA contrast) |
-| `--online` | `#0f9b60` | same | Status dot |
 | `--stage` | `#0c0c0f` | `#000` | Anything that moves |
 | `--tool-1/2`, `--dot` | `#ccc8ba` / `#dcd8cb` | `#2a2a2f` / `#1e1e22` | Backdrop |
 
@@ -35,12 +34,22 @@ Dark mode follows the system until the header toggle sets `data-theme` (remember
   - `ux` (Responsive): two lines inside a breakpoint frame, then it reflows to one.
 - The header picks the splash from the route (`disciplineForPath`); the end card always draws with the pen when it scrolls into view.
 - `HeroLockup` is the full-size lockup on the home page. On every page load (`html[data-intro]`, unless reduced motion) and any return to home inside the app, the pen draws each shape, drops anchors, fills, then the selection box snaps on. Server markup is always the finished mark.
-- `RevealStage` plays the After Effects renders (`public/assets/brand/reveals/*.mp4`) on a black stage in a browser frame, with the final frame as a still for reduced motion, blocked autoplay and after the video ends.
+- `RevealStage` plays the After Effects renders (`public/assets/brand/reveals/*.mp4`) on a black stage in a browser frame, with the final frame as a still for reduced motion, blocked autoplay and after the video ends. It is removed from the discipline pages for now, so no page renders it; the component, its CSS, the videos and the `video` and `reveal` fields in `disciplines` remain.
+
+## Glass
+
+Cards and folders share one material: generated art behind frosted glass, with a sheen, a tint, a highlight that follows the cursor, a rim and an edge glow that lights on hover.
+
+- `GlassCard` (`src/components/GlassCard.jsx`, `src/styles/glass-card.css`) is the site's card: About, Contact, Tools, the discipline pages and the project detail rail. `as` sets the root element and `look` picks the art. The tint is heavier than a folder's so text stays legible.
+- `src/data/glassLooks.js` holds the three looks, `web`, `motion` and `ux`, shared with the folders. Web and UX follow the theme; Motion is smoked glass in both. `src/components/glassArt.jsx` paints the art and `src/components/useGlassPointer.js` feeds the cursor.
+- `GlassFolder` (`src/components/GlassFolder.jsx`, `src/styles/glass-folder.css`) is the home page's discipline card. Its key is one arrow, a real link (`action="link"`) to the discipline page. `action="add"` gives the plus key, and there is no menu.
+- Project cards stay `ProjectCard`, with the selection handles below.
+- There is no status pill. Availability is a line of text in the footer and on Contact.
 
 ## Information architecture
 
 - Header: wordmark · Work · About · Contact · DOSEN (separate music site) · theme toggle.
-- `/web`, `/motion`, `/ux`: one page per discipline, each opening on its reveal, listing its projects (`disciplines` in `src/data/projectIndex.js`) and its own extra (live sites, films, process).
+- `/web`, `/motion`, `/ux`: one page per discipline, each opening on its title and intro, listing its projects (`disciplines` in `src/data/projectIndex.js`) and its own extra (live sites, films, process).
 - `/projects` is Work: every project, with discipline filters. Print and book work carries no discipline tag.
 - `/stack` (Tools) is linked from About and the footer rather than the header.
 
@@ -51,6 +60,6 @@ Dark mode follows the system until the header toggle sets `data-theme` (remember
 - Backdrop tools drift slowly, parallax at 0.22× scroll, and lean away from the cursor with a hint of blue. Discipline pages lean on their own tools.
 - Page changes cut through stage black (`src/transitions/`, `TransitionOverlay.jsx`). The address changes at once; the old page, header and backdrop stay until the screen is covered, the new page is swapped in and scrolled to the top under cover, then uncovered. Two cuts:
   - Dot grid (default, and the back button): a pulse runs out from the click through a dot grid twice as fine as the backdrop's, with every second dot on a backdrop dot. Its leading edge swells the dots into black. Its trailing edge opens the black in holes, each a window onto the new page that starts as a blue dot and grows until the windows merge, so the page forms out of the dots. Both edges are rimmed with blue dots. The black carries the same soft light as a lit backdrop tool: a faint neon wash with the backdrop's own tiny dots lit up in it, brightest through the band's middle and kept inside the black. The old page stays up, frozen, ahead of the pulse and the new one is already live behind it, so the screen never goes fully black and only a spot the pulse is crossing is black for an instant. Browsers that cannot keep a snapshot of the old page cover the screen first and then open it, with backdrop tools ahead of the pulse pushed along and lit. A few of the new page's tools spark as it lands.
-  - Selection box (project cards and folder sheets): the blue selection frame snaps onto what was clicked and drags out to the screen edges with a live size label, carrying the card's picture with it, so the bridge is the project's image filling the screen under a light black scrim. The picture then fades off the new page while the frame shrinks onto its title, neon wordmark or reveal and lets go.
-  The new page's entrances (sections rising, the header splash, the home pen, a discipline's reveal video) wait under the cover and start as the cut opens over them, so motion hands over from the cut to the page instead of stopping when it leaves. With the dot pulse, content rises in the trailing edge's wake, nearest the click first; with the selection box, the frame rides the rising title and lands where it settles. Hovering, focusing or pressing a link fetches and decodes the media at the top of the page it leads to. The same page asked for again just scrolls to the top.
+  - Selection box (project cards and folder sheets): the blue selection frame snaps onto what was clicked and drags out to the screen edges with a live size label, carrying the card's picture with it, so the bridge is the project's image filling the screen under a light black scrim. The picture then fades off the new page while the frame shrinks onto its title or neon wordmark and lets go.
+  The new page's entrances (sections rising, the header splash, the home pen) wait under the cover and start as the cut opens over them, so motion hands over from the cut to the page instead of stopping when it leaves. With the dot pulse, content rises in the trailing edge's wake, nearest the click first; with the selection box, the frame rides the rising title and lands where it settles. Hovering, focusing or pressing a link fetches and decodes the media at the top of the page it leads to. The same page asked for again just scrolls to the top.
 - Everything respects `prefers-reduced-motion`: reveals show their final frame, splashes are off, the backdrop is still.

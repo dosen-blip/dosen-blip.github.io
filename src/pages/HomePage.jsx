@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useLenis } from "lenis/react"
 import { ArrowDownIcon } from "../components/Icons"
 import { ArrowLink } from "../components/ArrowLink"
@@ -9,43 +9,12 @@ import { ProjectCard } from "../components/ProjectCard"
 import { Reveal } from "../components/Reveal"
 import GlassFolder from "../components/GlassFolder"
 import { InstinctCardArt } from "../components/InstinctCardArt"
-import { StatusChip } from "../components/StatusChip"
 import { disciplines } from "../data/disciplines"
+import { glassLooks } from "../data/glassLooks"
 import { projectIndex, projectsFor } from "../data/projectIndex"
 import "../styles/home.css"
 
 const featured = ["video-production", "frequency-shift", "beatport-redesign"].map((slug) => projectIndex.find((project) => project.slug === slug))
-
-const proof = [
-  { label: "Film and UX", value: "HintonX", since: "since 2019" },
-  { label: "Books and web", value: "Hinton Publishing", since: "since 2020" },
-  { label: "Creative direction", value: "Frequency Shift", since: "since 2025" },
-]
-
-/**
- * Artwork behind the glass of each folder, in the brand colours: beige, near-black and the blue.
- * Web and UX follow the theme; Motion is always smoked glass over black, because black is for anything that moves.
- */
-const folderArt = {
-  web: {
-    tone: "auto",
-    labelPlacement: "bottom-left",
-    art: { style: "streak", colors: ["#f7f5ed", "#cfd9f5", "#386dff", "#171916", "#2b4fb8", "#9db6ff", "#f7f5ed"], scale: 0.7, warp: 1.5, angle: -0.6, gloss: 0.2, veins: 0 },
-    seed: 7,
-  },
-  motion: {
-    tone: "dark",
-    labelPlacement: "bottom-left",
-    art: { style: "marble", colors: ["#050507", "#0c0c0f", "#1d2a55", "#171916", "#386dff", "#7fa0ff", "#e6ecff"], scale: 0.62, warp: 3.2, angle: -0.5, gloss: 0.55, veins: 0.6 },
-    seed: 11,
-  },
-  ux: {
-    tone: "auto",
-    labelPlacement: "bottom-left",
-    art: { style: "streak", colors: ["#fbfaf6", "#e4e8f2", "#9db6ff", "#efece2", "#c7d4f7", "#ffffff"], scale: 0.7, warp: 1.6, angle: 0.35, gloss: 0.25, veins: 0 },
-    seed: 3,
-  },
-}
 
 /** The folder fills its column, within reason: the server renders it at 340px and the client measures once mounted. */
 function useFolderWidth(min = 240, max = 380) {
@@ -88,7 +57,7 @@ function DisciplineFolder({ discipline, index }) {
   const navigate = useNavigate()
   const [ref, width] = useFolderWidth()
   const projects = projectsFor(discipline.id)
-  const look = folderArt[discipline.id]
+  const look = glassLooks[discipline.id]
   // The first project in display order sits nearest the glass, so the fan reads front to back.
   const files = [...projects].reverse().map((project) => ({
     name: project.title,
@@ -98,6 +67,8 @@ function DisciplineFolder({ discipline, index }) {
     href: `/projects/${project.slug}`,
   }))
   const go = (path) => (event) => {
+    // Cmd-click and friends open the real link in a new tab, as they do on every other link on the site
+    if (event?.metaKey || event?.ctrlKey || event?.shiftKey || event?.altKey) return
     event?.preventDefault()
     navigate(path)
   }
@@ -114,8 +85,8 @@ function DisciplineFolder({ discipline, index }) {
           seed={look.seed}
           labelPlacement={look.labelPlacement}
           files={files}
-          action="more"
-          menu={[{ label: `All ${discipline.label} projects`, onSelect: () => navigate(discipline.path) }]}
+          action="link"
+          link={{ label: `All ${discipline.label} projects`, href: discipline.path, onSelect: go(discipline.path) }}
           onFileSelect={(file, _index, event) => go(file.href)(event)}
           openLink={{ label: "All projects", href: discipline.path, onSelect: go(discipline.path) }}
           width={width}
@@ -125,8 +96,6 @@ function DisciplineFolder({ discipline, index }) {
     </li>
   )
 }
-
-const clients = ["Adobe", "Service Canada", "HintonX", "Hinton Publishing", "Frequency Shift", "Algonquin College"]
 
 export default function HomePage() {
   const lenis = useLenis()
@@ -140,7 +109,6 @@ export default function HomePage() {
     <div className="home">
       <section className="page home-hero" aria-label="Introduction">
         <div className="home-hero-top">
-          <StatusChip />
           <span className="eyebrow">Ottawa, Canada</span>
         </div>
         <HeroLockup />
@@ -181,28 +149,6 @@ export default function HomePage() {
           <ProjectCard project={featured[0]} className="home-project-card home-project-featured" />
           <div className="home-work-side">
             {featured.slice(1).map((project) => <ProjectCard key={project.slug} project={project} className="home-project-card" />)}
-          </div>
-        </div>
-      </Reveal>
-
-      <Reveal as="section" className="page section home-proof" aria-labelledby="proof-heading">
-        <div className="home-proof-card">
-          <div className="home-proof-copy">
-            <p className="eyebrow">Experience</p>
-            <h2 id="proof-heading">Clients and employers since 2019</h2>
-            <ArrowLink to="/about">About</ArrowLink>
-          </div>
-          <dl className="home-proof-list">
-            {proof.map((item) => (
-              <div key={item.label}>
-                <dt>{item.label}</dt>
-                <dd><strong>{item.value}</strong><span>{item.since}</span></dd>
-              </div>
-            ))}
-          </dl>
-          <div className="home-clients">
-            <span className="eyebrow">Clients</span>
-            <ul>{clients.map((client) => <li key={client}>{client}</li>)}</ul>
           </div>
         </div>
       </Reveal>

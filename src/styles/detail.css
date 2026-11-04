@@ -26,15 +26,15 @@
 }
 .detail-figure figcaption { margin-top: 10px; color: var(--soft); font-size: var(--text-sm); }
 
+/* Sticky stays on this wrapper because the glass card inside sets position: relative. */
 .detail-rail {
   position: sticky;
   top: calc(var(--header-h) + 24px);
+}
+.detail-rail-card {
   display: grid;
   gap: 20px;
   padding: 22px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
 }
 .detail-rail dl { display: grid; }
 .detail-rail dl > div { display: grid; gap: 4px; padding: 14px 0; border-top: 1px solid var(--line); }
