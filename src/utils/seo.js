@@ -1,6 +1,21 @@
-import { SITE_URL, siteDescription } from "../data/site"
+import { getProject } from "../data/projects"
+import { SITE_URL, pageMeta, shareImage, siteDescription } from "../data/site"
 
-export function seoFor({ path, title = "Matia Dosen", description = siteDescription, image }) {
+/** A route's title, description and share image: what the prerendered head says, and what the tab shows after a click. */
+export function metaFor(path) {
+  const slug = path.startsWith("/projects/") ? path.split("/").filter(Boolean).at(-1) : null
+  const project = slug ? getProject(slug) : null
+  const meta = project
+    ? { ...project.seo, description: project.summary || project.seo.description }
+    : pageMeta[path] ?? {}
+  return {
+    title: meta.title ?? "Matia Dosen",
+    description: meta.description ?? siteDescription,
+    image: meta.image || project?.cover || shareImage,
+  }
+}
+
+export function seoFor({ path, title, description, image }) {
   const canonical = new URL(path, SITE_URL).href
   const tags = [
     `<title>${escapeHtml(title)}</title>`,
