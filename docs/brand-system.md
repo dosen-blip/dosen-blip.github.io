@@ -18,7 +18,7 @@ These come from Matia's feedback on the site. Check against them before adding a
 - **Reuse before inventing.** New effects are built from what the site already has. A stamped-sprite glow was rejected for looking like "some kind of weird png"; the version that stayed copies the lit backdrop tools. New cards use `GlassCard`, not a look-alike.
 - **Take away padding.** Spec rows and label grids that only classify things read as padding, and so do status pills, client lists and side notes. All of these were removed tonight. Add one only if it tells the reader something new.
 - **One link per destination.** Put a call to action where the reader expects it, and make it obvious. A link belongs on a card only if it follows from that card: Education has none.
-- **Motion never holds up the page.** A "matia dosen" sequence between pages was removed for being too long. Entrances run alongside the content, about a second at most, and end in plain text.
+- **Motion never holds up the page.** A "matia dosen" sequence between pages was removed for being too long. Entrances run alongside the content, about two seconds at most, and end in plain text. They ease in from the page transition rather than waiting for it to finish, so there's no dead moment. Their impact comes from the site's own light and design-tool vocabulary, not new looks.
 - **Plain copy.** See "Writing copy" in `docs/ai-handoff/03_CONTENT_AND_ROUTES.md`.
 - **Own pages keep their own brand.** Frequency Shift and Instinct Groove use their own type and colour, and the portfolio's cards don't apply there.
 
@@ -56,10 +56,11 @@ Dark mode follows the system until the header toggle sets `data-theme` (remember
   - `web` (Decode): the name resolves letter by letter out of code characters.
   - `ux` (Responsive): two lines inside a breakpoint frame, then it reflows to one.
 - The header picks the splash from the route (`disciplineForPath`), on project pages only: home has its own pen, and discipline pages have their building title. The end card always draws with the pen when it scrolls into view.
-- `DisciplineTitle` (`src/components/DisciplineTitle.jsx`) gives each discipline page's title the same three ideas, shown on the word itself once the page transition's pulse has finished, in about 1.3s and without moving or holding up anything else:
-  - Motion graphics: the lit pen draws each letter and drops a few anchors, then the ink comes in through a frosted stage.
-  - Web development: lit code characters scramble over each letter, which locks in from left to right.
-  - UX design: the title sits on two lines in a lit selection frame with a live size label, reflows onto one line, and the frame lets go.
+- `DisciplineTitle` (`src/components/DisciplineTitle.jsx`) gives each discipline page's title the same three ideas, shown on the word itself. They start slowly as the page transition's pulse clears the title, pick up speed and run for about 1.6 to 2s, without moving or holding up anything else:
+  - Motion graphics: drawn by hand, at an uneven rhythm. A white-hot point runs along each letter's outline at its own pace, leaving a lit line and dropping anchors, and here and there a bezier handle swings out along the curve's real tangent, with a pool of blue following across the glass. Each letter ignites as it closes and cools to ink.
+  - Web development: columns of lit code hang over and under each letter, scrambling. A beam of light sweeps the whole card, and each column collapses into its letter as the beam reaches it.
+  - UX design: a layout grid and guides drop across the card. The title sits on two lines in a lit selection frame with a live size label, then the frame springs wide and the letters follow onto one line, one after another, with lit outlines trailing behind.
+  - All three land the same way: a gleam runs through the real text, it flares and cools, and the glass flares with it.
 - `HeroLockup` is the full-size lockup on the home page. On every page load (`html[data-intro]`, unless reduced motion) and any return to home inside the app, the pen draws each shape, drops anchors, fills, then the selection box snaps on. Server markup is always the finished mark.
 - `RevealStage` plays the After Effects renders (`public/assets/brand/reveals/*.mp4`) on a black stage in a browser frame, with the final frame as a still for reduced motion, blocked autoplay and after the video ends. It is removed from the discipline pages for now, so no page renders it; the component, its CSS, the videos and the `video` and `reveal` fields in `disciplines` remain.
 

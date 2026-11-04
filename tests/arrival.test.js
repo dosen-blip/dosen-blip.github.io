@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { afterCut, afterUncover, arrivalDelay } from "../src/transitions/arrival"
+import { afterUncover, arrivalDelay } from "../src/transitions/arrival"
 import { PULSE, WAVE } from "../src/transitions/dots"
 import { transition } from "../src/transitions/transitionStore"
 
@@ -81,20 +81,4 @@ describe("arrival", () => {
     vi.runAllTimers()
     expect(arrive).not.toHaveBeenCalled()
   })
-
-  it("waits for the whole cut for an entrance worth watching from the start", () => {
-    const arrive = vi.fn()
-    transition.navigate(() => {}, { wave: true, show: 1 })
-    const cancel = afterCut(arrive)
-    transition.step(.5)
-    expect(arrive).not.toHaveBeenCalled()
-    transition.step(.6)
-    expect(arrive).toHaveBeenCalledTimes(1)
-    cancel()
-
-    const now = vi.fn()
-    afterCut(now)
-    expect(now).toHaveBeenCalledTimes(1)
-  })
 })
-

@@ -61,22 +61,6 @@ export function afterUncover(node, arrive, { lead = 0 } = {}) {
   return () => {}
 }
 
-/**
- * Run `arrive` once the cut has finished crossing the whole screen, or at once when none is running. For an entrance worth
- * watching from the start, which `afterUncover` would begin as soon as the pulse clears its own spot. Returns a cancel function.
- */
-export function afterCut(arrive) {
-  if (!transition.active) {
-    arrive()
-    return () => {}
-  }
-  const stop = transition.on("showend", () => {
-    stop()
-    arrive()
-  })
-  return stop
-}
-
 /** False while a cut covers the page on screen; true once it starts opening, and whenever no cut is running. */
 export function useUncovered() {
   return useSyncExternalStore(transition.subscribe, () => !transition.covering, () => true)
