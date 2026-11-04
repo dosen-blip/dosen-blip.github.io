@@ -1,76 +1,69 @@
-# Visual system and interaction notes
+# Layout and behaviour
+
+The look, tokens and design decisions are in `docs/brand-system.md`. This file covers how things are built.
 
 ## Breakpoints
 
-| Range | Shell behavior |
+| Width | What changes |
 |---|---|
-| `>= 1200px` | Fixed 320px left sidebar; content/footer have 320px left offset. |
-| `810px–1199.98px` | Fixed 180px compact sidebar; navigation and DOSEN become icon-only. |
-| `<= 809.98px` | Sidebar hidden; fixed mobile header and expandable white menu panel. |
+| `< 810px` | The main one. Header becomes logo and menu button, `--header-h` drops to 60px, the mobile menu opens as a full panel, the home hero's top row and lede hide, and Instinct shows its still instead of the live scene. |
+| `< 1000px` | About's card rows, the Experience list and the project detail layout go to one column. The detail rail goes back to normal flow. |
+| `< 1100px` | Film grid and UX steps drop to two columns. |
 
-Reference viewports are exactly `1440x900`, `1024x900`, `810x900`, `809x900`, and `390x844`. The 810/809 pair is intentional breakpoint evidence.
+Shared layout: `.page` is capped at `--page-max` (1320px) with `--gutter` sides, and `.section` uses `--section` spacing. Sizes step down fluidly with `clamp()`.
 
-## DOSEN control: recently corrected
+## Shell
 
-Implementation: `DosenButton` in `src/components/SiteShell.jsx`; styles in `src/styles/global.css`.
+- **Header:** wordmark, Work, About, Contact, DOSEN button, theme toggle. Work also lights up on `/web`, `/motion` and `/ux`, and About on `/stack`. The wordmark plays a small splash for the page's discipline (`disciplineForPath`).
+- **Mobile menu:** locks scroll, closes on Escape and after navigating, returns focus. It holds the nav, discipline pills, DOSEN, the toggle and socials.
+- **End card:** the black footer on every page. The name draws with the pen when it scrolls into view. It also holds the availability line, email, link columns and Back to top.
+- **Backdrop:** `BrandBackdrop` draws the dot grid and floating tools behind every page. `NeonCursor` follows the pointer.
 
-The control is not a flat logo. It contains:
+## Scroll and entrances
 
-- A 20px clipping window.
-- Published disco-ball SVG in soft gray.
-- Published home SVG initially positioned 20px below the window.
-- A stationary 114px × 26.8359px DOSEN wordmark asset.
-- Hover/focus transition: disco moves to `translateY(-20px)` and home moves to `translateY(0)`.
-- External destination `https://dosen.figma.site/` in a new tab.
+- Lenis smooth scroll (`lerp: 0.1`), not mounted under reduced motion. Scroll restoration is manual and the swap resets scroll.
+- `Reveal`: sections below the fold rise 28px and fade in once. Server markup is always visible, and anything already on screen at hydration is left alone.
+- Home intro: `HeroLockup` under `html[data-intro]`, with the hero's other content fading in once the pen finishes.
 
-Measured positions after the fix:
+## Page transitions
 
-| Variant | Rectangle | Contents |
-|---|---|---|
-| Desktop | `x=25, y=528, w=269, h=74.828` | 24px padding; disco at `x=49`; wordmark at `x=81`. |
-| Tablet | `x=68, y=400.3984, w=44, h=44` | 12px padding; icon only. |
-| Mobile menu at 390px | `x=24, y=448, w=342, h=74.828` | Full icon + wordmark immediately after Contact. |
+`App.jsx` swaps the page under cover, and `SiteShell` gets the displayed pathname so the header, backdrop and end card change with it. `document.title` is set from `metaFor` at the swap.
 
-Verified interaction images:
+A capture-phase click listener (`src/transitions/origin.js`) notes where each click happened and picks one of two cuts:
 
-- `references/interactions/dosen-desktop-default.png`
-- `references/interactions/dosen-desktop-hover.png`
-- `references/interactions/dosen-tablet-default.png`
-- `references/interactions/dosen-tablet-hover.png`
-- `references/interactions/mobile-menu-open.png`
+- **Selection box** (`frame.js`, 0.7s hide, 1s show): clicks on `.project-card` or `.gf-sheet`. The blue frame, filled with the card's picture, grows to the screen edges, then shrinks onto the new page's first target in `frame.js` `TARGETS` that is on screen. It re-measures each frame so it follows the rising title.
+- **Dot wave** (`dots.js`): everything else, including the back button. A 15px grid with every second dot on the backdrop's 30px grid and its 0.22 parallax. Black dots swell on the leading edge, and `destination-out` holes open onto the live new page on the trailing edge.
+  - With the View Transitions API (`snapshot.js`), it is one wave of about 0.72s (`drawWave`, `WAVE`). The old page is the browser's frozen picture, and the new one is clipped to one circle scrubbed from the store's clock, staying inside the solid middle of the band. `BAND_GLOW` lights the band's black, painted `source-atop` so it stays on the black. The overlay and neon cursor have their own `view-transition-name`s so they stay live on top.
+  - Elsewhere it covers the screen first (`drawDots`, `PULSE`, about 0.48s then 0.56s).
 
-## Shared interactions
+The store's `uncover` event and `covering` flag gate entrances: `afterUncover` in `arrival.js` starts `Reveal` and `HeroLockup` when the cut has opened over them, and `SiteShell` keys the header splash on `useUncovered()`. Reduced motion and same-page navigation swap immediately.
 
-- `Reveal`: starts 48px below rest, fades in with a spring, and runs once. SSR content remains visible before hydration.
-- Reduced motion: entrance transforms are removed; Lenis is not mounted; CSS transition/animation durations collapse.
-- Smooth scroll: `ReactLenis` with `lerp: 0.1` and smooth wheel when reduced motion is off.
-- Page transitions: `App.jsx` renders routes against the page on screen, not the address bar. `SiteShell` gets the displayed pathname too, so the header, backdrop and end card change under cover. A capture-phase click listener (`src/transitions/origin.js`) notes where each click happened; clicks on `.project-card` or `.gf-sheet` also note the element's box and loaded picture and cut with the selection frame filled with that picture (`frame.js`, 0.7 s hide, 1 s show, lands on the first of `frame.js` TARGETS on screen), everything else with the dot grid pulse (`dots.js`, both edges travel out from the click; a 15px grid, every second dot on the backdrop's 30px grid and its 0.22 parallax; black dots swell on the leading edge, `destination-out` holes open onto the live new page on the trailing edge). It runs as one wave through a View Transition where the browser has the API (`snapshot.js`: the old page is the browser's frozen picture, the new one goes live inside the callback, clipped to one circle scrubbed from the store's clock so it stays in the solid middle of the band; `drawWave`, `WAVE` timings, about 0.72 s; `BAND_GLOW` lights the band's black like a lit backdrop tool, a faint wash and the 30px grid's dots with a 5px halo, painted `source-atop` so it stays on the black; a store `wave` cut swaps at once and has no hiding phase; the overlay and neon cursor have their own `view-transition-name`s so they stay live on top). Elsewhere it covers the screen first (`drawDots`, `PULSE` timings, about 0.48 s / 0.56 s). The store's `uncover` event (at the swap for both cuts) and `covering` flag gate entrances: `afterUncover` in `src/transitions/arrival.js` starts `Reveal`, `HeroLockup` and `RevealStage` (not rendered on any page for now) when the cut has opened over them (`arrivalDelay` follows the pulse's trailing edge), and `SiteShell` keys the header splash on `useUncovered()`. The selection frame re-measures its target each frame so it follows the rising title. `src/transitions/prefetch.js` warms each route's top images on link hover, focus or pointerdown (`mediaFor`). Scroll restoration is manual; the swap resets scroll. Lenis is stopped for the duration. Reduced motion and same-page navigations swap immediately. Tests: `tests/page-transitions.test.jsx`, `tests/transition-store.test.js`, `tests/dots.test.js`, `tests/frame.test.js`, `tests/origin.test.js`, `tests/arrival.test.js`, `tests/snapshot.test.js`, `tests/prefetch.test.js`.
-- Glass cards: `GlassCard` (`src/styles/glass-card.css`) is the card on About, Contact, Stack, the discipline pages and the project detail rail, with the folder's art, sheen and glow under a heavier tint. `look` is `web`, `motion` or `ux` (`src/data/glassLooks.js`); the cursor writes `--gf-px` and `--gf-py` (`useGlassPointer`).
-- Glass folders: on the home page, the key is one arrow link to the discipline page (`action="link"`, `.gf-key--link`). Escape or a press outside closes an open folder.
-- CTA arrow: two diagonal arrow layers exchange positions within a clipped 14px window.
-- Project cards: media padding collapses from 12px to 1px and the image scales to `1.015` on hover.
-- YouTube blocks: poster first; click swaps to a `youtube-nocookie.com` iframe without autoplay.
-- Detail pages: metadata/media rail is sticky on desktop and becomes normal flow below 1200px.
-- Mobile menu: toggles document scroll lock, supports Escape, restores focus, and closes after internal navigation.
+`prefetch.js` warms a route's top images on link hover, focus or press (`mediaFor`). No route lists a video for now. `warmVideo` stays for when the reveal stage returns.
 
-## Visual evidence lookup
+## Glass
 
-Route screenshot names use:
+- **`GlassCard`:** `<GlassCard as={Link} to="/x" look="web" className="...">`. The layers sit at `z-index: -1` inside an isolated stacking context, so children need no wrapper. Rules for using it:
+  - It has no padding: keep at least 22px, which the contrast figures assume.
+  - Consumer classes must not set `background` or `border`, and should not override `position` or `overflow`.
+  - For a sticky card, wrap it (see `.detail-rail`).
+  - Link cards lift and glow on their own, so don't add your own hover transform.
+  - Cards with the same look show identical art, so mix looks along a row.
+  - `.stack-card--no-frost` turns off the backdrop blur for pages with many cards.
+- **Tokens:** the card sets `--ink`, `--body`, `--soft`, `--accent-strong` and `--on-accent` locally, so child styles work on any look. Don't hardcode text colours inside one.
+- **Art:** painted once per recipe at a fixed 480x320 and cached, through one shared queue that spends a few milliseconds a frame. Folders paint before cards. The cursor writes `--gf-px` and `--gf-py`.
+- **`GlassFolder`:** rest, hover (the panel leans and files lift) and open (files fan out, each a link). Click or Enter opens; Escape or a press outside closes. The key is one arrow link to the discipline page (`action="link"`), and Cmd-click opens it in a new tab.
 
-- `/` -> `home--<viewport>.png`
-- `/projects/trendless` -> `projects__trendless--<viewport>.png`
-- `/404-probe` -> `404--<viewport>.png`
+## Instinct Groove page
 
-Directories:
+- The page is only a hero: Back to Work, the green Visit site button (the only link to the site), the wordmark, a short intro, then the wall extended by `.ig-hero-more` holding one line.
+- The live scene runs at 810px and wider, with WebGL2, without reduced motion and without Save-Data. Otherwise it shows the baked `hero-room` still with the wordmark lettered in CSS, so phones get black in the extended section.
+- The camera pulls back with height (`frameHeight`) so the wall keeps its scale. The canvas is capped at 5.5 megapixels (`MAX_PIXELS` in `hero.js`) to hold the frame rate.
+- After changing the scene, re-bake the plates: with `npm run dev` running, run `npm run bake:instinct` and open each URL it prints in the browser pane.
 
-- production: `references/screenshots/`
-- latest local visual run: `references/local/`
-- pixel diffs over 1%: `references/diff/`
-- captured production DOM: `references/dom/`
-- sampled computed styles: `references/styles/`
+## Other components
 
-Inspect one route and viewport at a time. Full-page screenshots are much more useful than loading the captured DOM wholesale.
-
-## Intentional published oddity
-
-The Stack page deliberately preserves the published 390px heading/card clipping defect. Do not “fix” it without user approval.
+- `ArrowLink`: internal or external, with an underline and two arrows that swap on hover.
+- `ButtonLink`: filled blue for the one main action on a screen, outlined for the rest.
+- `ProjectCard`: 16:10 media, image scales to 1.025 on hover, selection handles snap on, arrow turns into a filled blue circle.
+- YouTube blocks: poster first, then a `youtube-nocookie.com` iframe on click, with no autoplay.
+- `RevealStage`: not rendered on any page for now. Its CSS (`.stage*` in `components.css`), the videos and the `video` and `reveal` fields in `disciplines.js` stay so it can come back.

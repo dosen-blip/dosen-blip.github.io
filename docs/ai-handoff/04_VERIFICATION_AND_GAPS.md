@@ -1,71 +1,50 @@
-# Verification status and known gaps
+# Checking work and known gaps
 
-## Current functional status
+## Last verified
 
-Verified on 2026-07-27 after the HintonX video-production addition:
+2026-11-04, commit `25e6dd3`:
 
-- Node.js: v25.9.0.
 - `npm run lint`: pass.
-- `npm test`: pass, 12 files and 40 tests.
-- `npm run build`: pass; client bundle, SSR bundle, prerendered routes, and 404 produced.
-- `npm run capture:interactions`: pass; desktop/tablet DOSEN default and hover states are asserted and captured.
-- `npm run crawl`: pass; all 14 known routes passed status/metadata/assets/console/internal-link checks and an unknown route returned HTTP 404.
-- Local production preview: working at `http://127.0.0.1:4173` during the originating task.
+- `npx vitest run --dir tests`: 25 files, 174 tests, all pass.
+- `npm run build`: pass, including the prerender.
+- GitHub deploy: success. Changed pages checked on the live site in the browser pane.
+- `npm run crawl`: not run, because it launches headless Chrome.
 
-Re-run `npm run crawl` after any routing, asset, SEO, or build change.
+A worktree under `.claude/worktrees/` makes a plain `npm test` pick up its copy too and double the counts. Use `--dir tests` while one exists.
 
-## Test ownership
+## How much to check
+
+- **Copy or data:** the matching test, then the full suite.
+- **Shared CSS or a component:** lint, full tests, build, then look at it in the browser pane at desktop and 375px, in both themes. Tests run in jsdom and can't see layout, canvas or `backdrop-filter`.
+- **Motion or performance:** the pane must be visible. A hidden pane stops `requestAnimationFrame`, so numbers from it are meaningless. Dev builds run slower than production.
+- **Publishing:** see `00_READ_ME_FIRST.md`, then check the changed pages live.
+- **Contact form:** mock `fetch`. Don't send real submissions.
+
+## Tests
 
 | Test | Protects |
 |---|---|
-| `routes.test.jsx` | 5 static + 9 project route manifest |
-| `app-routes.test.jsx` | all route rendering and unknown-route 404 |
-| `project-records.test.js` | record completeness, block types, localized assets, related links, SEO |
-| `projects-index.test.jsx` | nine-card display order |
-| `animatic-record.test.js` | Animatic metadata/copy/video/order |
-| `seven-due-dates-record.test.js` | Seven Due Dates metadata/copy/video/order |
-| `project-detail-interactions.test.jsx` | YouTube activation and metadata visibility |
-| `contact.test.jsx` | fields, validation, disabled state, POST contract, success/failure |
-| `shell.test.jsx` | menu behavior, DOSEN structure/destination, and no status pill in the footer |
-| `about.test.jsx` | About intro copy, Contact button, card links and glass looks |
-| `glass-card.test.jsx` | `GlassCard` layers and server render, `GlassFolder` link key |
-| `stack.test.jsx` | grouped stack cards and new-tab destinations |
-| `not-found.test.jsx` | 404 copy and home link |
+| `routes`, `app-routes` | Route list, every route renders, unknown routes give the 404 |
+| `project-records`, `projects-index` | Records complete, assets exist, related links valid, SEO, display order |
+| `animatic-record`, `seven-due-dates-record` | Those two records' copy and videos |
+| `brand` | Discipline routing, header, end card, home order, server markup, discipline pages (and that the reveal stage and aside stay gone) |
+| `shell` | Menu behaviour, DOSEN button, no pill in the footer |
+| `about` | About intro, Contact button, card links and looks |
+| `contact` | Fields, validation, POST contract, success and failure, glass panels |
+| `stack` | Grouped cards, destinations, looks |
+| `glass-card` | `GlassCard` layers and server render, `GlassFolder` link key and closing behaviour |
+| `frequency-shift`, `instinct` | The two custom project pages |
+| `project-detail-interactions`, `slide-deck`, `not-found` | YouTube activation, the detail rail, decks, the 404 page |
+| `page-transitions`, `transition-store`, `dots`, `frame`, `origin`, `arrival`, `snapshot`, `prefetch` | Page transitions, tab title at the swap, prefetching |
 
-## Visual regression truth
+## Known gaps
 
-The original requirement was no more than 1% pixel difference per route/viewport. The last complete run in `references/visual-results.json` was generated at 18:00 EDT, before the 19:06 DOSEN fix, and **did not meet that target**:
-
-- 70 route/viewport comparisons.
-- Only 2 were at or below 1%.
-- Mean mismatch ratio: about 10.87%.
-- Maximum mismatch ratio: about 45.50%.
-
-The largest average gaps are currently in long project-detail pages, especially Trendless, Beatport, and Novak Books. Do not report the clone as 1:1 pixel-certified.
-
-The DOSEN fix has its own newer focused interaction evidence. A full `npm run visual:test` should be rerun before making any new claim about global visual parity.
-
-## Visual command behavior
-
-`npm run visual:test`:
-
-- serves no site itself; `npm run serve` must already be running.
-- captures 15 route states (14 known + 404 probe) at five viewports.
-- disables animation/transition noise.
-- writes local screenshots, diff images, and `references/visual-results.json`.
-- exits nonzero when any comparison exceeds 1%.
-
-Focused runs can reduce cost:
-
-```sh
-VISUAL_ROUTES=/contact VISUAL_VIEWPORTS=390x844 npm run visual:test
-VISUAL_ROUTES=/projects/trendless VISUAL_VIEWPORTS=1440x900 npm run visual:test
-```
-
-## Risk-based verification
-
-- Copy/data-only change: targeted record/page test, then full unit suite.
-- Shared shell/CSS change: lint, full tests, build, interaction capture, and at least 1440/1024/390 screenshots.
-- Route/SEO/asset change: lint, tests, build, serve, crawl.
-- Pixel-parity work: focused visual test during iteration; full 70-comparison run only at the end.
-- Contact endpoint work: mock fetch only unless real submission is separately authorized.
+- **Phones on Instinct:** the extended section is one line on plain black, because phones get the still rather than the scene.
+- **Instinct join:** the wall ends at a visible edge where the site's lighter background and dot grid begin.
+- **Glass:** not checked in Safari or Firefox, or on a real phone. The focus ring on glass is low contrast in places, though the card's rim and glow also light on focus.
+- **Mobile menu:** its discipline pills are the one `--surface` card not on glass.
+- **Open folders:** have two links to the same page, the crown and the key.
+- **About:** the line under "What I do" repeats its cards, and some of the intro repeats Experience.
+- **Unused:** `craft` in `disciplines.js` is read nowhere. `warmVideo` and `videos` in `prefetch.js` wait for `RevealStage`.
+- **Old tooling:** `npm run visual:test` compares against the July capture of the old site, so its results no longer mean anything. `capture` and `capture:interactions` also target the old site.
+- **Build warning:** chunks over 500 kB, mainly the Three.js scene.

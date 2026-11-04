@@ -1,70 +1,50 @@
-# Architecture and ownership map
+# Architecture and where things live
 
-## Runtime flow
+## Runtime
 
 ```text
-src/entry-client.jsx
-  -> BrowserRouter
-  -> App.jsx
-  -> SiteShell.jsx
-  -> static page OR ProjectDetail(project record)
+src/entry-client.jsx -> BrowserRouter -> App.jsx -> SiteShell.jsx -> the page on screen
 
-src/entry-server.jsx
-  -> StaticRouter
-  -> renderToString(App)
-  -> route-specific SEO head
-  -> scripts/prerender.mjs
-  -> dist/<route>/index.html and dist/404.html
+src/entry-server.jsx -> StaticRouter -> renderToString(App) -> metaFor + seoFor
+  -> scripts/prerender.mjs -> dist/<route>/index.html and dist/404.html
 ```
 
-`scripts/serve-dist.mjs` serves generated files and returns `dist/404.html` with an actual 404 for unknown paths.
+Components must render on the server: no `window` during render. `App.jsx` renders routes against the page on screen rather than the address bar, because a page transition swaps the page after the URL changes.
 
-## High-value files
+Dependencies: React, React Router, Lenis, Three.js (pinned to 0.170.0, the Instinct scene only). There is no animation library and no CSS framework.
+
+## Where things live
 
 | Concern | Source |
 |---|---|
-| Route allowlist and navigation | `src/data/routes.js` |
-| Router and Lenis enablement | `src/App.jsx` |
-| Shared desktop/tablet/mobile shell | `src/components/SiteShell.jsx` |
-| Global tokens, shell, shared detail styles | `src/styles/global.css` |
-| Static pages | `src/pages/*.jsx` and matching `src/styles/*.css` |
-| Card material | `src/components/GlassCard.jsx`, `src/styles/glass-card.css`, looks in `src/data/glassLooks.js` |
+| Routes and header nav | `src/data/routes.js` |
+| Router, swap, scroll reset, tab title, Lenis | `src/App.jsx` |
+| Header, mobile menu, footer end card | `src/components/SiteShell.jsx`, `src/styles/shell.css` |
+| Tokens and fonts | `src/styles/tokens.css` |
+| Base type, `.page`, `.section`, `Reveal` styles | `src/styles/base.css` |
+| Buttons, arrow links, project cards, selection handles | `src/styles/components.css` |
+| Pages | `src/pages/*.jsx`, with a matching stylesheet in `src/styles/` |
+| Disciplines (copy, tools, reveal video) | `src/data/disciplines.js` |
+| Site constants, page titles and descriptions | `src/data/site.js` |
+| Project cards and discipline tags, in display order | `src/data/projectIndex.js` |
+| Project records | `src/data/projectRecords/*.js`, gathered in `src/data/projects.js` |
+| Standard project page | `src/components/ProjectDetail.jsx`, `src/styles/detail.css` |
+| Frequency Shift page | `src/components/FrequencyShiftDetail.jsx`, `src/styles/frequency-shift.css` |
+| Instinct Groove page | `src/components/InstinctDetail.jsx`, `InstinctScene.jsx`, `src/scenes/instinct/`, `src/styles/instinct.css` |
+| Instinct cards and folder sheet | `src/components/InstinctCardArt.jsx`, `src/styles/instinct-card.css` |
+| Card material | `src/components/GlassCard.jsx`, `src/styles/glass-card.css` |
 | Home page folders | `src/components/GlassFolder.jsx`, `src/styles/glass-folder.css` |
-| Project index cards | `src/data/projectIndex.js` |
-| Full project records | `src/data/projectRecords/*.js` |
-| Project record aggregation | `src/data/projects.js` |
-| Reusable project renderer | `src/components/ProjectDetail.jsx` |
-| Card behavior | `src/components/ProjectCard.jsx` |
-| CTA arrow behavior | `src/components/ArrowLink.jsx` |
-| Scroll entrance behavior | `src/components/Reveal.jsx` |
-| Page transitions (store, click origin, dot and selection cuts, overlay) | `src/transitions/`, `src/components/TransitionOverlay.jsx` |
-| SEO generation | `src/entry-server.jsx`, `src/utils/seo.js` |
-| Contact submission contract | `src/pages/ContactPage.jsx` |
-| Build/prerender | `scripts/prerender.mjs` |
-| Static production server | `scripts/serve-dist.mjs` |
-| Functional crawl | `scripts/crawl-dist.mjs` |
-| Visual comparison | `scripts/visual-regression.mjs` |
+| Shared glass parts | `glassArt.jsx` (paint queue, `ArtCanvas`), `glassFolderArt.js` (art generator), `useGlassPointer.js`, `src/data/glassLooks.js` |
+| Wordmark and reveals | `src/brand/paths.js`, `Wordmark.jsx`, `HeroLockup.jsx`, `RevealStage.jsx` (not rendered for now) |
+| Backdrop and cursor | `BrandBackdrop.jsx`, `NeonCursor.jsx`, `src/brand/ToolIcon.jsx` |
+| Page transitions | `src/transitions/`, `src/components/TransitionOverlay.jsx` |
+| Titles and SEO head | `src/utils/seo.js` (`metaFor`, `seoFor`) |
+| Contact form | `src/pages/ContactPage.jsx` |
+| Build and server | `scripts/prerender.mjs`, `scripts/serve-dist.mjs` |
 
-## Shared design tokens
-
-Defined in `src/styles/global.css`:
-
-| Token | Value |
-|---|---|
-| ink | `#1a1a1a` |
-| muted | `#666` |
-| soft | `#999` |
-| line | `#e6e6e6` |
-| wash | `#fafafa` |
-| white | `#fff` |
-| green | `#19b373` |
-| green wash | `#e9fcf4` |
-
-Inter Regular and Medium are vendored as WOFF2 files.
+Colours and type are documented in `docs/brand-system.md`, not here.
 
 ## Project record contract
-
-Every record exports an object with:
 
 ```js
 {
@@ -73,30 +53,25 @@ Every record exports an object with:
   blocks: [
     { type: "richText", html },
     { type: "image", src, alt?, caption? },
-    { type: "youtube", id, title },
+    { type: "youtube", id, title, description? },
+    { type: "video", id, title, description?, src, poster },
+    { type: "deck", id, title, description?, deck },
     { type: "link", href, label },
   ],
-  liveUrl?, relatedSlugs,
+  summary?, liveUrl?, relatedSlugs,
   seo: { title, description, image? }
 }
 ```
 
-`ProjectDetail.jsx` is the only renderer for these records. Related slugs resolve through `getProject`; invalid slugs are filtered, while tests require all configured slugs to be valid.
+A record with `layout: "frequencyShift"` or `layout: "instinct"` holds `content` instead of `blocks` and gets its own component (`ProjectRoute` in `App.jsx`). Everything else goes through `ProjectDetail`.
 
-## Environment contracts
+To add a project, add its slug to `projectSlugs` in `routes.js`, its record to `projects.js` and its card to `projectIndex.js`. Tests check the three agree. The order in `projectIndex.js` is the display order.
 
-- `VITE_SITE_URL`: defaults to `https://matiadosen.com`; controls canonical and Open Graph URLs.
-- `VITE_CONTACT_ENDPOINT`: optional replacement POST destination. Without it, the form defaults to FormSubmit's AJAX endpoint for `matiadosen@outlook.com`.
+## Environment
 
-The contact form sends `Name`, `Email`, and `Message` plus FormSubmit reply-to, subject, template, and honeypot metadata. The first live submission to FormSubmit requires one-time activation from the recipient inbox. Success and failure copy is fixed in `ContactPage.jsx`.
+- `VITE_SITE_URL`: defaults to `https://matiadosen.com`; sets canonical and Open Graph URLs.
+- `VITE_CONTACT_ENDPOINT`: optional. Without it, the form posts to FormSubmit's AJAX endpoint for `matiadosen@outlook.com`, sending `Name`, `Email` and `Message` plus reply-to, subject, template and honeypot fields.
 
-## Build behavior
+## Build
 
-`npm run build` performs:
-
-1. Client Vite build into `dist/`.
-2. SSR bundle into `.prerender/`.
-3. Route iteration over `knownRoutes` plus a synthetic not-found render.
-4. Per-route HTML output and `dist/404.html`.
-
-Known routes receive prerendered initial markup and route-specific metadata. Browser hydration then enables menus, form state, hover behavior, YouTube activation, Motion, and Lenis.
+`npm run build` runs the client Vite build into `dist/`, an SSR bundle into `.prerender/`, then `scripts/prerender.mjs`, which writes one HTML file per known route and `dist/404.html`. `dist/` and `.prerender/` are gitignored.

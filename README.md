@@ -1,12 +1,12 @@
-# Matia Dosen Portfolio Clone
+# Matia Dosen Portfolio
 
-Standalone React + Vite implementation of the `https://matiadosen.com` portfolio, rebuilt on the October 2026 final brand: the matia dosen wordmark, beige and near-black with a blue accent, Outfit and Inter, a dot-grid backdrop, and one page per discipline (`/web`, `/motion`, `/ux`). See [`docs/brand-system.md`](docs/brand-system.md).
+The React + Vite source of `https://matiadosen.com`, on the October 2026 final brand: the matia dosen wordmark, beige and near-black with a blue accent, Outfit and Inter, a dot-grid backdrop, and one page per discipline (`/web`, `/motion`, `/ux`). See [`docs/brand-system.md`](docs/brand-system.md).
 
-The frozen production capture in `references/` documents the earlier published site and is no longer the visual source of truth.
+The capture in `references/` documents the old Framer site and is historical.
 
 ## AI/model handoff
 
-Start with [`docs/ai-handoff/00_READ_ME_FIRST.md`](docs/ai-handoff/00_READ_ME_FIRST.md). It provides a low-token loading strategy, architecture map, route/content inventory, exact responsive and interaction notes, current verification status, and a ready-to-paste prompt for another model.
+Start with [`docs/ai-handoff/00_READ_ME_FIRST.md`](docs/ai-handoff/00_READ_ME_FIRST.md). It gives the source-of-truth order, the working rules, a map of the code, the route and content inventory, how to verify work, and a ready-to-paste prompt for another model.
 
 ## Local development
 
@@ -38,7 +38,6 @@ Pushes to `main` deploy the production `dist/` build to GitHub Pages through `.g
 
 ## Verification
 
-- `npm run crawl` checks statuses, metadata, assets, console errors, internal links, and the unknown-route 404 while the production server is running.
-- `npm run capture` refreshes the production reference capture.
-- `npm run vendor:assets` localizes Framer-hosted media discovered by the capture.
-- `npm run visual:test` captures all 70 route/view combinations and writes measurements to `references/visual-results.json` plus local/diff images.
+Check work with lint, tests and build, then in a browser. See [`docs/ai-handoff/04_VERIFICATION_AND_GAPS.md`](docs/ai-handoff/04_VERIFICATION_AND_GAPS.md).
+
+`npm run crawl`, `npm run capture`, `npm run capture:interactions` and `npm run visual:test` launch headless Chrome, so avoid them unless there is no other way. The last three target the old site.

@@ -1,17 +1,15 @@
 # Starter prompt for another model
 
-Copy the block below and append the new task.
+Copy the block below and append the task.
 
 ```text
-You are working in the Matia Dosen portfolio clone repository.
+You are working on Matia Dosen's portfolio, https://matiadosen.com.
 
-Read docs/ai-handoff/00_READ_ME_FIRST.md first. Then load only the one handoff document relevant to the task. Do not scan all references, screenshots, project records, or CSS unless the task truly spans them.
+Read docs/ai-handoff/00_READ_ME_FIRST.md first, then docs/brand-system.md for anything visual or any copy, then only the handoff file the task needs. The code in src/ is the authority. references/ and pagespecs/ describe the old Framer site and are historical.
 
-The authority is the frozen published-site capture in references/ from 2026-07-21, not the Framer editor and not current production if it later changes. Preserve published copy, odd SEO titles, external-link behavior, localized static assets, excluded draft routes, and the intentional Stack 390px clipping defect.
+Pushing main deploys the live site: don't commit or push unless asked. Don't launch headless Chrome, which rules out npm run crawl, capture and visual:test unless Matia agrees. Check visuals in the browser pane, and keep the pane visible, because a hidden pane stops animation. ~/Documents/INSTINCT 2 is read-only.
 
-Functional gates currently pass, but the last complete visual run did not meet the 1% target. Never claim pixel parity without a fresh successful visual run. The DOSEN control was corrected after that run and has focused evidence in references/interactions/.
-
-Make the smallest scoped change, preserve unrelated work, and verify in proportion to risk. Do not deploy or perform a real contact submission without explicit authorization.
+Reuse what the site already has before inventing a look. New cards use GlassCard. Keep copy plain, short and true. Make the smallest change that does the job, and say plainly what you did and didn't check.
 
 Task:
 [INSERT TASK HERE]

@@ -1,62 +1,51 @@
-# AI handoff: read this first
+# Read this first
 
-This repository began as a standalone React/Vite clone of the **published** `https://matiadosen.com` portfolio and has since been expanded into a refreshed portfolio. The frozen production capture at `references/` remains the authority for cloned material; explicitly approved additions can have their own reference files.
+This is Matia Dosen's portfolio at `https://matiadosen.com`: React, Vite, plain CSS, prerendered to static files and hosted on GitHub Pages.
 
-## Current scope
+Last brought up to date on 2026-11-04, at commit `25e6dd3`. If the code and these docs disagree, the code is right: fix the doc.
 
-- 14 known routes: five static pages and nine project pages.
-- One catch-all 404, emitted as `dist/404.html` and returned with HTTP 404 by the local production server.
-- Plain JavaScript/JSX, React Router, Vite, CSS, Motion, Lenis, Vitest, and Playwright-based capture scripts.
-- 63 localized assets in `public/assets/`; third-party destinations and YouTube media remain external.
-- Pushes to `main` deploy through GitHub Actions to `https://dosen-blip.github.io`.
+## Source of truth, in order
 
-## Minimal context-loading strategy
+1. The code in `src/`, for what the site does.
+2. `docs/brand-system.md`, the design system, for how it should look and behave, and which decisions to keep.
+3. These handoff files, as a map of the code.
+4. The brand source folder, `~/Desktop/Desktop Files/Design & Portfolio/dosen-matia-final-brand/`: PDF, wordmarks, reveal videos, backdrop icons.
 
-Do **not** load the full frozen DOM, all screenshots, all project records, or all CSS at once.
+Historical, and not authority for anything: `references/` (a July 2026 capture of the old Framer site), `pagespecs/`, `docs/design-review/` (a September review of the old layout) and `docs/matia-portfolio-ai-handoff.zip` (the July handoff).
 
-1. Read this file.
-2. Read only the handoff file matching the task:
-   - architecture/build/routing: `01_ARCHITECTURE.md`
-   - layout/responsive/hover/animation: `02_VISUAL_AND_INTERACTIONS.md`
-   - copy/projects/links/SEO: `03_CONTENT_AND_ROUTES.md`
-   - tests/status/known gaps: `04_VERIFICATION_AND_GAPS.md`
-3. Open the exact source file named in that document.
-4. For visual work, inspect only the matching `references/screenshots/<route>--<viewport>.png` and local/diff image.
-5. Use `references/manifest.json` only for precise copy, metadata, links, or asset URLs. It is large.
+## Which file to read
 
-## Source-of-truth order
+- Build, routing, where things live: `01_ARCHITECTURE.md`
+- Layout, breakpoints, motion, how a component behaves: `02_VISUAL_AND_INTERACTIONS.md`
+- Copy, projects, links, SEO: `03_CONTENT_AND_ROUTES.md`
+- Tests, how to check work, known gaps: `04_VERIFICATION_AND_GAPS.md`
 
-1. Frozen production evidence in `references/` (captured 2026-07-21).
-2. Published wording and oddities recorded in project/page source.
-3. Current implementation in `src/`.
-4. The old implementation plan or Framer editor state.
+Open the source file a doc names rather than reading everything. `frequency-shift.css` alone is over 1,500 lines.
 
-If production changes after the capture, keep the frozen capture unless the user explicitly asks to refresh the reference.
+## Rules for working here
 
-## Guardrails
+- **Pushing `main` deploys the live site.** Commit or push only when Matia asks. There are no pull requests in this repo: work lands on `main`, and a fast-forward push publishes it.
+- **Don't launch headless Chrome.** It fills Matia's disk with caches. `npm run crawl`, `npm run capture`, `npm run capture:interactions` and `npm run visual:test` all launch it, so ask first. Check visuals in the browser pane instead.
+- **Show the browser pane before judging a page.** A hidden pane stops `requestAnimationFrame`, so the home intro and `Reveal` sections look blank and timing numbers mean nothing.
+- **`~/Documents/INSTINCT 2` is read-only.** It is the separate Instinct Groove site. Copy from it, never write to it.
+- **Don't send real contact submissions** while testing.
+- **Don't run `npm run capture`.** It overwrites the frozen reference.
 
-- Preserve exact published wording, including typos and unusual titles such as `Project Name - My Framer Site`.
-- The approved `/projects/video-production` addition is sourced from `https://www.hintonx.com/matiadosen`; its capture is in `references/hintonx-video-production.json`, and its overview is intentionally rewritten in first person.
-- Do not add draft routes: `/hintonx`, `/page`, `/dj-production`, or `/page-2`.
-- Do not run `npm run capture` casually: it overwrites the frozen production reference.
-- Do not make real contact submissions during testing unless the user separately authorizes one. The public form defaults to FormSubmit for `matiadosen@outlook.com`.
-- Keep Framer-hosted static media local. Keep YouTube, social, App Store, Google Play, Figma, and project-site destinations external.
-- Accessibility improvements are allowed when they do not alter the reference appearance.
-- GitHub repository: `https://github.com/dosen-blip/dosen-blip.github.io`, branch `main`.
-
-## Fast commands
+## Commands
 
 ```sh
-npm run dev
+npm run dev      # the Claude preview config uses port 5199
 npm run lint
 npm test
-npm run build
-npm run serve
-npm run crawl
+npm run build    # client build, SSR bundle, then prerender
+npm run serve    # serves dist at http://127.0.0.1:4173, with a real 404
+npm run bake:instinct   # re-bakes the Instinct plates (no headless browser)
 ```
 
-The local production server defaults to `http://127.0.0.1:4173`.
+## Publishing
 
-## Ready-made prompt
-
-For a concise prompt to give another model, use `MODEL_STARTER_PROMPT.md`.
+1. Run lint, tests and build.
+2. Commit to `main`, leaving out the untracked `.claude/` and `docs/design-review/`.
+3. Fetch, confirm `origin/main` hasn't moved, then `git push origin main`.
+4. `.github/workflows/deploy-pages.yml` runs lint, tests and build on Node 24, then deploys. Wait for it to succeed.
+5. Check the changed pages at `https://matiadosen.com` in the browser pane.

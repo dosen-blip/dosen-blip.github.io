@@ -1,77 +1,62 @@
-# Content, routes, and external links
+# Content, routes and links
 
-## Route inventory
+## Routes
 
-Static routes:
+19 known routes, plus a catch-all 404 (`NotFoundPage.jsx`, `dist/404.html`).
 
-| Route | Module |
-|---|---|
-| `/` | `src/pages/HomePage.jsx` |
-| `/about` | `src/pages/AboutPage.jsx` |
-| `/projects` | `src/pages/ProjectsPage.jsx` |
-| `/stack` | `src/pages/StackPage.jsx` |
-| `/contact` | `src/pages/ContactPage.jsx` |
+| Route | Module | Contents |
+|---|---|---|
+| `/` | `HomePage.jsx` | Hero, one glass folder per discipline, selected work |
+| `/about` | `AboutPage.jsx` | Intro and portrait, What I do, Experience, Education, Tools and Music cards |
+| `/projects` | `ProjectsPage.jsx` | Work: every project, with discipline filters |
+| `/web`, `/motion`, `/ux` | `DisciplinePage.jsx` | Title and intro, the discipline's projects, an extra (Live sites, Selected films, Process), next-discipline links |
+| `/stack` | `StackPage.jsx` | Tools: 13 cards in AI Systems & Agents, Design & Development, Creative Production. Linked from About and the footer, not the header |
+| `/contact` | `ContactPage.jsx` | Form and details |
 
-Project routes:
+## Projects, in display order
 
-| Route | Title | Client | Duration | Blocks | Gallery |
-|---|---|---|---|---|---:|
-| `/projects/video-production` | Video Production at HintonX | HintonX / Selected Clients | Ongoing | first-person rich text, 7 YouTube videos | 0 |
-| `/projects/trendless` | Trendless | Academic Team Project | 7 Weeks | rich text, image | 3 |
-| `/projects/animatic-remastered` | Animatic Remastered | Algonquin College | 1 Week | YouTube, rich text | 0 |
-| `/projects/seven-due-dates` | Seven Due Dates | Algonquin College | 1 Week | YouTube, rich text | 0 |
-| `/projects/2024-chasing-greatness` | Chasing Greatness - ECommerce Website | Hinton Publishing | 2 Months | external link, rich text | 3 |
-| `/projects/novak-books` | Novak Books | Hinton Publishing | 4 Months | rich text, external link, rich text | 4 |
-| `/projects/menu-design` | Restaurant Menu Design | Algonquin College | 4 Weeks | rich text | 1 |
-| `/projects/beatport-redesign` | Beatport Redesign | Algonquin College | 4 Weeks | rich text | 3 |
-| `/projects/toldya-tennis` | ToldYa - Tennis Application | HintonX | 6 Months | rich text with store links | 1 |
+| Route under `/projects/` | Title | Client | Disciplines | Page |
+|---|---|---|---|---|
+| `video-production` | Video Production at HintonX | HintonX / Selected Clients | motion | standard |
+| `frequency-shift` | Frequency Shift | Frequency Shift | web, motion | custom |
+| `instinct-groove` | Instinct Groove | Instinct Groove | web | custom |
+| `trendless` | Trendless | Academic Team Project | ux | standard |
+| `animatic-remastered` | Animatic Remastered | Algonquin College | motion | standard |
+| `seven-due-dates` | Seven Due Dates | Algonquin College | motion | standard |
+| `2024-chasing-greatness` | Chasing Greatness - ECommerce Website | Hinton Publishing | web | standard |
+| `novak-books` | Novak Books | Hinton Publishing | none | standard |
+| `menu-design` | Restaurant Menu Design | Algonquin College | none | standard |
+| `beatport-redesign` | Beatport Redesign | Algonquin College | ux | standard |
+| `toldya-tennis` | ToldYa - Tennis Application | HintonX | ux | standard |
 
-Catch-all unknown routes render `NotFoundPage.jsx`; production output also includes `dist/404.html`.
+Print and book work has no discipline, so it appears only on Work.
 
-Excluded routes: `/hintonx`, `/page`, `/dj-production`, and `/page-2`.
+## Who Matia is, in the order the site says it
 
-## Page behavior summary
+Lead with what Matia makes, then who for, in the order HintonX, Hinton Publishing, Frequency Shift. The home blurb and the About intro both follow this.
 
-- Home: hero, one glass folder per discipline, and selected work.
-- About: intro with responsive portrait, What I do, Experience, and Education, Tools and Music glass cards.
-- Projects: nine cards in the exact order defined by `projectIndex.js`.
-- Stack: expanded Design & Development, AI Systems & Agents, and Creative Production groups.
-- Contact: native required/email validation, FormSubmit default endpoint, honeypot, and fixed success/failure messages.
-- Detail pages: one shared renderer driven by ordered records; metadata, rich content, optional gallery/video/link, related projects, and route SEO.
+- **Home:** "Designer and video editor in Ottawa. I design and build websites and apps, and film and edit video for HintonX, Hinton Publishing and Frequency Shift."
+- **Descriptor:** `DESCRIPTOR` in `site.js`, "Web, Motion & UX designer".
+- **Music:** Matia DJs and produces as DOSEN, on a separate site, `https://dosen.ca`.
 
-## Project order
+## Writing copy
 
-The canonical order is:
+Write plainly, in the first person, and state only what's true. Frequency Shift's body copy was rewritten to remove an AI-sounding voice, so avoid these:
 
-1. video-production
-2. trendless
-3. animatic-remastered
-4. seven-due-dates
-5. 2024-chasing-greatness
-6. novak-books
-7. menu-design
-8. beatport-redesign
-9. toldya-tennis
+- em dashes as a habit, and "not X, but Y" constructions
+- filler words like "energy", "texture" and "the room" used loosely
+- abstractions like "visual language" or "continuity between those moments"
 
-This order is duplicated intentionally in `projectSlugs`, the project record imports, and `projectIndex`. Tests enforce consistency.
+Say the same fact once on a page. Prefer less copy: the Instinct page was deliberately cut to a short intro and one line. Don't invent facts about the work. If a sentence is inferred, ask Matia.
 
-## External-link policy
+Availability is one plain sentence, "Available for design, video and web projects.", in the footer and on Contact. There is no pill.
 
-Preserve published destinations and new-tab behavior:
+## Links
 
-- DOSEN/Figma site
-- Instagram and LinkedIn
-- Framer referral links used by stack cards
-- 2024 Tennis website
-- Novak bookstore
-- App Store and Google Play links inside ToldYa copy
-- YouTube thumbnail/player endpoints
-- HintonX video-production source page
-
-Static Framer media must remain local under `/assets/`.
+`DOSEN_URL`, `EMAIL` and `socialLinks` are in `src/data/site.js`. External links open in a new tab. Static media stays local under `public/assets/`; YouTube, app stores, shops and project sites stay external. Some files in `public/assets/` still have hashed names from the old Framer site.
 
 ## SEO
 
-Project SEO lives inside each project record. Static routes without explicit SEO use defaults in `entry-server.jsx` and `seo.js`. `VITE_SITE_URL` controls canonical and Open Graph URL construction.
-
-For exact published title, description, canonical, or link text, query the single matching route/view in `references/manifest.json`; do not infer or normalize it.
+- `metaFor(path)` in `src/utils/seo.js` is the one source of titles: `seo` in a project record, or `pageMeta` in `site.js` for the other pages. The prerender and the tab title both use it.
+- The description and share tags are only in the prerendered head, since crawlers load each URL.
+- The default share image is `/assets/brand/og-card.png`.
