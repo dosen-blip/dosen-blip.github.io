@@ -44,13 +44,13 @@ describe("Frequency Shift project page", () => {
     expect(getByRole("heading", { level: 1, name: "Frequency Shift" })).toBeTruthy()
     expect(container.querySelector('.fs-hero-neon-asset[src="/assets/frequency-shift/mobile-fs-wordmark.svg"]')).toBeTruthy()
     expect(container).toHaveTextContent("Web Development / Video Editing")
-    expect(getByText(/I shape Frequency Shift from first announcement to final archive/i)).toBeTruthy()
+    expect(getByText(/I run the creative side of Frequency Shift/i)).toBeTruthy()
     expect(getByRole("heading", { name: "A visual system built to move between rooms." })).toBeTruthy()
     expect(getByRole("heading", { name: "A permanent home for a moving series." })).toBeTruthy()
 
     const djAside = container.querySelector(".fs-dj-aside")
     expect(djAside).toHaveTextContent("Supplementary / DJ")
-    expect(djAside).toHaveTextContent("I also play selected Frequency Shift nights")
+    expect(djAside).toHaveTextContent("I also DJ some of the nights")
     expect(container.querySelector(".fs-room").compareDocumentPosition(djAside)).toBe(
       Node.DOCUMENT_POSITION_CONTAINED_BY | Node.DOCUMENT_POSITION_FOLLOWING,
     )

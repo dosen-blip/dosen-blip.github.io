@@ -43,7 +43,7 @@ describe("project records", () => {
 
       if (project.layout === "frequencyShift") {
         expect(project.liveUrl).toBe("https://frequencyshift.ca/")
-        expect(project.content.hero.dek).toContain("directing the identity")
+        expect(project.content.hero.dek).toContain("I direct the look")
         expect(project.content.hero.meta.map((item) => item.label)).toEqual(["Role", "Platform", "Output", "Period"])
         expect(project.content.hero.meta.find((item) => item.label === "Output")?.value).toBe("Web Development / Video Editing")
         expect(project.content.motion.slots).toHaveLength(4)

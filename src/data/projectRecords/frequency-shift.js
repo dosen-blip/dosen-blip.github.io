@@ -15,7 +15,7 @@ const frequencyShift = {
   content: {
     hero: {
       kicker: "Creative Direction / Web Management / Video",
-      dek: "I shape Frequency Shift from first announcement to final archive—directing the identity, building and managing the website, and editing the video work around each event. I also support planning, promotion, and the room itself as part of the core team.",
+      dek: "I run the creative side of Frequency Shift. I direct the look, build and manage the website, and edit the videos for each event. I’m also on the core team, so I help with planning and promotion and work the nights themselves.",
       image: "/assets/frequency-shift/hero-crowd.webp",
       meta: [
         { label: "Role", value: "Creative Direction" },
@@ -28,8 +28,8 @@ const frequencyShift = {
       eyebrow: "02 / The role",
       title: "One role across the whole series.",
       paragraphs: [
-        "Frequency Shift is an Ottawa house series built around the dancefloor—solo nights, partner takeovers, and a two-stage festival, each with its own room and energy.",
-        "My role is to keep that range coherent. I direct the visual language, manage frequencyshift.ca, edit the motion work, and keep each campaign moving from the first announcement through doors and into the archive.",
+        "Frequency Shift is a house series in Ottawa. It runs solo nights, partner takeovers and a two-stage festival.",
+        "I make the visuals, look after frequencyshift.ca and edit the videos, so the festival and a one-off partner night still look like the same series. I also keep each campaign on schedule, from the first announcement to the night itself to the archive afterwards.",
       ],
       annotation: "For the love of house.",
     },
@@ -37,8 +37,8 @@ const frequencyShift = {
       eyebrow: "03 / Creative direction",
       title: "A visual system built to move between rooms.",
       paragraphs: [
-        "Each night asks for a different rhythm—from the first solo GRIDWRKS event to collaborations at City At Night and Frequency Fest at Club SAW. The system starts with bold type, saturated colour, the FS mark, and fast, high-contrast motion, then flexes around each partner, lineup, and room.",
-        "These photographs are the other half of the brief. They keep the identity grounded in the people and venues it is built to serve—not only the assets that announce them.",
+        "Every night needs something a bit different. The first solo night at GRIDWRKS, the collaborations at City At Night and Frequency Fest at Club SAW each got their own look. The base stays the same: bold type, saturated colour, the FS mark and fast, high-contrast motion. From there I adjust it for the partner, the lineup and the venue.",
+        "The photos matter as much as the graphics. They show who actually comes and where it happens.",
       ],
     },
     featuredPosts: [
@@ -88,8 +88,8 @@ const frequencyShift = {
       eyebrow: "01 / Motion and promotion",
       title: "Cut for the announcement and the afterimage.",
       paragraphs: [
-        "I edit every promotional film for Frequency Shift. Announcement pieces make the date, lineup, venue, and ticket route legible in seconds; recap edits hold onto the texture of the room after the doors close.",
-        "The Techno Special film leads this selection, pairing the live energy of GRIDWRKS with a campaign edit built to move tickets. The standalone and Frequency Shift × Solstice pieces show the wider range: vertical-first promotion and cuts driven by the room itself. The This Friday promo sits alongside it—a short, last-call announcement cut to the beat of the room.",
+        "I edit every promo video for Frequency Shift. Announcements have a few seconds to get across the date, lineup, venue and where to buy tickets. Recaps show what the night actually felt like.",
+        "The Techno Special film comes first. It mixes live footage from GRIDWRKS with a campaign edit meant to sell tickets. This Friday is a short last-call promo cut to the beat. The GRIDWRKS film and the Solstice collab show the other side: vertical-first promo and edits built around the night itself.",
       ],
       slots: [
         {
@@ -138,23 +138,23 @@ const frequencyShift = {
       eyebrow: "04 / Web platform",
       title: "A permanent home for a moving series.",
       paragraphs: [
-        "I built and maintain frequencyshift.ca as the working home of the series. Each event has a clear path to the essentials—date, lineup, venue, and tickets—while completed nights move into an archive with photography, credits, collaborators, and source posts.",
-        "I handle releases, content updates, media, and the archive as the program changes. The site moves at the speed of the feed without losing the longer story.",
+        "I built frequencyshift.ca and I still run it. Each event page gives you the date, lineup, venue and tickets up front. After the night, the event moves into an archive with photos, credits, collaborators and links to the original posts.",
+        "I handle releases, content updates and media as the schedule changes, so the site stays as current as the Instagram.",
       ],
       homeScreenshot: "/assets/frequency-shift/web/home-desktop.webp",
     },
     room: {
       eyebrow: "05 / Inside the room",
       title: "The work continues when doors open.",
-      body: "I stay involved in planning, promotion, last-minute asset updates, and on-site support. Watching where people hesitate, what information they need, and how the room actually moves feeds directly into the next campaign.",
-      dj: "I also play selected Frequency Shift nights. It is a supporting part of the role, not the centre of the project, but it keeps me close to the audience the work is built around.",
+      body: "I stay involved through planning and promotion, make last-minute changes to assets, and help out on site. Seeing where people get stuck, what they need to know and how the crowd moves on the night changes how I run the next campaign.",
+      dj: "I also DJ some of the nights. It’s a small part of what I do here, but it keeps me close to the people who come.",
     },
     closing: {
       eyebrow: "06 / Continuity",
       title: "From first post to final record.",
       paragraphs: [
-        "Since May 2025, Frequency Shift has grown from a first Ottawa night into solo editions, partner takeovers, and Frequency Fest at Club SAW. The archive keeps the artists, venues, collaborators, and photographers visible alongside the work.",
-        "My contribution is the continuity between those moments: carrying each night through campaign, live experience, and permanent record without changing voice at every handoff.",
+        "The first night was in May 2025. Since then, Frequency Shift has added solo editions, partner takeovers and Frequency Fest at Club SAW. The archive credits the artists, venues, collaborators and photographers alongside the work.",
+        "I stay with each night the whole way through, from the campaign to the event to the archive, which is why it all still sounds like one series.",
       ],
     },
   },
