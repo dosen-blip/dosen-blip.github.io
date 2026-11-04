@@ -1,11 +1,14 @@
 import { useEffect, useRef } from "react"
 
-// The live wall needs a desktop-sized screen, a GPU (WebGL2) and motion; everywhere else the hero shows a baked still.
-const LIVE_QUERY = "(min-width: 810px) and (prefers-reduced-motion: no-preference)"
+// The live wall needs a GPU (WebGL2) and motion. Everywhere else the hero shows a baked still, as it does when a phone is
+// on Save-Data, is short of memory, can't get the wall up in time or can't keep it running.
+const PHONE_QUERY = "(max-width: 809.98px)"
+const PHONE_START_LIMIT = 9000 // ms
 
 function canRunLive() {
-  if (!window.matchMedia?.(LIVE_QUERY).matches) return false
+  if (!window.matchMedia?.("(prefers-reduced-motion: no-preference)").matches) return false
   if (navigator.connection?.saveData) return false
+  if (window.matchMedia(PHONE_QUERY).matches && navigator.deviceMemory && navigator.deviceMemory < 3) return false
   return typeof WebGL2RenderingContext !== "undefined"
 }
 
@@ -46,14 +49,27 @@ export function InstinctScene({ slotRef, moreRef, onMode }) {
     }
 
     const controller = new AbortController()
+    const phone = window.matchMedia(PHONE_QUERY).matches
+    const fallBack = () => {
+      window.clearTimeout(startLimit)
+      if (controller.signal.aborted) return
+      controller.abort()
+      report("still")
+    }
+    const startLimit = phone ? window.setTimeout(fallBack, PHONE_START_LIMIT) : 0
     report("loading")
     import("../scenes/instinct/hero.js")
       .then(({ createHero }) => createHero(host, {
-        layout: "case",
+        layout: phone ? "phone" : "case",
+        quality: phone ? "phone" : "full",
         anchor: () => (slotRef.current ? boxWithin(slotRef.current, stage) : null),
         frameHeight: () => stage.clientHeight - (moreRef.current?.offsetHeight ?? 0),
         pointerTarget: stage,
-        onStart: () => report("live"),
+        onStart: () => {
+          window.clearTimeout(startLimit)
+          report("live")
+        },
+        onFail: fallBack,
         signal: controller.signal,
       }))
       .then((hero) => {
@@ -63,9 +79,12 @@ export function InstinctScene({ slotRef, moreRef, onMode }) {
       .catch((error) => {
         if (controller.signal.aborted) return
         console.warn("[instinct] live scene unavailable, showing the still", error)
-        report("still")
+        fallBack()
       })
-    return () => controller.abort()
+    return () => {
+      window.clearTimeout(startLimit)
+      controller.abort()
+    }
   }, [slotRef, moreRef])
 
   return <div ref={hostRef} className="ig-scene" aria-hidden="true" />

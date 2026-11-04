@@ -6,7 +6,7 @@ The look, tokens and design decisions are in `docs/brand-system.md`. This file c
 
 | Width | What changes |
 |---|---|
-| `< 810px` | The main one. Header becomes logo and menu button, `--header-h` drops to 60px, the mobile menu opens as a full panel, the home hero's top row and lede hide, and Instinct shows its still instead of the live scene. |
+| `< 810px` | The main one. Header becomes logo and menu button, `--header-h` drops to 60px, the mobile menu opens as a full panel, the home hero's top row and lede hide, and Instinct's scene switches to its phone tier. |
 | `< 1000px` | About's card rows, the Experience list and the project detail layout go to one column. The detail rail goes back to normal flow. |
 | `< 1100px` | Film grid and UX steps drop to two columns. |
 
@@ -73,8 +73,10 @@ The store's `uncover` event and `covering` flag gate entrances: `afterUncover` i
 ## Instinct Groove page
 
 - The page is only a hero: Back to Work, the green Visit site button (the only link to the site), the wordmark, a short intro, then the wall extended by `.ig-hero-more` holding one line.
-- The live scene runs at 810px and wider, with WebGL2, without reduced motion and without Save-Data. Otherwise it shows the baked `hero-room` still with the wordmark lettered in CSS, so phones get black in the extended section.
-- The camera pulls back with height (`frameHeight`) so the wall keeps its scale. The canvas is capped at 5.5 megapixels (`MAX_PIXELS` in `hero.js`) to hold the frame rate.
+- The live scene runs on every screen size, with WebGL2 and without reduced motion or Save-Data. Otherwise, or if a phone has under 3GB of reported memory, it shows the baked `hero-room` still with the wordmark lettered in CSS.
+- Phones (under 810px) get `quality: "phone"` in `hero.js`: `QUALITY.phone` caps the canvas at 1.25 megapixels and shrinks the buffers, MSAA and god-ray taps. Half-size `*-phone.webp` textures bring the download from 6.8MB to about 0.7MB, and the frame rate is capped at 60 through the intro and 30 after. Touch doesn't move the camera. `LAYOUTS.phone` in `vines.js` keeps the ivy around the edges so the sign and copy stay clear.
+- A phone falls back to the still if the scene hasn't started in 9s, the GPU context is lost, or frames stay over 110ms at the lowest resolution. `watchFrameRate` first drops resolution by steps to 55% whenever a 30-frame average passes 42ms.
+- The camera pulls back with height (`frameHeight`) so the wall keeps its scale. The canvas is capped at 5.5 megapixels on larger screens (`QUALITY.full`) to hold the frame rate.
 - After changing the scene, re-bake the plates: with `npm run dev` running, run `npm run bake:instinct` and open each URL it prints in the browser pane.
 
 ## Other components

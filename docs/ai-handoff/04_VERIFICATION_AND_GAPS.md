@@ -40,7 +40,7 @@ A worktree under `.claude/worktrees/` makes a plain `npm test` pick up its copy 
 ## Known gaps
 
 - **Discipline titles:** the animation itself isn't covered by tests, because jsdom can't measure text. Check it in the browser pane after changing the title, its font or `.page-title`.
-- **Phones on Instinct:** the extended section is one line on plain black, because phones get the still rather than the scene.
+- **Phones on Instinct:** the live scene's performance and WebKit compatibility haven't been measured on a real phone. The browser pane uses the Mac's GPU, and the iOS Simulator needs a full Xcode install, which this Mac doesn't have. The still is the fallback.
 - **Instinct join:** the wall ends at a visible edge where the site's lighter background and dot grid begin.
 - **Glass:** not checked in Safari or Firefox, or on a real phone. The focus ring on glass is low contrast in places, though the card's rim and glow also light on focus.
 - **Mobile menu:** its discipline pills are the one `--surface` card not on glass.

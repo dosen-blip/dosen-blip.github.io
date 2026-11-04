@@ -92,7 +92,23 @@ const SHEET = STRANDS
   .filter((spec, i) => i !== 2 && spec.from?.[0] !== 2 && !(spec.kind === 'hang' && spec.top !== undefined))
   .map((spec) => (spec.from?.[0] > 2 ? { ...spec, from: [spec.from[0] - 1, spec.from[1]] } : spec));
 
-export const LAYOUTS = { poster: STRANDS, case: CASE, sheet: SHEET };
+// A phone's wall is tall and narrow, and the sign and the copy take its full width. So the ivy keeps to the top of the wall,
+// its edges and its foot, leaving the sign and the copy clear. Lengths here are shares of a much taller wall.
+const PHONE = [
+  { kind: 'climb', pts: [[.98, 1.15, .05], [.9, .86, .06], [.97, .58, .05], [.88, .34, .07], [.94, .2, .06]], r: [.026, .014], leaf: { size: [.16, .3], per: 2, spread: .14 } },
+  { kind: 'climb', pts: [[.94, .78, .06], [.66, .72, .08], [.38, .79, .07], [.14, .73, .1], [-.08, .78, .1]], r: [.02, .009], leaf: { size: [.13, .24], per: 2, spread: .07 } },
+  { kind: 'climb', pts: [[-1.08, 1.12, .05], [-.9, .92, .06], [-.98, .7, .07], [-.9, .54, .06]], r: [.018, .009], leaf: { size: [.14, .24], per: 1, spread: .07 } },
+  { kind: 'climb', pts: [[.99, -1.15, .06], [.9, -.86, .08], [.98, -.6, .07], [.9, -.42, .08]], r: [.026, .014], leaf: { size: [.17, .3], per: 3, spread: .16 } },
+  { kind: 'climb', pts: [[-.3, -1.13, .06], [.08, -.94, .08], [.46, -1, .07], [.78, -.88, .08], [1.12, -.84, .06]], r: [.024, .012], leaf: { size: [.17, .3], per: 2, spread: .14 } },
+  { kind: 'climb', pts: [[-1.12, -.72, .05], [-.94, -.88, .06], [-.88, -1.15, .05]], r: [.018, .01], leaf: { size: [.15, .26], per: 1, spread: .08 } },
+  { kind: 'hang', from: [1, .4], len: .3, z: .16, r: [.01, .004], leaf: { size: [.11, .19] } },
+  { kind: 'hang', from: [1, 1], len: .2, z: .18, r: [.01, .004], leaf: { size: [.11, .18] } },
+  { kind: 'hang', from: [0, .6], len: .22, z: .2, r: [.011, .004], leaf: { size: [.12, .2] } },
+  { kind: 'hang', top: -.5, len: .34, z: .28, r: [.01, .004], leaf: { size: [.11, .19] } },
+  { kind: 'stalk', base: [.86, -1.08, .6], height: .5, lean: [-.15, .1], r: [.02, .006], leaf: { size: [.22, .38] } },
+];
+
+export const LAYOUTS = { poster: STRANDS, case: CASE, sheet: SHEET, phone: PHONE };
 
 export class Vines {
   constructor(U, atlas, atlasMeta) {

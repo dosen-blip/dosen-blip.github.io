@@ -77,7 +77,7 @@ Cards and folders share one material: generated art behind frosted glass, with a
 ## Own-brand pages
 
 - Frequency Shift (`/projects/frequency-shift`) has its own neon look in `src/styles/frequency-shift.css`.
-- Instinct Groove (`/projects/instinct-groove`) is black and moss with brand green `#32e07a`, Space Mono labels and the live wall. It is a hero only, with one bright control: the green Visit site button.
+- Instinct Groove (`/projects/instinct-groove`) is black and moss with brand green `#32e07a`, Space Mono labels and the live wall. It is a hero only, with one bright control: the green Visit site button. The real rendered wall runs on phones too, with the ivy kept around the edges, and a baked still is only the fallback.
 
 ## Information architecture
 

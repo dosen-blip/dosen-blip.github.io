@@ -22,6 +22,12 @@ import { Flicker, Fireflies, Dust, GodRaysPass } from './fx.js';
 export const INTRO = { strike: .7, caught: 2.8, roomStart: 2.9, roomEnd: 6.8, reveal: 5.4, settled: 6.4, calm: 7.6 };
 const CAM_Z = 16, BAKE_W = 4096;
 const MAX_PIXELS = 5.5e6;   // a taller wall gives up some sharpness rather than frames
+// A phone is a much smaller GPU, and the wall on it is tall and narrow. Sizes are each buffer's longest side.
+const QUALITY = {
+  full: { pixels: MAX_PIXELS, bake: BAKE_W, shadow: 2048, glow: 1024, fireflies: 512, samples: 4, taps: 64, margin: 2.5 },
+  phone: { pixels: 1.25e6, bake: 3072, shadow: 1536, glow: 512, fireflies: 256, samples: 2, taps: 40, margin: 2.2 },
+};
+const SLOW_FRAME = 42, HOPELESS_FRAME = 110, SLOW_WINDOW = 30, MIN_SCALE = .55;   // ms, rendered frames, share of full resolution
 const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
 const smoother = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * t * (t * (t * 6 - 15) + 10); };
 // idle frame-rate steps (ms between frames) after `calm`: the display's own rate, then 60, 40 and 30 fps, ~0.8 s apart,
@@ -31,7 +37,8 @@ const IDLE_STEPS = [[1500, 0], [2300, 1000 / 60], [3100, 1000 / 40], [Infinity, 
 /**
  * Mounts the wall into `container` (any positioned element; the canvas fills it).
  * assets: base URL of the scene's textures and SVGs.
- * layout: the ivy, 'poster' (the lab's centred composition) or 'case' (the wordmark on the left, the ivy taking the right).
+ * layout: the ivy, 'poster' (the lab's centred composition), 'case' (the wordmark on the left, the ivy taking the right) or
+ *   'phone' (the ivy around the edges of a tall, narrow wall).
  * frameHeight: () => px: how tall the composition is framed for, when the container is taller. The camera pulls back so the
  *   wall keeps its scale and the extra height shows more wall; the ivy, fireflies and dust spread across all of it.
  * anchor: () => ({ x, y, w, h }) in container px: where the wordmark should land once the camera has settled, so it
@@ -42,20 +49,27 @@ const IDLE_STEPS = [[1500, 0], [2300, 1000 / 60], [3100, 1000 / 40], [Infinity, 
  * carve: false leaves the letters out of the wall (everything else is still placed around them), for a still that the
  *   page letters itself.
  * signal: an AbortSignal; aborting before the assets arrive stops the build.
+ * quality: 'full' or 'phone'. A phone gets smaller buffers, no touch parallax, a lower frame cap and a resolution that
+ *   drops if frames run slow.
+ * onFail: called if the wall can't keep going: the GPU context was lost, or a phone can't hold a frame rate at the lowest
+ *   resolution. The page should take it down and show the still.
  */
 export async function createHero(container, { assets = '/assets/instinct/scene/', layout: ivyLayout = 'poster', anchor = null, frameHeight = null,
-  focusY = () => .485, onStart = () => {}, onSettled = () => {}, pointerTarget = null, bake = false, carve = true, signal = null } = {}) {
+  focusY = () => .485, onStart = () => {}, onSettled = () => {}, pointerTarget = null, bake = false, carve = true, signal = null, quality = 'full', onFail = () => {} } = {}) {
+  const tier = QUALITY[quality] ?? QUALITY.full;
+  const phone = quality === 'phone';
   const assetUrl = (name) => `${assets}${name}`;
   const aborted = () => !!signal?.aborted;
+  const suffix = phone ? '-phone' : '';   // half-size textures: a phone would otherwise download 6.8 MB
 
   // ------------------------------------------------------------------ assets
   const loader = new THREE.TextureLoader();
   const tex = (url, setup) => loader.loadAsync(url).then((t) => { setup(t); return t; });
   const [sdf, tDark, tLight, atlas, atlasMeta, octopus] = await Promise.all([
     buildWordmarkSDF(assetUrl('wordmark.svg')),
-    tex(assetUrl('concrete-dark.webp'), (t) => { t.wrapS = t.wrapT = THREE.MirroredRepeatWrapping; t.anisotropy = 8; }),
-    tex(assetUrl('concrete-light.webp'), (t) => { t.wrapS = t.wrapT = THREE.MirroredRepeatWrapping; t.anisotropy = 8; }),
-    tex(assetUrl('leaf-atlas.webp'), (t) => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; }),
+    tex(assetUrl(`concrete-dark${suffix}.webp`), (t) => { t.wrapS = t.wrapT = THREE.MirroredRepeatWrapping; t.anisotropy = 8; }),
+    tex(assetUrl(`concrete-light${suffix}.webp`), (t) => { t.wrapS = t.wrapT = THREE.MirroredRepeatWrapping; t.anisotropy = 8; }),
+    tex(assetUrl(`leaf-atlas${suffix}.webp`), (t) => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; }),
     fetch(assetUrl('leaf-atlas.json'), { signal }).then((r) => r.json()),
     buildStencil(assetUrl('octopus.svg')),
   ]);
@@ -157,10 +171,10 @@ export async function createHero(container, { assets = '/assets/instinct/scene/'
   // so it gets neither MSAA nor depth. sceneTarget is kept as the composer's read buffer at the start of every frame.
   const composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, depthBuffer: false }));
   composer.renderTarget2.dispose();
-  composer.renderTarget2 = composer.readBuffer = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 });
+  composer.renderTarget2 = composer.readBuffer = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: tier.samples });
   const sceneTarget = composer.renderTarget2;
   composer.addPass(new RenderPass(scene, camera));
-  const godrays = new GodRaysPass(false, () => {}, { shift: 2, taps: 64 });   // its source is drawn in renderAtmosphere()
+  const godrays = new GodRaysPass(false, () => {}, { shift: 2, taps: tier.taps });   // its source is drawn in renderAtmosphere()
   Object.assign(godrays.uniforms, { uDecay: { value: .952 }, uWeight: { value: .03 } });   // same ray length with fewer taps
   // the god-ray pass also composites the haze; uFF/uFFCol/uFFHaze are the shared live uniforms
   Object.assign(godrays.uniforms, { tHaze: { value: hazeRT.texture }, uHazeOn: { value: 1 }, uFF: U.uFF, uFFCol: U.uFFCol, uFFHaze: U.uFFHaze, ...viewUniforms });
@@ -203,16 +217,24 @@ export async function createHero(container, { assets = '/assets/instinct/scene/'
     const t = -settledCam.position.z / ray.z;
     return { x: settledCam.position.x + ray.x * t, y: settledCam.position.y + ray.y * t };
   };
-  function layout() {
-    const w = container.clientWidth, h = container.clientHeight;
-    if (!w || !h) return;
-    const dpr = bake ? baseDpr : Math.min(baseDpr, Math.sqrt(MAX_PIXELS / (w * h)));
+  let resolution = 1;   // a phone's share of its full resolution, lowered if frames run slow
+  // Everything that follows the canvas's pixel size, and nothing that needs the wall rebuilt.
+  function applyResolution(w, h) {
+    const dpr = (bake ? baseDpr : Math.min(baseDpr, Math.sqrt(tier.pixels / (w * h)))) * resolution;
     renderer.setPixelRatio(dpr);
     renderer.setSize(w, h, false);
     composer.setPixelRatio(dpr);
     composer.setSize(w, h);
-    camera.aspect = w / h;
+    U.uPx.value = h * dpr / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
+    grade.uniforms.uRes.value.set(w * dpr, h * dpr);
+    hazeRT.setSize(Math.max(1, (w * dpr) >> 2), Math.max(1, (h * dpr) >> 2));
+  }
+  function layout() {
+    const w = container.clientWidth, h = container.clientHeight;
+    if (!w || !h) return;
     camera.fov = 30;
+    applyResolution(w, h);
+    camera.aspect = w / h;
     camera.updateProjectionMatrix();
     const frameH = frameHeight?.() || h, stretch = Math.max(1, h / frameH);
     camZ = CAM_Z * stretch;
@@ -232,7 +254,6 @@ export async function createHero(container, { assets = '/assets/instinct/scene/'
     }
     const wmScale = wm.w / sdf.aspect;
     Object.assign(view, { halfW, halfH, w, h, wpp: 2 * halfH / h, wm: { ...wm, h: wmScale } });
-    U.uPx.value = h * dpr / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
     U.uWmScale.value = wmScale;
     U.uWmCenter.value.set(wm.x, carve ? wm.y : 1e4);
     U.uChipAmp.value = .028 * wmScale;
@@ -247,29 +268,33 @@ export async function createHero(container, { assets = '/assets/instinct/scene/'
     // the overhead fixture hangs just right of the sign (as in the lab); on the case layout it moves in a little further,
     // so it also reaches the ivy on the right
     U.uTopPos.value.set(wm.x + halfW * (ivyLayout === 'case' ? .3 : .12), halfH + frameHalfH * .35, 4.5);
-    grade.uniforms.uRes.value.set(w * dpr, h * dpr);
 
     // static wall maps cover the view plus parallax margin
-    const dom = { x: halfW * 2.5, y: halfH * 2.5 };
+    const dom = { x: halfW * tier.margin, y: halfH * tier.margin };
+    // a buffer of `longest` on its longest side, in the wall's proportions (a tall wall would overrun the GPU's limit)
+    const fit = (longest) => {
+      const tall = dom.y / dom.x;
+      return tall > 1 ? [Math.round(longest / tall), longest] : [longest, Math.round(longest * tall)];
+    };
     const ground = { y0: -dom.y / 2, y1: -dom.y / 2 + dom.y * .3 };   // damp band at the foot of the wall, fixed in world space
     U.uDomMin.value.set(-dom.x / 2, -dom.y / 2);
     U.uDomSize.value.set(dom.x, dom.y);
     wall.scale.set(dom.x, dom.y, 1);
     wall.position.y = 0;
-    const bw = BAKE_W, bh = Math.round(bw * dom.y / dom.x);
+    const [bw, bh] = fit(tier.bake);
     bakeRT.setSize(bw, bh);
     wallUniforms.uBakeTexel.value.set(1 / bw, 1 / bh);
-    shadowRT.setSize(2048, Math.round(2048 * dom.y / dom.x));
-    glowRT.setSize(1024, Math.round(1024 * dom.y / dom.x));
-    ffLightRT.setSize(512, Math.round(512 * dom.y / dom.x)); ffDirRT.setSize(512, Math.round(512 * dom.y / dom.x));
-    ffMapMat.uniforms.uTexelWorld.value = dom.x / 512;
-    hazeRT.setSize(Math.max(1, (w * dpr) >> 2), Math.max(1, (h * dpr) >> 2));
+    shadowRT.setSize(...fit(tier.shadow));
+    glowRT.setSize(...fit(tier.glow));
+    const fireflySize = fit(tier.fireflies);
+    ffLightRT.setSize(...fireflySize); ffDirRT.setSize(...fireflySize);
+    ffMapMat.uniforms.uTexelWorld.value = dom.x / fireflySize[0];
     U.uGlowRes.value.set(glowRT.width, glowRT.height);
     Object.assign(shadowCam, { left: -dom.x / 2, right: dom.x / 2, top: dom.y / 2, bottom: -dom.y / 2 });
     shadowCam.updateProjectionMatrix();
 
     vines.build(halfW, halfH, view.wm, { strands: LAYOUTS[ivyLayout] });
-    growthCanvas.width = 1024; growthCanvas.height = Math.round(1024 * dom.y / dom.x);
+    [growthCanvas.width, growthCanvas.height] = fit(1024);
     vines.drawGrowth(growthCanvas, U.uDomMin.value, U.uDomSize.value, ground);
     growthTex.needsUpdate = true;
     renderer.setRenderTarget(bakeRT);
@@ -285,6 +310,7 @@ export async function createHero(container, { assets = '/assets/instinct/scene/'
   const idlePointer = { active: false };
   let lastMove = -1e9, livelyAt = 0;
   const onMove = (e) => {
+    if (e.pointerType === 'touch') return;   // a finger on a phone is scrolling, not looking around
     lastMove = performance.now();
     const r = container.getBoundingClientRect();
     pointer.nx = (e.clientX - r.left) / r.width * 2 - 1;
@@ -295,14 +321,25 @@ export async function createHero(container, { assets = '/assets/instinct/scene/'
 
   // ------------------------------------------------------------------ mounting, visibility
   let visible = true, resizeTimer = 0, raf = 0, destroyed = false;
-  const resizer = new ResizeObserver(() => { clearTimeout(resizeTimer); resizeTimer = setTimeout(layout, 120); });
+  let laidOut = { w: 0, h: 0 };
+  const relayoutIfNeeded = () => {
+    const w = container.clientWidth, h = container.clientHeight;
+    // a phone's address bar sliding away isn't worth rebuilding the wall for
+    if (phone && w === laidOut.w && Math.abs(h - laidOut.h) < 120) return;
+    laidOut = { w, h };
+    layout();
+  };
+  const resizer = new ResizeObserver(() => { clearTimeout(resizeTimer); resizeTimer = setTimeout(relayoutIfNeeded, 120); });
+  const onContextLost = (event) => { event.preventDefault(); onFail(); };
   const watcher = new IntersectionObserver((entries) => { visible = entries[0].isIntersecting; });
   const pointerEl = pointerTarget || container;
   container.append(canvas);
   if (!bake) {
     resizer.observe(container); watcher.observe(container);
     pointerEl.addEventListener('pointermove', onMove); pointerEl.addEventListener('pointerleave', onLeave);
+    canvas.addEventListener('webglcontextlost', onContextLost);
   }
+  laidOut = { w: container.clientWidth, h: container.clientHeight };
   layout();
 
   // ------------------------------------------------------------------ loop
@@ -377,11 +414,31 @@ export async function createHero(container, { assets = '/assets/instinct/scene/'
     // full rate through the intro and while the cursor moves the camera; once that has been quiet a while the rate
     // steps down to ~30 fps (the motion is slow), a step at a time
     if (time < INTRO.calm || now - lastMove < 1200) livelyAt = now;
-    const cap = IDLE_STEPS.find(([until]) => now - livelyAt < until)[1];
+    const cap = phone ? 1000 / (time < INTRO.calm ? 60 : 30) : IDLE_STEPS.find(([until]) => now - livelyAt < until)[1];
     if (cap && now - last < cap - 3) return;
-    const dt = Math.min((now - last) / 1000, 1 / 20);
+    const elapsed = now - last;
+    const dt = Math.min(elapsed / 1000, 1 / 20);
     last = now;
     render(dt, step(dt));
+    if (phone) watchFrameRate(elapsed);
+  }
+
+  // A phone that can't keep up gives up resolution, then the live wall altogether.
+  let slowFrames = 0, slowTotal = 0, gaveUp = false;
+  function watchFrameRate(elapsed) {
+    if (elapsed > 500) return;   // away from the tab or a browser pause, not the wall's doing
+    slowTotal += elapsed;
+    if (++slowFrames < SLOW_WINDOW) return;
+    const average = slowTotal / slowFrames;
+    slowFrames = slowTotal = 0;
+    if (average < SLOW_FRAME || gaveUp) return;
+    if (resolution > MIN_SCALE) {
+      resolution = Math.max(MIN_SCALE, resolution * .8);
+      applyResolution(container.clientWidth, container.clientHeight);
+    } else if (average > HOPELESS_FRAME) {
+      gaveUp = true;
+      onFail();
+    }
   }
 
   function destroy() {
@@ -391,6 +448,7 @@ export async function createHero(container, { assets = '/assets/instinct/scene/'
     clearTimeout(resizeTimer);
     resizer.disconnect(); watcher.disconnect();
     pointerEl.removeEventListener('pointermove', onMove); pointerEl.removeEventListener('pointerleave', onLeave);
+    canvas.removeEventListener('webglcontextlost', onContextLost);
     vines.dispose();
     scene.traverse((o) => { o.geometry?.dispose(); o.material?.dispose?.(); });
     for (const q of [bakeQuad, glowQuad, occQuad, hazeQuad]) { q.material.dispose(); q.dispose(); }
