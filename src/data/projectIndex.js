@@ -11,7 +11,7 @@ export const projectIndex = [
   {
     slug: "frequency-shift",
     title: "Frequency Shift",
-    category: "Creative direction · Web · Video",
+    category: "Motion · Web · Events",
     cover: "/assets/frequency-shift/fs-icon-vector.svg",
     mediaBackground: "#020102",
     disciplines: ["web", "motion"],

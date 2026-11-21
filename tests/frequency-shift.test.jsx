@@ -36,7 +36,7 @@ describe("Frequency Shift project page", () => {
     expect(wordmark).not.toContain("@keyframes fs-neon-ignite")
   })
 
-  it("prioritizes creative and operational leadership before the supplementary DJ role", () => {
+  it("lists the jobs up front and keeps DJing as a side note in the event section", () => {
     const { container, getByRole, getByText } = render(
       <MemoryRouter><FrequencyShiftDetail project={frequencyShift} /></MemoryRouter>,
     )
@@ -44,12 +44,12 @@ describe("Frequency Shift project page", () => {
     expect(getByRole("heading", { level: 1, name: "Frequency Shift" })).toBeTruthy()
     expect(container.querySelector('.fs-hero-neon-asset[src="/assets/frequency-shift/mobile-fs-wordmark.svg"]')).toBeTruthy()
     expect(container).toHaveTextContent("Web Development / Video Editing")
-    expect(getByText(/I run the creative side of Frequency Shift/i)).toBeTruthy()
-    expect(getByRole("heading", { name: "A visual system built to move between rooms." })).toBeTruthy()
+    expect(getByText(/I’m on the team behind Frequency Shift/i)).toBeTruthy()
+    expect(getByRole("heading", { name: "Same series, different nights." })).toBeTruthy()
     expect(getByRole("heading", { name: "A permanent home for a moving series." })).toBeTruthy()
 
     const djAside = container.querySelector(".fs-dj-aside")
-    expect(djAside).toHaveTextContent("Supplementary / DJ")
+    expect(djAside).toHaveTextContent("Also / DJ")
     expect(djAside).toHaveTextContent("I also DJ some of the nights")
     expect(container.querySelector(".fs-room").compareDocumentPosition(djAside)).toBe(
       Node.DOCUMENT_POSITION_CONTAINED_BY | Node.DOCUMENT_POSITION_FOLLOWING,
@@ -78,7 +78,7 @@ describe("Frequency Shift project page", () => {
     expect(films.compareDocumentPosition(motion.querySelector("#fs-motion-title"))).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
     expect(motion).toHaveTextContent("01 / Motion and promotion")
     expect(sections[1]).toHaveTextContent("02 / The role")
-    expect(sections[2]).toHaveTextContent("03 / Creative direction")
+    expect(sections[2]).toHaveTextContent("03 / The look")
   })
 
   it("leads with the two landscape films and demotes the vertical pair beneath them", () => {

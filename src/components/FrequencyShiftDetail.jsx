@@ -393,7 +393,7 @@ export function FrequencyShiftDetail({ project }) {
         <SectionHeading eyebrow={content.room.eyebrow} title={content.room.title} id="fs-room-title" />
         <p className="fs-room-body">{content.room.body}</p>
         <aside className="fs-dj-aside">
-          <span>Supplementary / DJ</span>
+          <span>Also / DJ</span>
           <p>{content.room.dj}</p>
         </aside>
       </CinematicReveal>

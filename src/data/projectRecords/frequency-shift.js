@@ -2,7 +2,7 @@ const frequencyShift = {
   slug: "frequency-shift",
   layout: "frequencyShift",
   title: "Frequency Shift",
-  category: "Creative Direction / Web / Video",
+  category: "Motion / Web / Events",
   client: "Frequency Shift",
   duration: "Ongoing",
   date: "2025 — Present",
@@ -14,11 +14,11 @@ const frequencyShift = {
   instagramUrl: "https://www.instagram.com/frequency___shift/",
   content: {
     hero: {
-      kicker: "Creative Direction / Web Management / Video",
-      dek: "I run the creative side of Frequency Shift. I direct the look, build and manage the website, and edit the videos for each event. I’m also on the core team, so I help with planning and promotion and work the nights themselves.",
+      kicker: "Motion / Web / Instagram / Events",
+      dek: "I’m on the team behind Frequency Shift. I edit videos, look after the website, run the Instagram, help run the events and DJ some of the nights.",
       image: "/assets/frequency-shift/hero-crowd.webp",
       meta: [
-        { label: "Role", value: "Creative Direction" },
+        { label: "Role", value: "Team member" },
         { label: "Platform", value: "frequencyshift.ca" },
         { label: "Output", value: "Web Development / Video Editing" },
         { label: "Period", value: "2025—Present" },
@@ -26,19 +26,19 @@ const frequencyShift = {
     },
     overview: {
       eyebrow: "02 / The role",
-      title: "One role across the whole series.",
+      title: "Where I fit in.",
       paragraphs: [
         "Frequency Shift is a house series in Ottawa. It runs solo nights, partner takeovers and a two-stage festival.",
-        "I make the visuals, look after frequencyshift.ca and edit the videos, so the festival and a one-off partner night still look like the same series. I also keep each campaign on schedule, from the first announcement to the night itself to the archive afterwards.",
+        "I help with a few different parts of it. I edit promos and recaps, keep frequencyshift.ca up to date, post to the Instagram, and work the nights themselves.",
       ],
       annotation: "For the love of house.",
     },
     creative: {
-      eyebrow: "03 / Creative direction",
-      title: "A visual system built to move between rooms.",
+      eyebrow: "03 / The look",
+      title: "Same series, different nights.",
       paragraphs: [
-        "Every night needs something a bit different. The first solo night at GRIDWRKS, the collaborations at City At Night and Frequency Fest at Club SAW each got their own look. The base stays the same: bold type, saturated colour, the FS mark and fast, high-contrast motion. From there I adjust it for the partner, the lineup and the venue.",
-        "The photos matter as much as the graphics. They show who actually comes and where it happens.",
+        "The first solo night at GRIDWRKS, the collaborations at City At Night and Frequency Fest at Club SAW each had their own look, on the same base: bold type, saturated colour, the FS mark and fast, high-contrast motion.",
+        "I use that in the videos and on the Instagram. The photos do a lot of the work, since they show who comes and where it happens.",
       ],
     },
     featuredPosts: [
@@ -86,10 +86,10 @@ const frequencyShift = {
     ],
     motion: {
       eyebrow: "01 / Motion and promotion",
-      title: "Cut for the announcement and the afterimage.",
+      title: "Promos before, recaps after.",
       paragraphs: [
-        "I edit every promo video for Frequency Shift. Announcements have a few seconds to get across the date, lineup, venue and where to buy tickets. Recaps show what the night actually felt like.",
-        "The Techno Special film comes first. It mixes live footage from GRIDWRKS with a campaign edit meant to sell tickets. This Friday is a short last-call promo cut to the beat. The GRIDWRKS film and the Solstice collab show the other side: vertical-first promo and edits built around the night itself.",
+        "I edit promo videos and recaps for the series. An announcement has a few seconds to get across the date, lineup, venue and where to buy tickets. A recap shows what the night was like.",
+        "Techno Special mixes live footage from GRIDWRKS with a campaign edit to sell tickets. This Friday is a short last-call promo cut to the beat. The GRIDWRKS and Solstice films are vertical edits for Instagram.",
       ],
       slots: [
         {
@@ -138,29 +138,27 @@ const frequencyShift = {
       eyebrow: "04 / Web platform",
       title: "A permanent home for a moving series.",
       paragraphs: [
-        "I built frequencyshift.ca and I still run it. Each event page gives you the date, lineup, venue and tickets up front. After the night, the event moves into an archive with photos, credits, collaborators and links to the original posts.",
-        "I handle releases, content updates and media as the schedule changes, so the site stays as current as the Instagram.",
+        "I built frequencyshift.ca and keep it updated. Each event page has the date, lineup, venue and tickets up front. After the night, the event moves to an archive with photos, credits and links to the original posts.",
       ],
       homeScreenshot: "/assets/frequency-shift/web/home-desktop.webp",
     },
     room: {
-      eyebrow: "05 / Inside the room",
-      title: "The work continues when doors open.",
-      body: "I stay involved through planning and promotion, make last-minute changes to assets, and help out on site. Seeing where people get stuck, what they need to know and how the crowd moves on the night changes how I run the next campaign.",
-      dj: "I also DJ some of the nights. It’s a small part of what I do here, but it keeps me close to the people who come.",
+      eyebrow: "05 / On the night",
+      title: "Running the events.",
+      body: "I help run the events, before doors open and through the night. Being there also shows me what people ask about, which helps with the next round of posts.",
+      dj: "I also DJ some of the nights, as DOSEN.",
     },
     closing: {
-      eyebrow: "06 / Continuity",
-      title: "From first post to final record.",
+      eyebrow: "06 / So far",
+      title: "Since May 2025.",
       paragraphs: [
-        "The first night was in May 2025. Since then, Frequency Shift has added solo editions, partner takeovers and Frequency Fest at Club SAW. The archive credits the artists, venues, collaborators and photographers alongside the work.",
-        "I stay with each night the whole way through, from the campaign to the event to the archive, which is why it all still sounds like one series.",
+        "The first night was in May 2025. Since then there have been solo nights, partner takeovers and Frequency Fest at Club SAW. The archive on the site credits the artists, venues, collaborators and photographers for each one.",
       ],
     },
   },
   seo: {
-    title: "Frequency Shift — Creative Direction, Web & Video by Matia Dosen",
-    description: "Creative direction, web management, video editing, campaign production, and event support for Ottawa house series Frequency Shift.",
+    title: "Frequency Shift — Motion, Web & Events by Matia Dosen",
+    description: "Video editing, the website, Instagram and event work for Frequency Shift, a house series in Ottawa.",
     image: "/assets/frequency-shift/hero-crowd.webp",
   },
 }
