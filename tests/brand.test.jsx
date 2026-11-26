@@ -77,7 +77,8 @@ describe("home page", () => {
     expect(folders.map((folder) => [...folder.querySelectorAll(".gf-sheet")].map((sheet) => sheet.getAttribute("href")))).toEqual(
       disciplines.map((discipline) => projectsFor(discipline.id).map((project) => `/projects/${project.slug}`).reverse()),
     )
-    expect(container.querySelector(".home-disciplines video")).toBeNull()
+    // (the Frequency Shift sheet's moving show is a video, but they are the sheet's own card art, not a preview)
+    expect(container.querySelector(".home-disciplines video:not(.fsc-show-video)")).toBeNull()
   })
 })
 

@@ -1,0 +1,133 @@
+/* Frequency Shift card art: baked from the site's laser room (FrequencyShiftCardArt.jsx). The bare room, then what the
+   sign adds and what moves adds (a video of the beams, the smoke and the fog, over a still of its first frame until it
+   plays), on layers of their own and added back (plus-lighter), so the sign can stutter on its own. */
+.fsc-art {
+  --fsc-tx: 0;
+  --fsc-ty: 0;
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  isolation: isolate;
+  background: #050506;
+}
+
+.fsc-room {
+  position: absolute;
+  inset: -5%;
+  display: block;
+  transform:
+    translate3d(calc(var(--fsc-tx) * -1.6%), calc(var(--fsc-ty) * -1.6%), 0)
+    scale(1.02);
+  transition: transform 1.1s cubic-bezier(.16, 1, .3, 1);
+}
+
+/* the show, added to the room: its still until the video plays, then the video (each is black but for the light it
+   adds, so inside the group they simply lie one over the other) */
+.fsc-show {
+  position: absolute;
+  inset: 0;
+  display: block;
+  mix-blend-mode: plus-lighter;
+}
+
+.fsc-art video.fsc-show-video {
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+
+.fsc-art.is-playing video.fsc-show-video {
+  opacity: 1;
+}
+
+.fsc-art.is-playing .fsc-show-still {
+  opacity: 0;
+}
+
+.fsc-art .fsc-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  border-radius: 0;
+  transform: none;
+  transition: opacity .6s ease, filter .6s ease;
+}
+
+.fsc-base {
+  filter: brightness(.94);
+}
+
+.fsc-sign {
+  mix-blend-mode: plus-lighter;
+}
+
+/* the haze around the sign: its own light, spread and soft. Screen, not plus-lighter: Chrome blows a blurred
+   plus-lighter layer out to white in patches. */
+.fsc-bloom {
+  mix-blend-mode: screen;
+  opacity: .2;
+  filter: blur(14px) saturate(1.2);
+}
+
+/* Pointed at: the sign strikes and catches, as it powers on at the site, its haze swells, the room leans in */
+:is(.project-card, .gf-sheet):is(:hover, :focus-visible) .fsc-sign {
+  animation: fsc-power-on 1.1s linear both;
+}
+
+:is(.project-card, .gf-sheet):is(:hover, :focus-visible) .fsc-bloom {
+  opacity: .4;
+  animation: fsc-power-on 1.1s linear both;
+}
+
+:is(.project-card, .gf-sheet):is(:hover, :focus-visible) .fsc-base {
+  filter: brightness(1.08);
+}
+
+:is(.project-card, .gf-sheet):is(:hover, :focus-visible) .fsc-room {
+  transform:
+    translate3d(calc(var(--fsc-tx) * -1.6%), calc(var(--fsc-ty) * -1.6%), 0)
+    scale(1.05);
+}
+
+/* the site's power-on: dead, a run of failed strikes, then it catches */
+@keyframes fsc-power-on {
+  0%, 3% { opacity: 1; }
+  5% { opacity: .05; }
+  11% { opacity: .62; }
+  14% { opacity: .04; }
+  21% { opacity: .82; }
+  24% { opacity: .1; }
+  31% { opacity: .5; }
+  33% { opacity: .08; }
+  42%, 100% { opacity: 1; }
+}
+
+/* The folder sheet: the monogram sits high, so the strip that shows while the sheet is in the stack carries the
+   beams and its light */
+.fsc-art--sheet .fsc-room {
+  inset: -3%;
+}
+
+.fsc-art--sheet .fsc-bloom {
+  opacity: .3;
+  filter: blur(8px) saturate(1.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fsc-room,
+  .fsc-art .fsc-layer {
+    transition: none;
+  }
+
+  :is(.project-card, .gf-sheet):is(:hover, :focus-visible) :is(.fsc-sign, .fsc-bloom) {
+    animation: none;
+  }
+
+  /* the show held still */
+  .fsc-art video.fsc-show-video {
+    display: none;
+  }
+}

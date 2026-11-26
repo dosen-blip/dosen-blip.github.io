@@ -18,8 +18,10 @@ const plates = [
   // project cards (16:10): the lab's own composition, the sign centred in the room
   { name: "card", size: "1440x900", layout: "poster", keep: ["room", "sign", "lit"] },
   // glass-folder sheet (272x184 at 3x): the sign high, centred ~48 px down, just under the name, where the strip that shows
-  // while the sheet is in the stack (and lifts on hover) catches its light
-  { name: "sheet", size: "816x552", layout: "sheet", anchor: "180,113,457", keep: ["room", "sign"] },
+  // while the sheet is in the stack (and lifts on hover) catches its light. Drawn half again as tall with the sign as far
+  // down, and cropped back to the plate: drawn at the plate's own size the sign sat so near the top that the mural was
+  // squeezed and left a dark band above it, and the vignette another below
+  { name: "sheet", size: "816x828", layout: "sheet", anchor: "180,251,457", crop: "138,552", keep: ["room", "sign"] },
   // hero still (phones, reduced motion, no WebGL2): the case layout without the letters, the page lights the wordmark.
   // The anchor is the wordmark slot in a 1600x900 window (x, y, width in the 1600x828 hero)
   { name: "hero", size: "1600x828", layout: "case", anchor: process.env.HERO_ANCHOR || "56,455,700", nocarve: true, keep: ["room"] },
@@ -56,7 +58,7 @@ server.listen(port, () => {
   for (const plate of plates) {
     const query = new URLSearchParams({
       size: plate.size, layout: plate.layout, name: plate.name, keep: plate.keep.join(","), post: `http://localhost:${port}`,
-      ...(plate.focusY ? { focusY: plate.focusY } : {}), ...(plate.anchor ? { anchor: plate.anchor } : {}), ...(plate.nocarve ? { nocarve: "" } : {}),
+      ...(plate.focusY ? { focusY: plate.focusY } : {}), ...(plate.anchor ? { anchor: plate.anchor } : {}), ...(plate.nocarve ? { nocarve: "" } : {}), ...(plate.crop ? { crop: plate.crop } : {}),
     })
     console.log(`  ${origin}/scripts/instinct-bake.html?${query}`)
   }

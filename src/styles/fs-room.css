@@ -1,0 +1,453 @@
+/* The Frequency Shift laser room behind the case study, and the site's glass ------------------------------------------
+   The room is the site's own scene (src/scenes/laser-room, mounted by FrequencyShiftRoom.jsx), fixed behind the whole
+   page: at the top the camera looks at the wall, lit from behind the page's wordmark, and as the page scrolls it turns
+   down to the wet floor. The glass, its light under the cursor and the pulse on the beat are the site's too
+   (~/Documents/FREQUEMCY 2, app/globals.css: "Glass, the buttons' way" and "Light on the glass"). */
+
+.frequency-shift-page.page-wrap {
+  /* the show's two beam colours (show.ts MAGENTA and CYAN) */
+  --laser-pink: #ff1f8f;
+  --laser-cyan: #1ec8ff;
+  /* the room's light, written by the room as it plays (caseStudy.js lightThePage); these hold before it does */
+  --room-sign: .8;
+  --room-lasers: .4;
+  --room-pink: .5;
+  --room-travel: 0;
+  /* the colour of the air right now: pink and cyan in the show's mix */
+  --room-mix: color-mix(in oklab, var(--laser-pink) calc(var(--room-pink) * 100%), var(--laser-cyan));
+  /* one bar at the show's 124 BPM */
+  --room-bar-time: 1935ms;
+
+  /* the glass: dark smoked glass with a pink sheen from above and a cyan one from below, a rim that runs from pink to
+     cyan, and a soft glow in both. Painted, so it costs the room nothing. */
+  --glass-rim: linear-gradient(135deg, #ffa8db, rgba(255, 190, 230, .32) 30%, rgba(170, 230, 255, .24) 68%, #8fe3ff);
+  --glass-sheen-pink: radial-gradient(110% 80% at 10% -15%, rgba(255, 120, 200, .3), transparent 58%);
+  --glass-sheen-cyan: radial-gradient(90% 70% at 100% 115%, rgba(30, 200, 255, .22), transparent 62%);
+  --glass-base: linear-gradient(180deg, rgba(26, 6, 30, .74), rgba(6, 3, 12, .84));
+  --glass-glow:
+    inset 0 1px 0 rgba(255, 236, 248, .38),
+    inset 0 0 1.6rem rgba(235, 115, 193, .18),
+    inset 0 -.8rem 2rem -1rem rgba(30, 200, 255, .22),
+    0 0 .1rem rgba(255, 220, 242, .6),
+    -.5rem -.4rem 1.6rem -.4rem rgba(255, 31, 143, .42),
+    .5rem .4rem 1.6rem -.4rem rgba(30, 200, 255, .34),
+    0 0 3.5rem rgba(197, 72, 240, .16);
+  /* for photographs, whose pictures would cover a painted rim: a pink edge up and to the left, a cyan one down and to
+     the right, glowing out */
+  --glass-edges:
+    -1px -1px 0 #ffa8db,
+    1px 1px 0 #8fe3ff,
+    -.5rem -.4rem 1.6rem -.4rem rgba(255, 31, 143, .5),
+    .5rem .4rem 1.6rem -.4rem rgba(30, 200, 255, .42);
+  --glass-edges-lit:
+    -1px -1px 0 #ffa8db,
+    1px 1px 0 #8fe3ff,
+    0 0 .15rem #fff,
+    -.5rem -.5rem 2rem -.4rem rgba(255, 31, 143, .75),
+    .5rem .5rem 2rem -.4rem rgba(30, 200, 255, .6),
+    0 0 5rem rgba(197, 72, 240, .3);
+}
+
+/* The stage ---------------------------------------------------------------------------------------------------------- */
+.fs-room-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: #050506;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .6s ease, visibility 0s linear .6s;
+}
+
+.frequency-shift-page:is([data-room="loading"], [data-room="live"]) .fs-room-stage {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .6s ease;
+}
+
+.fs-room-stage .laser-room__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* a veil over the room that deepens once the camera has turned down to the floor, so words further down sit on
+   darker air */
+.fs-room-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 45%, transparent 0 30%, rgba(2, 2, 5, .55) 100%),
+    rgba(2, 2, 5, .18);
+  opacity: clamp(0, var(--room-travel), 1);
+}
+
+/* the page over the room */
+.frequency-shift-page > :not(.fs-room-stage) {
+  position: relative;
+  z-index: 1;
+}
+
+/* With the room, the hero is the room: no photograph, and none of the shading laid over it */
+.frequency-shift-page:not([data-room="still"]) .fs-hero {
+  background: transparent;
+}
+
+.frequency-shift-page:not([data-room="still"]) .fs-hero-shade,
+.frequency-shift-page:not([data-room="still"]) .fs-hero::before,
+.frequency-shift-page:not([data-room="still"]) .fs-hero::after {
+  display: none;
+}
+
+/* the outlined lettering behind the copy belongs to the photograph: in front of the room it would be a flat sheet
+   hung between the room and the words */
+.frequency-shift-page:is([data-room="loading"], [data-room="live"]) .fs-hero-wordmark {
+  display: none;
+}
+
+/* the header over the lit room, as on the site: see-through until the page scrolls */
+body:has(.frequency-shift-page[data-room="live"]) .site-header {
+  border-bottom-color: rgba(235, 115, 193, .1);
+  background: rgba(5, 5, 6, .5);
+}
+
+/* Glass panels: the words sit on smoked glass that the room lights from behind -------------------------------------- */
+.frequency-shift-page :is(.fs-narrative, .fs-room-body, .fs-dj-aside) {
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: 1.4rem;
+  background:
+    var(--glass-sheen-pink) padding-box,
+    var(--glass-sheen-cyan) padding-box,
+    var(--glass-base) padding-box,
+    var(--glass-rim) border-box;
+  box-shadow:
+    var(--glass-glow),
+    0 2.5rem 6rem -1.5rem rgba(0, 0, 0, .85);
+}
+
+.frequency-shift-page :is(.fs-narrative p, .fs-room-body, .fs-dj-aside p) {
+  color: rgba(255, 244, 250, .84);
+}
+
+/* the panel's edge on the beat: its rim brightens on every beat, and its glow swells out on the bar */
+.frequency-shift-page :is(.fs-narrative, .fs-room-body, .fs-dj-aside)::after {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--room-mix) 37%, transparent),
+    0 0 3.5rem color-mix(in srgb, var(--room-mix) 28%, transparent);
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+}
+
+.frequency-shift-page.room-live :is(.fs-narrative, .fs-room-body, .fs-dj-aside)::after {
+  animation: fs-beat-pulse var(--room-bar-time) linear infinite;
+}
+
+/* Photographs and the browser stand in the room with the glass's edges; hovering one lights it the way the site's
+   main button lights */
+.frequency-shift-page :is(.fs-campaign-media, .fs-related-image) {
+  border: 1px solid rgba(255, 220, 240, .16);
+  box-shadow:
+    var(--glass-edges),
+    0 3rem 6rem -2rem rgba(0, 0, 0, .9);
+}
+
+/* The live site's homepage stands on the wet floor like the site's poster: its edges taking the room's light, its
+   reflection running away below it */
+.frequency-shift-page .fs-web-browser {
+  border: 1px solid rgba(255, 220, 240, .16);
+  box-shadow:
+    var(--glass-edges),
+    0 0 1.2rem color-mix(in srgb, var(--room-mix) calc(30% + 30% * var(--room-lasers)), transparent),
+    0 3rem 6rem -2rem rgba(0, 0, 0, .9);
+  -webkit-box-reflect: below 1.4rem linear-gradient(transparent 62%, rgba(255, 255, 255, .2));
+}
+
+/* the call-to-action buttons: the glass in its own shape */
+.frequency-shift-page .fs-cta {
+  position: relative;
+  min-height: 3.25rem;
+  padding: 0 1.4rem 0 1.55rem;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid transparent;
+  border-radius: 1.15rem;
+  background:
+    var(--glass-sheen-pink) padding-box,
+    var(--glass-sheen-cyan) padding-box,
+    linear-gradient(180deg, rgba(14, 5, 18, .82), rgba(5, 3, 10, .88)) padding-box,
+    var(--glass-rim) border-box;
+  box-shadow:
+    var(--glass-glow),
+    0 1rem 2.5rem -.75rem rgba(0, 0, 0, .95);
+  color: #fff8fd;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.frequency-shift-page .fs-cta {
+  white-space: nowrap;
+}
+
+.frequency-shift-page .fs-closing-links {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.frequency-shift-page .fs-cta > span:first-child {
+  padding: 0;
+  background: none;
+}
+
+.frequency-shift-page .fs-cta .arrow-swap {
+  color: #ffa8db;
+}
+
+@media (hover: hover) {
+  .frequency-shift-page :is(.fs-campaign-card:hover, .fs-campaign-card:focus-visible) .fs-campaign-media,
+  .frequency-shift-page :is(.fs-related-card:hover, .fs-related-card:focus-visible) .fs-related-image {
+    border-color: #ffd9f1;
+    box-shadow:
+      var(--glass-edges-lit),
+      0 3rem 6rem -2rem rgba(0, 0, 0, .9);
+  }
+
+  .frequency-shift-page .fs-cta:is(:hover, :focus-visible) {
+    background:
+      var(--glass-sheen-pink) padding-box,
+      var(--glass-sheen-cyan) padding-box,
+      linear-gradient(180deg, rgba(17, 6, 15, .9), rgba(6, 3, 12, .92)) padding-box,
+      var(--glass-rim) border-box;
+    box-shadow:
+      var(--glass-glow),
+      var(--glass-edges-lit);
+    color: #fff8fd;
+    text-shadow:
+      0 0 .1rem rgba(255, 255, 255, .7),
+      0 0 .5rem rgba(235, 115, 193, .55);
+    transform: translateY(-1px);
+  }
+}
+
+/* The beat, one bar (four beats) to a loop: each hit lands at once and dies away as the scene's own does, the bar's
+   first beat the larger. Opacity only, so a pulse costs no drawing. */
+@keyframes fs-beat-pulse {
+  0% { opacity: 1; }
+  2% { opacity: .77; }
+  5% { opacity: .534; }
+  10% { opacity: .308; }
+  16% { opacity: .171; }
+  24.99% { opacity: .074; }
+  25% { opacity: .524; }
+  27% { opacity: .365; }
+  30% { opacity: .215; }
+  35% { opacity: .094; }
+  41% { opacity: .039; }
+  49.99% { opacity: .01; }
+  50% { opacity: .46; }
+  52% { opacity: .31; }
+  55% { opacity: .172; }
+  60% { opacity: .065; }
+  66% { opacity: .021; }
+  74.99% { opacity: 0; }
+  75% { opacity: .451; }
+  77% { opacity: .303; }
+  80% { opacity: .166; }
+  85% { opacity: .062; }
+  91% { opacity: .019; }
+  99.99% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Light on the glass --------------------------------------------------------------------------------------------------
+   The cursor is a small light held over the glass (src/components/fsGlassLight.js places it on every pane within
+   reach). On the face: a pool, a hot core, colour fringes turned toward the light, a second image off the back face.
+   Through the slab: the light fans out pink to cyan toward the far side and leaves as a glow on the far edge. On the
+   bevel nearest the light: a crisp bright line, glowing out past the edge and in across the glass, its colours parted
+   along it. Every piece is drawn once at a fixed size and only moved, turned, stretched and faded, so the light never
+   repaints a pane. */
+.frequency-shift-page .glint-host {
+  position: relative;
+}
+
+.frequency-shift-page .glint {
+  --glint-out: 26px;
+  position: absolute;
+  inset: calc(-1 * var(--glint-out));
+  z-index: 3;
+  border-radius: inherit;
+  contain: strict;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 480ms ease, visibility 0s linear 480ms;
+}
+
+.frequency-shift-page .glint.is-lit {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 200ms ease, visibility 0s;
+}
+
+/* the pane's own shape (the glint reaches past it on every side) */
+.frequency-shift-page :is(.glint__face, .glint__inner, .glint__bevel) {
+  position: absolute;
+  inset: var(--glint-out);
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+/* the bevel: a crisp line one and a half pixels wide round the edge */
+.frequency-shift-page .glint__bevel {
+  padding: 2px;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+/* just inside the edge, fading in across the glass, and just outside it, fading out into the room: soft bands drawn
+   to the pane's own shape, corners and all (the script draws each pane's two masks once, from its size and radius) */
+.frequency-shift-page :is(.glint__inner, .glint__outer) {
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+.frequency-shift-page .glint__outer {
+  position: absolute;
+  inset: 0;
+}
+
+/* each piece is centred on its own origin; the script moves it there */
+.frequency-shift-page .glint i {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: var(--size);
+  height: var(--size);
+  margin: calc(var(--size) / -2) 0 0 calc(var(--size) / -2);
+  opacity: 0;
+}
+
+.frequency-shift-page .glint.is-lit i {
+  will-change: transform, opacity;
+}
+
+/* on the face */
+.frequency-shift-page .glint__pool {
+  --size: 28rem;
+  background: radial-gradient(closest-side, rgba(255, 150, 215, .38), color-mix(in srgb, var(--room-mix) 16%, transparent) 40%, transparent);
+}
+
+/* the core: wide and soft, no blunt hot spot, easing out like real glow */
+.frequency-shift-page .glint__core {
+  --size: 11rem;
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 246, 252, .5),
+    rgba(255, 236, 248, .38) 12%,
+    rgba(255, 222, 242, .22) 30%,
+    rgba(255, 208, 236, .1) 55%,
+    rgba(255, 200, 232, .03) 80%,
+    transparent
+  );
+}
+
+/* the core's colours parted by the glass, along the line from the middle of the pane to the light: pink on the far
+   side of the core, cyan on the near */
+.frequency-shift-page .glint__fringe {
+  --size: 13rem;
+  background:
+    radial-gradient(closest-side at 58% 50%, rgba(255, 50, 165, .36), rgba(255, 50, 165, .14) 45%, rgba(255, 50, 165, .04) 75%, transparent),
+    radial-gradient(closest-side at 42% 50%, rgba(40, 200, 255, .32), rgba(40, 200, 255, .12) 45%, rgba(40, 200, 255, .03) 75%, transparent);
+}
+
+.frequency-shift-page .glint__ghost {
+  --size: 3.4rem;
+  background: radial-gradient(closest-side, rgba(215, 243, 255, .3), rgba(215, 243, 255, .08) 55%, transparent);
+}
+
+/* through the slab: a fan of light from the core to the far side, its colours spreading apart as it goes; drawn
+   420px long and stretched to fit */
+.frequency-shift-page .glint .glint__fan {
+  width: 420px;
+  height: 260px;
+  margin: -130px 0 0;
+  transform-origin: 0 50%;
+  background: conic-gradient(
+    from 68deg at 0% 50%,
+    rgba(255, 50, 165, 0) 0deg,
+    rgba(255, 50, 165, .12) 7deg,
+    rgba(255, 50, 165, .26) 15deg,
+    rgba(255, 232, 246, .22) 22deg,
+    rgba(40, 200, 255, .26) 29deg,
+    rgba(40, 200, 255, .12) 37deg,
+    rgba(40, 200, 255, 0) 44deg,
+    transparent 44deg
+  );
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 16%, rgba(0, 0, 0, .6) 50%, rgba(0, 0, 0, .22) 85%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 16%, rgba(0, 0, 0, .6) 50%, rgba(0, 0, 0, .22) 85%, transparent);
+}
+
+/* the near bevel, turned with the light: pink leads one way along the edge and cyan the other, round a white-hot
+   middle */
+.frequency-shift-page .glint__edge-near {
+  --size: 26rem;
+  background:
+    radial-gradient(closest-side, #fff, rgba(255, 240, 249, .95) 22%, rgba(255, 236, 247, .3) 45%, rgba(255, 236, 247, 0) 62%),
+    radial-gradient(closest-side at 50% 40%, #ff3ca8, rgba(255, 60, 168, .7) 45%, transparent),
+    radial-gradient(closest-side at 50% 60%, #36ccff, rgba(54, 204, 255, .65) 45%, transparent);
+}
+
+.frequency-shift-page .glint__inner-near {
+  --size: 22rem;
+  background:
+    radial-gradient(closest-side, rgba(255, 235, 247, .85), rgba(255, 235, 247, 0) 40%),
+    radial-gradient(closest-side at 50% 42%, rgba(255, 60, 168, .7), rgba(255, 60, 168, .2) 50%, transparent),
+    radial-gradient(closest-side at 50% 58%, rgba(54, 204, 255, .6), rgba(54, 204, 255, .16) 50%, transparent);
+}
+
+.frequency-shift-page .glint__outer-near {
+  --size: 20rem;
+  background:
+    radial-gradient(closest-side, rgba(255, 200, 235, .7), rgba(255, 200, 235, 0) 40%),
+    radial-gradient(closest-side at 50% 40%, rgba(255, 40, 160, .65), transparent),
+    radial-gradient(closest-side at 50% 60%, rgba(40, 200, 255, .45), transparent);
+}
+
+/* the far bevel, where the light that crossed the slab comes out */
+.frequency-shift-page .glint__edge-far {
+  --size: 18rem;
+  background: radial-gradient(closest-side, #e9fbff, #7fe0ff 25%, rgba(54, 204, 255, .35) 60%, transparent);
+}
+
+.frequency-shift-page .glint__inner-far {
+  --size: 16rem;
+  background: radial-gradient(closest-side, rgba(127, 224, 255, .6), rgba(127, 224, 255, .15) 55%, transparent);
+}
+
+.frequency-shift-page .glint__outer-far {
+  --size: 11rem;
+  background: radial-gradient(closest-side, rgba(54, 204, 255, .5), rgba(54, 204, 255, .1) 55%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frequency-shift-page .glint,
+  .frequency-shift-page .glint.is-lit {
+    transition: none;
+  }
+}

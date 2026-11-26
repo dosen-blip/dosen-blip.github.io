@@ -12,6 +12,7 @@
     "capture:interactions": "node scripts/capture-interactions.mjs",
     "vendor:assets": "node scripts/vendor-assets.mjs",
     "bake:instinct": "node scripts/bake-instinct-plates.mjs",
+    "bake:fs": "node scripts/bake-fs-plates.mjs",
     "build": "vite build && vite build --ssr src/entry-server.jsx --outDir .prerender && node scripts/prerender.mjs",
     "serve": "node scripts/serve-dist.mjs",
     "crawl": "node scripts/crawl-dist.mjs",

@@ -1,0 +1,279 @@
+/* The curved row of films on the Frequency Shift page. It runs edge to edge, so it steps out of the section's padding. */
+.fs-reel {
+  --fs-reel-height: min(clamp(300px, 46vw, 720px), 78svh);
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+}
+
+.fs-reel-stage {
+  position: relative;
+  height: var(--fs-reel-height);
+  overflow: hidden;
+}
+
+/* The curve's ends fade into the page. */
+.fs-reel-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: pan-y;
+  animation: fs-reel-appear .7s ease-out;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+@keyframes fs-reel-appear {
+  from { opacity: 0; }
+}
+
+/* The videos feed the row's textures. iOS suspends one that's out of the page, so they stay in it, too small to see. */
+.fs-reel-sources {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: .01;
+  pointer-events: none;
+}
+
+.fs-reel-sources video {
+  display: block;
+  width: 1px;
+  height: 1px;
+}
+
+/* Still row: the posters at one height, each its own shape. */
+.fs-reel-row {
+  height: 100%;
+  padding-inline: clamp(24px, 5.2vw, 76px);
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 20px);
+}
+
+.fs-reel-tile {
+  flex: var(--fs-reel-ratio-value, 1) 1 0;
+  min-width: 0;
+  aspect-ratio: var(--fs-reel-ratio);
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(244, 94, 184, .36);
+  background: #020202;
+  cursor: pointer;
+  transition: border-color .35s ease, box-shadow .45s ease;
+}
+
+.fs-reel-tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fs-reel-tile:focus-visible {
+  border-color: rgba(255, 22, 143, .82);
+  box-shadow: 0 0 0 1px rgba(255, 22, 143, .14), 0 0 30px rgba(244, 94, 184, .24);
+}
+
+@media (hover: hover) {
+  .fs-reel-tile:hover {
+    border-color: rgba(255, 22, 143, .82);
+    box-shadow: 0 0 0 1px rgba(255, 22, 143, .14), 0 0 30px rgba(244, 94, 184, .24);
+  }
+}
+
+/* Live row: the posters give way to the canvas and stay on as the keyboard route, which the row itself answers. */
+.fs-reel[data-mode="live"] .fs-reel-row {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.fs-reel[data-mode="live"] .fs-reel-tile {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  flex: none;
+  opacity: 0;
+}
+
+.fs-reel-caption {
+  margin-top: clamp(14px, 1.6vw, 24px);
+  padding-inline: clamp(24px, 5.2vw, 76px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.fs-reel-caption-film {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.fs-reel-caption-film h3 {
+  margin: 0;
+  color: var(--fs-ink);
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.12;
+}
+
+.fs-reel-caption-film p {
+  margin: 8px 0 0;
+  color: var(--fs-pink);
+  font-size: 10px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.frequency-shift-page .fs-reel-hint {
+  flex: none;
+  margin: 0;
+  color: var(--fs-soft);
+  font-size: 10px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+/* The expanded player. A modal dialog is above everything, the dark-mode LED cursor included, so it has the system's. */
+.fs-reel-player {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: clamp(16px, 3vw, 40px);
+  border: 0;
+  background: rgba(5, 5, 5, .97);
+  color: var(--fs-ink);
+  overflow: auto;
+}
+
+.fs-reel-player[open] {
+  display: grid;
+  place-items: center;
+}
+
+.fs-reel-player,
+.fs-reel-player * {
+  cursor: auto !important;
+}
+
+.fs-reel-player button,
+.fs-reel-player a {
+  cursor: pointer !important;
+}
+
+.fs-reel-player::backdrop {
+  background: transparent;
+}
+
+.fs-reel-player-body {
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+}
+
+.fs-reel-frame {
+  --fs-reel-player-height: calc(100dvh - 2 * clamp(16px, 3vw, 40px) - 96px);
+  position: relative;
+  width: min(100%, calc(var(--fs-reel-player-height) * var(--fs-reel-ratio-value, 1.7778)));
+  aspect-ratio: var(--fs-reel-ratio);
+  max-height: var(--fs-reel-player-height);
+  overflow: hidden;
+  border: 1px solid rgba(255, 22, 143, .82);
+  background: #020202 center / cover no-repeat;
+  box-shadow: 0 0 0 1px rgba(255, 22, 143, .14), 0 0 30px rgba(244, 94, 184, .24);
+}
+
+.fs-reel-frame video,
+.fs-reel-frame-still {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fs-reel-frame-still {
+  pointer-events: none;
+}
+
+.fs-reel-frame[data-started] .fs-reel-frame-still {
+  display: none;
+}
+
+.fs-reel-player-copy {
+  width: 100%;
+  max-width: 720px;
+  padding-top: 0;
+}
+
+.fs-reel-close {
+  position: fixed;
+  z-index: 1;
+  top: clamp(14px, 2vw, 28px);
+  right: clamp(14px, 2vw, 28px);
+  padding: 10px 14px;
+  border: 1px solid var(--fs-line);
+  background: rgba(5, 5, 5, .72);
+  color: var(--fs-ink);
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  transition: border-color .3s ease, color .3s ease;
+}
+
+.fs-reel-close:hover,
+.fs-reel-close:focus-visible {
+  border-color: var(--fs-pink);
+  color: var(--fs-pink);
+}
+
+@media (max-width: 809.98px) {
+  .fs-reel-row {
+    padding-inline: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .fs-reel-tile {
+    flex: none;
+    height: min(240px, 46vw);
+    scroll-snap-align: center;
+  }
+
+  .fs-reel-caption {
+    padding-inline: 20px;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .fs-reel-caption-film {
+    grid-template-columns: 26px minmax(0, 1fr);
+    gap: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fs-reel-canvas {
+    animation: none;
+  }
+
+  .fs-reel-tile,
+  .fs-reel-close {
+    transition: none;
+  }
+}

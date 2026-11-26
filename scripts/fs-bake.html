@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Frequency Shift plate bake</title>
+  <style>
+    html, body { margin: 0; background: #000; color: #eee; font: 12px/1.4 ui-monospace, Menlo, monospace; }
+    #host { position: fixed; left: 0; top: 0; overflow: hidden; visibility: hidden; }
+    #preview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 8px; }
+    #preview figure { margin: 0; }
+    #preview canvas { width: 100%; height: auto; display: block; }
+  </style>
+</head>
+<body>
+  <!-- Dev-only (npm run bake:fs drives it): renders still plates of the Frequency Shift laser room for the card art
+       (FrequencyShiftCardArt.jsx). Not part of the build. Without ?post it shows every look, sign on, to choose from. -->
+  <div id="host"></div>
+  <div id="preview"></div>
+  <script type="module">
+    import { createLaserRoom } from "/src/scenes/laser-room/scene.ts"
+
+    const params = new URLSearchParams(location.search)
+    const [width, height] = (params.get("size") || "1440x900").split("x").map(Number)
+    const variant = params.get("name") || "card"
+    const t = Number(params.get("t") || 12)
+    const looks = (params.get("looks") || "sheet,fan").split(",")
+    const host = document.getElementById("host")
+    Object.assign(host.style, { width: `${width}px`, height: `${height}px` })
+
+    // The site's home sign: the FS monogram over the wordmark, laid out as the site's own desktop lockup (sign.ts
+    // defaultLayout). The folder sheet is small: the monogram alone, high, where the strip that shows while the sheet
+    // is in the stack catches its light (anchor=x,y,w in plate px).
+    const art = "/scripts/fs-bake/"
+    const lockup = {
+      width: 1000,
+      height: 350 + 40 + 1000 / (1455.54 / 102.77),
+      parts: [
+        { url: `${art}fs-icon-neon.svg`, x: 325, y: 0, w: 350, h: 350 },
+        { url: `${art}frequency-shift-wordmark-neon.svg`, x: 0, y: 390, w: 1000, h: 1000 / (1455.54 / 102.77) },
+      ],
+    }
+    const monogram = { width: 1, height: 1, parts: [{ url: `${art}fs-icon-neon.svg`, x: 0, y: 0, w: 1, h: 1 }] }
+    const box = params.get("anchor")?.split(",").map(Number)
+    // The show. ?order=fan:4,twin:4: a running order (looks and bars); ?lock=tunnel: one look on its own (a lock leaves
+    // out the page's rigs). ?rigs=rain,floor&turn=1: the page's rigs round the room and its full fog bank, which come in
+    // as the camera turns down to the floor, with the camera held on the hero's view (a turn of nothing): as on the
+    // site, the show's own beams thin out to one in four meanwhile. ?fog=0.8: the fog bank at that strength.
+    const order = params.get("order")?.split(",").map((entry) => { const [look, bars] = entry.split(":"); return [look, Number(bars)] })
+    const lockLook = params.get("lock") || undefined
+    const rigs = params.get("rigs")?.split(",")
+    const turn = Number(params.get("turn") || 0)
+    const fog = params.has("fog") ? Number(params.get("fog")) : undefined
+    const look = {
+      ...(order ? { order } : {}),
+      ...(rigs ? { rigs } : {}),
+      ...(turn ? { path: { tilt: 0 } } : {}),
+    }
+    const room = await createLaserRoom(host, {
+      textures: { albedo: "/assets/frequency-shift/laser-room/floor-albedo.webp", surface: "/assets/frequency-shift/laser-room/floor-surface.webp" },
+      layout: params.get("sign") === "monogram" ? monogram : lockup,
+      signKey: variant,
+      anchor: box ? () => ({ x: box[0], y: box[1], w: box[2], h: box[2] }) : undefined,
+      // the page, scrolled `turn` screens down (the camera's path needs one: with none its turn to the floor divides
+      // nothing by nothing)
+      page: () => ({ at: turn, end: 2 }),
+      look,
+      ...(fog !== undefined ? { fog } : {}),
+      still: true,
+    })
+    room.lock(lockLook)
+    window.fsBakeRoom = room
+
+    // the room's frame at the plate's own size (or a video's: ?vsize, drawn from the same framing, smaller)
+    const [outW, outH] = (params.get("vsize") || `${width}x${height}`).split("x").map(Number)
+    const grab = () => {
+      const c = document.createElement("canvas")
+      c.width = outW; c.height = outH
+      const ctx = c.getContext("2d", { willReadFrequently: true })
+      ctx.imageSmoothingQuality = "high"
+      ctx.drawImage(room.canvas, 0, 0, outW, outH)
+      return { c, ctx, data: ctx.getImageData(0, 0, outW, outH) }
+    }
+    // switch layers (each switch draws the frozen frame again)
+    const layers = (on) => Object.entries(on).forEach(([layer, value]) => room.setLayer(layer, value))
+    // ?atmos: the smoke and the fog move with the show, so they go with it, not in the still room
+    const atmos = params.has("atmos")
+    const still = atmos ? { smoke: false, fog: false, lasers: false } : { lasers: false }
+    const moving = atmos ? { smoke: true, fog: true, lasers: true } : { lasers: true }
+    const frameAt = (time, on) => {
+      layers(on)
+      room.freeze(0.001)
+      room.freeze(time)
+      return grab()
+    }
+    // `a` minus `b`: what one source adds to the room, for plus-lighter over it
+    const minus = (a, b) => {
+      const out = new ImageData(outW, outH)
+      for (let i = 0; i < out.data.length; i += 4) {
+        for (let k = 0; k < 3; k++) out.data[i + k] = Math.max(0, a.data.data[i + k] - b.data.data[i + k])
+        out.data[i + 3] = 255
+      }
+      const c = document.createElement("canvas")
+      c.width = outW; c.height = outH
+      c.getContext("2d").putImageData(out, 0, 0)
+      return c
+    }
+    const send = async (canvas, name) => {
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"))
+      await fetch(`${params.get("post")}/${name}.png`, { method: "POST", body: blob, headers: { "Content-Type": "image/png" } })
+    }
+    const caption = (text) => Object.assign(document.createElement("figcaption"), { textContent: text })
+    const show = (canvas, text) => {
+      const fig = document.createElement("figure")
+      fig.append(canvas, caption(text))
+      document.getElementById("preview").append(fig)
+    }
+
+    const receiver = params.get("post")
+    if (receiver && !params.has("keep") && (order || lockLook)) {
+      // ?post with a show: the moving layer, one whole pass of the running order (or of the one look's own cycle) and
+      // ?overlap seconds more, for the receiver to fade the end over the start (the beams repeat exactly; the haze,
+      // smoke and fog they light do not). Each frame is what moves (the lasers; with ?atmos the smoke and fog too) as
+      // it adds to the room. Starts `from` beats into a pass, after the show's opening one.
+      const BPM = 124
+      const beats = order ? order.reduce((sum, [, bars]) => sum + bars * 4, 0) : Number(params.get("beats"))
+      const period = (beats * 60) / BPM
+      const fps = Number(params.get("fps") || 30)
+      const frames = Math.round(period * fps)
+      const overlap = Math.round(fps * Number(params.get("overlap") || 0.5))
+      const start = 1.43 + ((beats + Number(params.get("from") || 0)) * 60) / BPM
+      // the sign stays as it is in both: with ?atmos it lights the smoke, which then moves with the rest
+      layers({ sign: atmos })
+      for (let i = 0; i < frames + overlap; i++) {
+        const time = start + (i * period) / frames
+        layers(moving)
+        room.freeze(time)
+        const on = grab()
+        layers(still)
+        const off = grab()
+        await send(minus(on, off), `${variant}-frame-${String(i).padStart(4, "0")}`)
+        document.title = `frame ${i + 1} of ${frames + overlap}`
+      }
+      document.title = "frames sent"
+    } else if (!receiver && params.has("times")) {
+      // choosing a shot: the whole room, everything on, at each of ?times
+      for (const time of params.get("times").split(",").map(Number)) show(frameAt(time, { sign: true, smoke: true, fog: true, lasers: true }).c, `${time}s`)
+      window.__bakeReady = true
+    } else if (!receiver) {
+      // choosing a look: every look with the sign on
+      for (const name of ["fan", "sheet", "tunnel", "twin", "cross", "scan"]) {
+        room.lock(name)
+        show(frameAt(t, { sign: true, lasers: true }).c, `${name} @ ${t}s`)
+      }
+      window.__bakeReady = true
+    } else {
+      // the still plates. base: the room with the sign off and what moves off. sign: what the sign adds to that.
+      // lit: everything on, as one picture.
+      room.lock(lockLook ?? looks[0])
+      const base = frameAt(t, { sign: false, ...still })
+      const plates = {
+        base: base.c,
+        sign: minus(frameAt(t, { sign: true, ...still }), base),
+        lit: frameAt(t, { sign: true, ...moving }).c,
+      }
+      for (const kind of params.get("keep").split(",")) await send(plates[kind], `${variant}-${kind}`)
+      document.title = "plates sent"
+    }
+  </script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 import { useImperativeHandle, useRef } from "react"
 import { glassLooks } from "../data/glassLooks"
 import { ArtCanvas } from "./glassArt"
+import { useGlassLight } from "./useGlassLight"
 import { useGlassPointer } from "./useGlassPointer"
 import "../styles/glass-folder.css"
 import "../styles/glass-card.css"
@@ -11,7 +12,7 @@ const ART_H = 320
 
 /**
  * A content card made of the same material as the glass folders: their generated art, sheen, frost, tint, cursor
- * highlight, rim and edge glow, with the children on top. The tint is heavier than a folder's so paragraphs stay
+ * highlight, rim and edge glow, plus the LED cursor scattering through it, with the children on top. The tint is heavier than a folder's so paragraphs stay
  * legible; src/styles/glass-card.css has the numbers.
  *
  * Props:
@@ -25,6 +26,7 @@ export default function GlassCard({ as: Root = "div", look = "motion", className
   const rootRef = useRef(null)
   useImperativeHandle(ref, () => rootRef.current, [])
   useGlassPointer(rootRef)
+  useGlassLight(rootRef, ":scope > .gc-layers")
 
   return (
     <Root {...rest} ref={rootRef} className={"gc" + (className ? " " + className : "")} data-look={id} data-tone={tone}>
@@ -33,9 +35,11 @@ export default function GlassCard({ as: Root = "div", look = "motion", className
         <span className="gf-back-sheen" />
         <span className="gc-frost" />
         <span className="gc-tint" />
+        <span className="glass-light" />
         <span className="gf-spec" />
         <span className="gc-glow" />
         <span className="gc-rim" />
+        <span className="gc-rim-light" />
       </span>
       {children}
     </Root>

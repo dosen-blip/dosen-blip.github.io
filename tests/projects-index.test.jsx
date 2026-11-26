@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest"
 import { disciplineIds } from "../src/data/disciplines"
-import { projectIndex, projectsFor } from "../src/data/projectIndex"
+import { render } from "@testing-library/react"
+import { MemoryRouter } from "react-router-dom"
+import { projectIndex, projectsFor, workIndex } from "../src/data/projectIndex"
+import ProjectsPage from "../src/pages/ProjectsPage"
 import { projectSlugs } from "../src/data/routes"
 
 describe("project index", () => {
@@ -11,7 +14,7 @@ describe("project index", () => {
         slug: "frequency-shift",
         title: "Frequency Shift",
         category: "Motion · Web · Events",
-        cover: "/assets/frequency-shift/fs-icon-vector.svg",
+        cover: "/assets/frequency-shift/card/card-lit.webp",
         mediaBackground: "#020102",
         disciplines: ["web", "motion"],
       },
@@ -40,6 +43,17 @@ describe("project index", () => {
       { slug: "beatport-redesign", title: "Beatport Redesign", category: "UI redesign · Algonquin", cover: "/assets/beatport-cover.png", disciplines: ["ux"] },
       { slug: "toldya-tennis", title: "ToldYa - Tennis Application", category: "UX · HintonX", cover: "/assets/toldya-cover.png", disciplines: ["ux"] },
     ])
+  })
+
+  it("leads the Work page with Frequency Shift, Instinct Groove, HintonX and Beatport, then the rest in display order", () => {
+    const leads = ["frequency-shift", "instinct-groove", "video-production", "beatport-redesign"]
+    expect(workIndex.slice(0, 4).map((project) => project.slug)).toEqual(leads)
+    expect(workIndex.slice(4).map((project) => project.slug)).toEqual(projectIndex.map((project) => project.slug).filter((slug) => !leads.includes(slug)))
+
+    const { container } = render(<MemoryRouter><ProjectsPage /></MemoryRouter>)
+    const cards = [...container.querySelectorAll(".work-grid .project-card")].map((card) => card.getAttribute("href"))
+    expect(cards.slice(0, 4)).toEqual(leads.map((slug) => `/projects/${slug}`))
+    expect(cards).toHaveLength(projectIndex.length)
   })
 
   it("covers every project route and only tags known disciplines", () => {

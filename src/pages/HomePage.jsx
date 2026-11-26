@@ -8,6 +8,7 @@ import { HeroLockup } from "../components/HeroLockup"
 import { ProjectCard } from "../components/ProjectCard"
 import { Reveal } from "../components/Reveal"
 import GlassFolder from "../components/GlassFolder"
+import { FrequencyShiftCardArt } from "../components/FrequencyShiftCardArt"
 import { InstinctCardArt } from "../components/InstinctCardArt"
 import { disciplines } from "../data/disciplines"
 import { glassLooks } from "../data/glassLooks"
@@ -32,23 +33,9 @@ function useFolderWidth(min = 240, max = 380) {
   return [ref, width]
 }
 
-/** The Frequency Shift sheet carries the same lit logo as its project card: the crowd behind, the mark in three glowing layers. */
-function FrequencyShiftSheet({ project }) {
-  return (
-    <span className="fs-sheet" aria-hidden="true">
-      <img className="fs-sheet-backdrop" src="/assets/frequency-shift/hero-crowd.webp" alt="" loading="lazy" decoding="async" draggable={false} />
-      <span className="fs-sheet-logo">
-        <img className="fs-sheet-logo-layer fs-sheet-logo-ambient" src={project.cover} alt="" loading="lazy" decoding="async" draggable={false} />
-        <img className="fs-sheet-logo-layer fs-sheet-logo-bloom" src={project.cover} alt="" loading="lazy" decoding="async" draggable={false} />
-        <img className="fs-sheet-logo-layer fs-sheet-logo-core" src={project.cover} alt="" loading="lazy" decoding="async" draggable={false} />
-      </span>
-    </span>
-  )
-}
-
-/** Sheets that carry their project's own lit art rather than a cover image. */
+/** Sheets that carry their project's own lit art rather than a cover image: windows into each site's own scene. */
 const sheetMedia = {
-  "frequency-shift": (project) => <FrequencyShiftSheet project={project} />,
+  "frequency-shift": () => <FrequencyShiftCardArt variant="sheet" />,
   "instinct-groove": () => <InstinctCardArt variant="sheet" />,
 }
 

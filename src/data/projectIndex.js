@@ -12,7 +12,7 @@ export const projectIndex = [
     slug: "frequency-shift",
     title: "Frequency Shift",
     category: "Motion · Web · Events",
-    cover: "/assets/frequency-shift/fs-icon-vector.svg",
+    cover: "/assets/frequency-shift/card/card-lit.webp",
     mediaBackground: "#020102",
     disciplines: ["web", "motion"],
   },
@@ -89,3 +89,11 @@ export const projectDisciplines = Object.fromEntries(projectIndex.map((project) 
 export function projectsFor(disciplineId) {
   return projectIndex.filter((project) => project.disciplines.includes(disciplineId))
 }
+
+/** The Work page leads with these, in this order; everything else follows in display order. The folders and the
+ * discipline pages keep display order. */
+const WORK_LEADS = ["frequency-shift", "instinct-groove", "video-production", "beatport-redesign"]
+export const workIndex = [
+  ...WORK_LEADS.map((slug) => projectIndex.find((project) => project.slug === slug)),
+  ...projectIndex.filter((project) => !WORK_LEADS.includes(project.slug)),
+]

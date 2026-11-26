@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import { ProjectCard } from "../components/ProjectCard"
 import { Reveal } from "../components/Reveal"
 import { disciplines } from "../data/disciplines"
-import { projectIndex, projectsFor } from "../data/projectIndex"
+import { projectIndex, projectsFor, workIndex } from "../data/projectIndex"
 import "../styles/work.css"
 
 export default function ProjectsPage() {
@@ -23,7 +23,7 @@ export default function ProjectsPage() {
       </Reveal>
 
       <Reveal className="project-grid work-grid">
-        {projectIndex.map((project) => <ProjectCard key={project.slug} project={project} headingLevel={2} />)}
+        {workIndex.map((project) => <ProjectCard key={project.slug} project={project} headingLevel={2} />)}
       </Reveal>
 
       <p className="work-note">

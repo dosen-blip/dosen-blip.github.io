@@ -92,8 +92,8 @@
     inset 0 0 6px 1.3px rgb(var(--neon-rgb, 56 109 255) / calc(var(--neon-on, 0) * .9)),
     inset 0 0 16px 9px rgb(var(--neon-rgb, 56 109 255) / calc(.3 + var(--neon-on, 0) * .6));
   transition: opacity .5s var(--gf-ease);
-  -webkit-mask-image: radial-gradient(300px 240px at calc(50% + var(--gf-px) * 42%) calc(50% + var(--gf-py) * 42%), #000 0%, rgb(0 0 0 / .45) 72%);
-  mask-image: radial-gradient(300px 240px at calc(50% + var(--gf-px) * 42%) calc(50% + var(--gf-py) * 42%), #000 0%, rgb(0 0 0 / .45) 72%);
+  -webkit-mask-image: radial-gradient(300px 240px at var(--gl-mx, calc(50% + var(--gf-px) * 42%)) var(--gl-my, calc(50% + var(--gf-py) * 42%)), #000 0%, rgb(0 0 0 / .45) 72%);
+  mask-image: radial-gradient(300px 240px at var(--gl-mx, calc(50% + var(--gf-px) * 42%)) var(--gl-my, calc(50% + var(--gf-py) * 42%)), #000 0%, rgb(0 0 0 / .45) 72%);
 }
 .gc:is(:hover, :focus-within) .gc-glow { opacity: 1; animation: gf-strike .45s linear; }
 

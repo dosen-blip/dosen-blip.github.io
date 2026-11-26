@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from "react"
 import { ArtCanvas } from "./glassArt"
 import { fanSlot, hashString, rng } from "./glassFolderArt"
+import { useGlassLight } from "./useGlassLight"
 import { useGlassPointer } from "./useGlassPointer"
 import "../styles/glass-folder.css"
 
@@ -149,6 +150,7 @@ export default function GlassFolder({
   }, [appear, appearDelay])
 
   useGlassPointer(rootRef)
+  useGlassLight(rootRef, ".gf-back, .gf-front", bump)
 
   // ---- closed files are out of the tab order ------------------------------
   useEffect(() => {
@@ -226,6 +228,7 @@ export default function GlassFolder({
               <ArtCanvas className="gf-art" art={art} seed={seed} w={W + 24} h={H + 24} density={density} priority={0} />
             ) : null}
             <div className="gf-back-sheen" />
+            <div className="glass-light" />
             <svg className="gf-rim gf-glow gf-back-glow" viewBox={"0 0 " + W + " " + H} aria-hidden="true">
               <path className="gf-glow-soft" d={BACK_PATH} />
               <path className="gf-glow-core" d={BACK_PATH} />
@@ -242,6 +245,7 @@ export default function GlassFolder({
             style={{ clipPath: "path('" + FRONT_PATH + "')" }}
           >
             <div className="gf-tint" aria-hidden="true" />
+            <div className="glass-light" aria-hidden="true" />
             <div className="gf-spec" aria-hidden="true" />
             <svg className="gf-rim gf-glow gf-front-glow" viewBox={"0 0 " + W + " " + FRONT_H} aria-hidden="true">
               <path className="gf-glow-soft" d={FRONT_PATH} />
@@ -256,6 +260,7 @@ export default function GlassFolder({
                 </linearGradient>
               </defs>
               <path d={FRONT_PATH} stroke={"url(#gf-rim-" + uid + ")"} />
+              <path className="gf-rim-light" d={FRONT_PATH} />
             </svg>
             <button
               ref={hitRef}

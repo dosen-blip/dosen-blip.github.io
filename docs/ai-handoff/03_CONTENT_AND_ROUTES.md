@@ -8,7 +8,7 @@
 |---|---|---|
 | `/` | `HomePage.jsx` | Hero, one glass folder per discipline, selected work |
 | `/about` | `AboutPage.jsx` | Intro and portrait, What I do, Experience, Education, Tools and Music cards |
-| `/projects` | `ProjectsPage.jsx` | Work: every project, with discipline filters |
+| `/projects` | `ProjectsPage.jsx` | Work: every project, with discipline filters, led by Frequency Shift, Instinct Groove, HintonX and Beatport Redesign (`workIndex`) |
 | `/web`, `/motion`, `/ux` | `DisciplinePage.jsx` | Building title and intro on a glass pane, the discipline's projects, an extra (Live sites, Selected films, Process), next-discipline links |
 | `/stack` | `StackPage.jsx` | Tools: 13 cards in AI Systems & Agents, Design & Development, Creative Production. Linked from About and the footer, not the header |
 | `/contact` | `ContactPage.jsx` | Form and details |

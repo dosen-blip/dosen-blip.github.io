@@ -1,0 +1,109 @@
+/* The cursor's LED lighting the glass from inside, driven by src/components/useGlassLight.js. A white core stays on the
+   dot and scatters out through paler blue into the deep blue of --neon-rgb, each band a little later than the one before.
+   The tint thins around the light so the frosted art shows through, a dodge lights up the art's own structure, and the
+   rim catches whatever reaches it. Everything is multiplied by --neon-on, so the light theme, which has no LED, is unchanged.
+
+   Text stays on top of all of this. Against the --body grey it would reach 4.5:1 only about 100px from the LED, so a
+   lit card's text goes white, which brings that in to about 50px: the core, right under the pointer. */
+
+:is(.gc[data-tone="dark"], [data-theme="dark"] .gc[data-tone="auto"]):hover {
+  --body: #fff;
+  --soft: #fff;
+}
+
+.glass-light {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--neon-on, 0);
+}
+
+.glass-light::before,
+.glass-light::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+/* Into the material: brightens what's already there, so the art's own shapes light up rather than a flat blue wash. */
+.glass-light::before {
+  mix-blend-mode: color-dodge;
+  background: radial-gradient(
+    circle calc(300px + var(--gl-spread, 0) * 130px) at var(--gl-mx, 50%) var(--gl-my, 50%),
+    rgb(var(--neon-rgb, 56 109 255) / calc(var(--gl-lit, 0) * (.4 + var(--gl-surge, 0) * .34))) 0%,
+    rgb(var(--neon-rgb, 56 109 255) / calc(var(--gl-lit, 0) * .2)) 34%,
+    rgb(var(--neon-rgb, 56 109 255) / calc(var(--gl-lit, 0) * .07)) 68%,
+    transparent 100%
+  );
+}
+
+/* The light itself. A fast-moving LED smears wider and dimmer; at rest it gathers round the dot. */
+.glass-light::after {
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(
+      circle calc(46px + var(--gl-spread, 0) * 18px) at var(--gl-x, 50%) var(--gl-y, 50%),
+      rgb(240 245 255 / calc(var(--gl-lit, 0) * (.46 - var(--gl-spread, 0) * .18))) 0%,
+      rgb(176 200 255 / calc(var(--gl-lit, 0) * .16)) 30%,
+      rgb(var(--neon-rgb, 56 109 255) / calc(var(--gl-lit, 0) * .06)) 62%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle calc(190px + var(--gl-spread, 0) * 70px) at var(--gl-mx, 50%) var(--gl-my, 50%),
+      rgb(var(--neon-rgb, 56 109 255) / calc(var(--gl-lit, 0) * (.24 - var(--gl-spread, 0) * .08))) 0%,
+      rgb(var(--neon-rgb, 56 109 255) / calc(var(--gl-lit, 0) * .13)) 38%,
+      rgb(var(--neon-rgb, 56 109 255) / calc(var(--gl-lit, 0) * .05)) 72%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle calc(460px + var(--gl-spread, 0) * 170px + var(--gl-surge, 0) * 120px) at var(--gl-fx, 50%) var(--gl-fy, 50%),
+      rgb(var(--neon-rgb, 56 109 255) / calc(var(--gl-lit, 0) * (.13 + var(--gl-surge, 0) * .22))) 0%,
+      rgb(var(--neon-rgb, 56 109 255) / calc(var(--gl-lit, 0) * (.06 + var(--gl-surge, 0) * .1))) 48%,
+      transparent 100%
+    );
+}
+
+/* The tint thins around the light, which is what lets it look like it's inside the glass and not on top of it. */
+.gc-tint,
+.gf-tint {
+  -webkit-mask-image: radial-gradient(
+    circle calc(250px + var(--gl-spread, 0) * 80px) at var(--gl-mx, 50%) var(--gl-my, 50%),
+    rgb(0 0 0 / calc(1 - var(--gl-lit, 0) * var(--neon-on, 0) * .24)) 0%,
+    rgb(0 0 0 / calc(1 - var(--gl-lit, 0) * var(--neon-on, 0) * .12)) 46%,
+    #000 100%
+  );
+  mask-image: radial-gradient(
+    circle calc(250px + var(--gl-spread, 0) * 80px) at var(--gl-mx, 50%) var(--gl-my, 50%),
+    rgb(0 0 0 / calc(1 - var(--gl-lit, 0) * var(--neon-on, 0) * .24)) 0%,
+    rgb(0 0 0 / calc(1 - var(--gl-lit, 0) * var(--neon-on, 0) * .12)) 46%,
+    #000 100%
+  );
+}
+
+/* The rim catches the light travelling through the glass, including when the LED is just outside it. */
+.gc-layers > .gc-rim-light {
+  padding: 1.4px;
+  opacity: var(--neon-on, 0);
+  background: radial-gradient(
+    circle calc(280px + var(--gl-surge, 0) * 200px) at var(--gl-mx, 50%) var(--gl-my, 50%),
+    rgb(255 255 255 / calc(var(--gl-lit, 0) * .95)) 0%,
+    rgb(190 208 255 / calc(var(--gl-lit, 0) * .7)) 26%,
+    rgb(var(--neon-rgb, 56 109 255) / calc(var(--gl-lit, 0) * .5)) 58%,
+    transparent 100%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+
+/* The folder's rim is its panel's path, so the same light is a mask on a stroke of that path. */
+.gf-rim-light {
+  stroke: rgb(205 220 255);
+  stroke-width: 2.8;
+  opacity: calc(var(--gl-lit, 0) * var(--neon-on, 0));
+  -webkit-mask-image: radial-gradient(circle calc(240px + var(--gl-surge, 0) * 200px) at var(--gl-mx, 50%) var(--gl-my, 50%), #000 0%, rgb(0 0 0 / .5) 40%, transparent 100%);
+  mask-image: radial-gradient(circle calc(240px + var(--gl-surge, 0) * 200px) at var(--gl-mx, 50%) var(--gl-my, 50%), #000 0%, rgb(0 0 0 / .5) 40%, transparent 100%);
+}

@@ -2,9 +2,18 @@ import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import { ArrowLink } from "./ArrowLink"
 import { CinematicReveal } from "./CinematicReveal"
+import { FilmReel } from "./FilmReel"
+import { FrequencyShiftRoom } from "./FrequencyShiftRoom"
+import { installGlassLight } from "./fsGlassLight"
 import { ArrowLeftIcon, ArrowUpRightIcon } from "./Icons"
 import { getProject } from "../data/projects"
 import "../styles/frequency-shift.css"
+import "../styles/fs-room.css"
+
+const WORDMARK = "/assets/frequency-shift/mobile-fs-wordmark.svg"
+
+// The glass the cursor lights, as on the Frequency Shift site: the panels, the photographs, the browser and the buttons.
+const GLASS = ".fs-narrative, .fs-room-body, .fs-dj-aside, .fs-campaign-media, .fs-web-browser, .fs-related-image, .fs-cta"
 
 function ExternalSource({ href, children, className = "" }) {
   return (
@@ -32,8 +41,7 @@ function Narrative({ paragraphs }) {
   )
 }
 
-function FrequencyShiftHeroWordmark({ src }) {
-  const lockupRef = useRef(null)
+function FrequencyShiftHeroWordmark({ src, lockupRef }) {
   const overlayRef = useRef(null)
   const activeTimers = useRef(new Set())
   const lastStrike = useRef(new WeakMap())
@@ -175,7 +183,7 @@ function FrequencyShiftHeroWordmark({ src }) {
       timers.forEach(window.clearTimeout)
       timers.clear()
     }
-  }, [src])
+  }, [src, lockupRef])
 
   const asset = (
     <img className="fs-hero-neon-asset" src={src} alt="" width="930" height="212" aria-hidden="true" />
@@ -197,54 +205,6 @@ function FrequencyShiftHeroWordmark({ src }) {
   )
 }
 
-function MotionCard({ item }) {
-  const [failed, setFailed] = useState(false)
-  const cardClassName = `fs-motion-card${item.featured ? " fs-motion-card-featured" : ""}`
-  const mediaStyle = item.aspectRatio ? { "--fs-motion-ratio": item.aspectRatio } : undefined
-
-  return (
-    <article className={cardClassName}>
-      <div className="fs-motion-media" style={mediaStyle}>
-        {failed ? (
-          <div className="fs-motion-error" role="status">
-            <img
-              src={item.poster}
-              alt=""
-              width={item.featured ? "1920" : "720"}
-              height={item.featured ? "1080" : "1280"}
-              loading="lazy"
-              decoding="async"
-            />
-            <div>
-              <p>This browser could not play the original master.</p>
-              <ExternalSource href={item.fallbackUrl}>View event archive</ExternalSource>
-            </div>
-          </div>
-        ) : (
-          <video
-            className="fs-motion-video"
-            src={item.src}
-            poster={item.poster}
-            controls
-            playsInline
-            preload="none"
-            aria-label={`${item.title} video`}
-            onError={() => setFailed(true)}
-          />
-        )}
-      </div>
-      <div className="fs-motion-copy">
-        <span className="fs-motion-number">{item.number}</span>
-        <div>
-          <h3>{item.title}</h3>
-          <p>{item.venue}</p>
-          <span>{item.description}</span>
-        </div>
-      </div>
-    </article>
-  )
-}
-
 function BrowserFrame({ src, alt, label, url, className = "" }) {
   return (
     <figure className={`fs-web-browser ${className}`.trim()}>
@@ -262,23 +222,33 @@ export function FrequencyShiftDetail({ project }) {
   const { content } = project
   const related = project.relatedSlugs.map(getProject).filter(Boolean)
   const liveLabel = project.liveUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")
-  const landscapeFilms = content.motion.slots.filter((item) => item.featured)
-  const verticalFilms = content.motion.slots.filter((item) => !item.featured)
+  const pageRef = useRef(null)
+  const wordmarkRef = useRef(null)
+  // "pending" until the page knows whether the room can run, then "loading", "live", or "still" (the photograph)
+  const [room, setRoom] = useState("pending")
+
+  useEffect(() => installGlassLight(pageRef.current, GLASS), [])
 
   return (
-    <article className="frequency-shift-page page-wrap">
+    <article ref={pageRef} className="frequency-shift-page page-wrap" data-room={room}>
+      {/* The Frequency Shift site's laser room, fixed behind the whole page and lit from behind the wordmark. */}
+      <FrequencyShiftRoom pageRef={pageRef} wordmarkRef={wordmarkRef} artwork={WORDMARK} onMode={setRoom} />
       <header className="fs-hero">
-        <img
-          className="fs-hero-image"
-          src={content.hero.image}
-          alt=""
-          width="2400"
-          height="1600"
-          loading="eager"
-          decoding="async"
-          fetchPriority="high"
-        />
-        <div className="fs-hero-shade" aria-hidden="true" />
+        {room === "still" && (
+          <>
+            <img
+              className="fs-hero-image"
+              src={content.hero.image}
+              alt=""
+              width="2400"
+              height="1600"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+            />
+            <div className="fs-hero-shade" aria-hidden="true" />
+          </>
+        )}
         <div className="fs-hero-topline">
           <Link className="fs-back-link" to="/projects"><ArrowLeftIcon /><span>Back to Work</span></Link>
           <div className="fs-hero-links">
@@ -293,7 +263,7 @@ export function FrequencyShiftDetail({ project }) {
         </div>
         <div className="fs-hero-copy">
           <p className="fs-hero-kicker">{content.hero.kicker}</p>
-          <FrequencyShiftHeroWordmark src="/assets/frequency-shift/mobile-fs-wordmark.svg" />
+          <FrequencyShiftHeroWordmark src={WORDMARK} lockupRef={wordmarkRef} />
           <p className="fs-hero-dek">{content.hero.dek}</p>
         </div>
         <dl className="fs-hero-meta">
@@ -304,18 +274,7 @@ export function FrequencyShiftDetail({ project }) {
       </header>
 
       <CinematicReveal className="fs-section fs-motion" aria-labelledby="fs-motion-title">
-        <div className="fs-motion-films" role="group" aria-label="Selected Frequency Shift video work">
-          <div className="fs-motion-primary">
-            {landscapeFilms.map((item) => <MotionCard key={item.number} item={item} />)}
-          </div>
-          <div className="fs-motion-secondary-heading">
-            <p>Vertical cuts</p>
-            <span>{String(verticalFilms.length).padStart(2, "0")} promos</span>
-          </div>
-          <div className="fs-motion-secondary">
-            {verticalFilms.map((item) => <MotionCard key={item.number} item={item} />)}
-          </div>
-        </div>
+        <FilmReel films={content.motion.slots} label="Selected Frequency Shift video work" />
         <div className="fs-section-intro">
           <SectionHeading eyebrow={content.motion.eyebrow} title={content.motion.title} id="fs-motion-title" />
           <Narrative paragraphs={content.motion.paragraphs} />
@@ -382,7 +341,7 @@ export function FrequencyShiftDetail({ project }) {
         <div className="fs-web-showcase">
           <BrowserFrame
             src={content.web.homeScreenshot}
-            alt="Current Frequency Shift homepage with its neon serif identity and For the love of house statement."
+            alt="The Frequency Shift homepage: the neon FS sign hanging in a 3D laser room, with For the love of house. under it."
             url={liveLabel}
             label="Live homepage / development and ongoing management"
           />

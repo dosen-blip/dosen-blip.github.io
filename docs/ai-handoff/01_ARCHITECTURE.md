@@ -29,7 +29,7 @@ Dependencies: React, React Router, Lenis, Three.js (pinned to 0.170.0, the Insti
 | Project cards and discipline tags, in display order | `src/data/projectIndex.js` |
 | Project records | `src/data/projectRecords/*.js`, gathered in `src/data/projects.js` |
 | Standard project page | `src/components/ProjectDetail.jsx`, `src/styles/detail.css` |
-| Frequency Shift page | `src/components/FrequencyShiftDetail.jsx`, `src/styles/frequency-shift.css` |
+| Frequency Shift page | `src/components/FrequencyShiftDetail.jsx`, `FrequencyShiftRoom.jsx`, `fsGlassLight.js`, `src/scenes/laser-room/`, `src/styles/frequency-shift.css`, `fs-room.css` |
 | Instinct Groove page | `src/components/InstinctDetail.jsx`, `InstinctScene.jsx`, `src/scenes/instinct/`, `src/styles/instinct.css` |
 | Instinct cards and folder sheet | `src/components/InstinctCardArt.jsx`, `src/styles/instinct-card.css` |
 | Card material | `src/components/GlassCard.jsx`, `src/styles/glass-card.css` |
@@ -66,7 +66,7 @@ Colours and type are documented in `docs/brand-system.md`, not here.
 
 A record with `layout: "frequencyShift"` or `layout: "instinct"` holds `content` instead of `blocks` and gets its own component (`ProjectRoute` in `App.jsx`). Everything else goes through `ProjectDetail`.
 
-To add a project, add its slug to `projectSlugs` in `routes.js`, its record to `projects.js` and its card to `projectIndex.js`. Tests check the three agree. The order in `projectIndex.js` is the display order.
+To add a project, add its slug to `projectSlugs` in `routes.js`, its record to `projects.js` and its card to `projectIndex.js`. Tests check the three agree. The order in `projectIndex.js` is the display order (the folders, the discipline pages). The Work page leads with `WORK_LEADS` (Frequency Shift, Instinct Groove, HintonX, Beatport Redesign) and then follows the display order (`workIndex`).
 
 ## Environment
 

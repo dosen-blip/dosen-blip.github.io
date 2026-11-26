@@ -26,9 +26,11 @@ describe("GlassCard", () => {
       "gf-back-sheen",
       "gc-frost",
       "gc-tint",
+      "glass-light",
       "gf-spec",
       "gc-glow",
       "gc-rim",
+      "gc-rim-light",
     ])
     expect(layers.nextElementSibling).toBe(screen.getByText("Inside"))
   })

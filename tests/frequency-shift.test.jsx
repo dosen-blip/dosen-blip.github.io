@@ -2,7 +2,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { MemoryRouter } from "react-router-dom"
-import { afterEach, describe, expect, it } from "vitest"
+import { afterEach, describe, expect, it, vi } from "vitest"
 import { FrequencyShiftDetail } from "../src/components/FrequencyShiftDetail"
 import frequencyShift from "../src/data/projectRecords/frequency-shift"
 import HomePage from "../src/pages/HomePage"
@@ -13,7 +13,7 @@ describe("Frequency Shift project page", () => {
   it("uses one scoped cinematic motion language without the old view-timeline layer", () => {
     const component = fs.readFileSync(path.join(process.cwd(), "src/components/FrequencyShiftDetail.jsx"), "utf8")
     const styles = fs.readFileSync(path.join(process.cwd(), "src/styles/frequency-shift.css"), "utf8")
-    const cardStyles = fs.readFileSync(path.join(process.cwd(), "src/styles/project-card-fs.css"), "utf8")
+    const cardStyles = fs.readFileSync(path.join(process.cwd(), "src/styles/fs-card.css"), "utf8")
     const wordmark = fs.readFileSync(path.join(process.cwd(), "public/assets/frequency-shift/mobile-fs-wordmark.svg"), "utf8")
 
     expect(component).not.toContain('from "./Reveal"')
@@ -22,12 +22,10 @@ describe("Frequency Shift project page", () => {
     expect(styles).not.toContain("fs-hero-breathe")
     expect(styles).toContain("fs-hero-neon-layer-ambient")
     expect(styles).toContain("fs-neon-hover")
-    expect(cardStyles).toContain(".project-card-frequency-shift .project-card-media .frequency-shift-card-logo-layer")
-    expect(cardStyles).toContain("blur(2.2rem) saturate(1.5)")
-    expect(cardStyles).toContain("drop-shadow(0 0 1.8rem rgba(197, 72, 240, .78))")
-    expect(cardStyles).toContain("brightness(1.36)")
-    expect(cardStyles).toContain("drop-shadow(0 0 1.45rem rgba(197, 72, 240, .58))")
-    expect(cardStyles).toContain("frequency-shift-card-tube-flicker 820ms")
+    // the card art is the laser room, baked: the show plays over it and the sign powers on when pointed at
+    expect(cardStyles).toContain(".fsc-art.is-playing video.fsc-show-video")
+    expect(cardStyles).toContain("animation: fsc-power-on 1.1s linear both")
+    expect(cardStyles).toContain("mix-blend-mode: plus-lighter")
     expect(styles).toContain("@keyframes fs-neon-power-core")
     expect(styles).toContain("fs-neon-power-core 1.92s")
     expect(styles).toContain("fs-neon-power-bloom 1.92s")
@@ -74,62 +72,75 @@ describe("Frequency Shift project page", () => {
     expect(container.querySelector(".fs-hero + .fs-section")).toHaveClass("fs-motion")
 
     const motion = sections[0]
-    const films = motion.querySelector(".fs-motion-films")
+    const films = motion.querySelector(".fs-reel")
     expect(films.compareDocumentPosition(motion.querySelector("#fs-motion-title"))).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
     expect(motion).toHaveTextContent("01 / Motion and promotion")
     expect(sections[1]).toHaveTextContent("02 / The role")
     expect(sections[2]).toHaveTextContent("03 / The look")
   })
 
-  it("leads with the two landscape films and demotes the vertical pair beneath them", () => {
-    const { container } = render(
+  it("runs every film through the reel as a silent copy, with a button that opens each one", () => {
+    const { container, getByRole } = render(
       <MemoryRouter><FrequencyShiftDetail project={frequencyShift} /></MemoryRouter>,
     )
 
-    expect(container.querySelectorAll(".fs-motion-card")).toHaveLength(4)
-    expect(container.querySelector(".fs-motion-card")).toHaveClass("fs-motion-card-featured")
-    expect(container.querySelectorAll(".fs-motion-card-pending")).toHaveLength(0)
-
-    const primary = [...container.querySelectorAll(".fs-motion-primary .fs-motion-card")]
-    const secondary = [...container.querySelectorAll(".fs-motion-secondary .fs-motion-card")]
-    expect(primary).toHaveLength(2)
-    expect(secondary).toHaveLength(2)
-    expect(primary.every((card) => card.classList.contains("fs-motion-card-featured"))).toBe(true)
-    expect(secondary.some((card) => card.classList.contains("fs-motion-card-featured"))).toBe(false)
-    expect(primary.map((card) => card.querySelector(".fs-motion-media").style.getPropertyValue("--fs-motion-ratio"))).toEqual(["16 / 9", "16 / 9"])
-    expect(secondary.map((card) => card.querySelector(".fs-motion-media").style.getPropertyValue("--fs-motion-ratio"))).toEqual(["", ""])
-    expect(primary[1].compareDocumentPosition(secondary[0])).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
-    expect(container.querySelector(".fs-motion-secondary-heading")).toHaveTextContent("02 promos")
-
-    const videos = [...container.querySelectorAll("video")]
-    expect(videos).toHaveLength(4)
-    expect(videos.map((video) => video.getAttribute("src"))).toEqual([
-      "/assets/frequency-shift/video/frequency-shift-techno-special-master.mp4",
-      "/assets/frequency-shift/video/frequency-shift-this-friday-promo.mp4",
-      "/assets/frequency-shift/video/frequency-shift-gridwrks-master.mov",
-      "/assets/frequency-shift/video/frequency-shift-solstice-city-at-night-master.mov",
+    expect(container.querySelectorAll(".fs-motion-card")).toHaveLength(0)
+    const sources = [...container.querySelectorAll(".fs-reel-sources video")]
+    expect(sources.map((video) => video.getAttribute("src"))).toEqual([
+      "/assets/frequency-shift/video/reel/techno-special.mp4",
+      "/assets/frequency-shift/video/reel/gridwrks.mp4",
+      "/assets/frequency-shift/video/reel/this-friday.mp4",
+      "/assets/frequency-shift/video/reel/solstice.mp4",
     ])
-    for (const video of videos) {
-      expect(video.controls).toBe(true)
-      expect(video.autoplay).toBe(false)
+    for (const video of sources) {
+      expect(video.muted).toBe(true)
+      expect(video.controls).toBe(false)
       expect(video.playsInline).toBe(true)
       expect(video.getAttribute("preload")).toBe("none")
-      expect(video.getAttribute("poster")).toMatch(/^\/assets\/frequency-shift\/video\/.+-poster\.jpg$/)
     }
-    expect(container).toHaveTextContent("Frequency Shift: Techno Special")
-    expect(container).toHaveTextContent("Frequency Shift at GRIDWRKS")
-    expect(container).toHaveTextContent("Frequency Shift × Solstice")
-    expect(container).toHaveTextContent("City At Night")
-    expect(container).not.toHaveTextContent("frequency-shift-gridwrks-master.mov")
-    expect(container).not.toHaveTextContent("frequency-shift-solstice-city-at-night-master.mov")
-    expect(container).not.toHaveTextContent("frequency-shift-flagship-film.mp4")
-    expect(container).not.toHaveTextContent("Master incoming")
-    expect(container).not.toHaveTextContent("Flagship film")
-    expect(container).not.toHaveTextContent("Next master")
 
-    fireEvent.error(videos[0])
-    expect(container).toHaveTextContent("This browser could not play the original master.")
-    expect(container.querySelector('a[href="https://frequencyshift.ca/events/september-4/"]')).toBeTruthy()
+    // Landscape and vertical alternate, and nothing plays until the live row has started.
+    const shapes = frequencyShift.content.motion.slots.map((film) => film.aspectRatio)
+    expect(shapes).toEqual(["16 / 9", "9 / 16", "16 / 9", "9 / 16"])
+    expect(container.querySelector(".fs-reel")).toHaveAttribute("data-mode", "still")
+    expect(container.querySelectorAll(".fs-reel-tile")).toHaveLength(4)
+    expect(getByRole("button", { name: /Watch Frequency Shift × Solstice, City At Night/ })).toBeTruthy()
+    expect(container).toHaveTextContent("Frequency Shift: Techno Special")
+    expect(container).not.toHaveTextContent("frequency-shift-gridwrks-master.mov")
+  })
+
+  it("expands a film into a player with the master and sound, and falls back to the archive if it can't play", () => {
+    const showModal = vi.fn()
+    HTMLDialogElement.prototype.showModal = showModal
+    HTMLDialogElement.prototype.close = vi.fn()
+    HTMLMediaElement.prototype.play = vi.fn(() => Promise.resolve())
+
+    const { container, getByRole } = render(
+      <MemoryRouter><FrequencyShiftDetail project={frequencyShift} /></MemoryRouter>,
+    )
+    expect(container.querySelector(".fs-reel-player")).toBeNull()
+
+    fireEvent.click(getByRole("button", { name: /Watch Frequency Shift: Techno Special/ }))
+    expect(showModal).toHaveBeenCalledOnce()
+    const player = container.querySelector(".fs-reel-player")
+    const video = player.querySelector("video")
+    expect(video.getAttribute("src")).toBe("/assets/frequency-shift/video/frequency-shift-techno-special-master.mp4")
+    expect(video.controls).toBe(true)
+    expect(video.muted).toBe(false)
+    expect(video.playsInline).toBe(true)
+    expect(HTMLMediaElement.prototype.play).toHaveBeenCalled()
+
+    fireEvent.error(video)
+    expect(player).toHaveTextContent("This browser could not play the original master.")
+    expect(player.querySelector('a[href="https://frequencyshift.ca/events/september-4/"]')).toBeTruthy()
+
+    fireEvent.click(player.querySelector(".fs-reel-close"))
+    expect(container.querySelector(".fs-reel-player")).toBeNull()
+
+    // The browser closing the dialog on its own clears the player the same way.
+    fireEvent.click(getByRole("button", { name: /Watch Frequency Shift: This Friday/ }))
+    fireEvent(container.querySelector(".fs-reel-player"), new Event("close"))
+    expect(container.querySelector(".fs-reel-player")).toBeNull()
   })
 
   it("shows five venue-photography posts with visible source credits and no posters", () => {
@@ -188,8 +199,19 @@ describe("Frequency Shift portfolio placement", () => {
     expect(projects[0]).toHaveTextContent("Video Production at HintonX")
     expect(projects[1]).toHaveTextContent("Frequency Shift")
     expect(projects[1]).toHaveClass("project-card-frequency-shift")
-    expect(projects[1].querySelector('.frequency-shift-card-backdrop[src="/assets/frequency-shift/hero-crowd.webp"]')).toBeTruthy()
-    expect(projects[1].querySelectorAll('.frequency-shift-card-logo-layer[src="/assets/frequency-shift/fs-icon-vector.svg"]')).toHaveLength(3)
+    // a window into the site's laser room: the room, two of the show's looks and the sign's light, baked from the scene
+    for (const plate of ["card-base", "card-show", "card-sign"]) {
+      expect(projects[1].querySelector(`.fsc-art img[src="/assets/frequency-shift/card/${plate}.webp"]`)).toBeTruthy()
+    }
+    // the moving show is a muted, looping video that loads only once the card is near the screen
+    const show = projects[1].querySelector("video.fsc-show-video")
+    expect(show.muted).toBe(true)
+    expect(show).toHaveAttribute("loop")
+    expect(show).toHaveAttribute("preload", "none")
+    expect(show.getAttribute("src")).toBeNull()
+    expect(fs.existsSync(path.join(process.cwd(), "public/assets/frequency-shift/card/card-show.mp4"))).toBe(true)
+    // and the Web development folder's sheet is the same room, with the monogram up high
+    expect(container.querySelector('.gf-sheet .fsc-art--sheet img[src="/assets/frequency-shift/card/sheet-base.webp"]')).toBeTruthy()
     expect(projects[2]).toHaveTextContent("Beatport Redesign")
     // Animatic sits in the Motion folder above, but not among the selected work.
     expect(container.querySelector(".home-work")).not.toHaveTextContent("Animatic Remastered")

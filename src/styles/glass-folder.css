@@ -105,8 +105,8 @@ canvas.gf-art[data-ready] { opacity: 1; filter: none; }
   z-index: 1;
   opacity: 0;
   transition: opacity .5s var(--gf-ease);
-  -webkit-mask-image: radial-gradient(300px 240px at calc(50% + var(--gf-px) * 42%) calc(50% + var(--gf-py) * 42%), #000 0%, rgb(0 0 0 / .45) 72%);
-  mask-image: radial-gradient(300px 240px at calc(50% + var(--gf-px) * 42%) calc(50% + var(--gf-py) * 42%), #000 0%, rgb(0 0 0 / .45) 72%);
+  -webkit-mask-image: radial-gradient(300px 240px at var(--gl-mx, calc(50% + var(--gf-px) * 42%)) var(--gl-my, calc(50% + var(--gf-py) * 42%)), #000 0%, rgb(0 0 0 / .45) 72%);
+  mask-image: radial-gradient(300px 240px at var(--gl-mx, calc(50% + var(--gf-px) * 42%)) var(--gl-my, calc(50% + var(--gf-py) * 42%)), #000 0%, rgb(0 0 0 / .45) 72%);
 }
 .gf-back-glow { width: 340px; height: 272px; }
 .gf-front-glow { width: 340px; height: 198px; }

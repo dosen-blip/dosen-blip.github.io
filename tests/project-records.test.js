@@ -50,7 +50,6 @@ describe("project records", () => {
         expect(project.content.motion.slots.filter((slot) => slot.src)).toHaveLength(4)
         expect(project.content.motion.slots[0]).toMatchObject({
           title: "Frequency Shift: Techno Special",
-          featured: true,
           aspectRatio: "16 / 9",
         })
         for (const slot of project.content.motion.slots.filter((item) => item.src)) {
@@ -59,6 +58,7 @@ describe("project records", () => {
           expect(slot.fallbackUrl).toMatch(/^https:\/\/frequencyshift\.ca\/(archive|events)\//)
           expect(fs.existsSync(path.join(process.cwd(), "public", slot.src))).toBe(true)
           expect(fs.existsSync(path.join(process.cwd(), "public", slot.poster))).toBe(true)
+          expect(fs.existsSync(path.join(process.cwd(), "public", slot.reel))).toBe(true)
         }
         expect(fs.existsSync(path.join(process.cwd(), "public", project.content.hero.image))).toBe(true)
         expect(fs.existsSync(path.join(process.cwd(), "public", project.content.web.homeScreenshot))).toBe(true)

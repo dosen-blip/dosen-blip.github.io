@@ -33,6 +33,16 @@
     }
     // room: the room lit, sign off. lit: the same moment with the sign on. sign: lit minus room, so that
     // room + sign (plus-lighter) gives back lit, and the sign can flicker on its own over the room.
+    // ?crop=y,h keeps rows y..y+h: the frame is drawn taller than the plate, so the composition's own edges (the top of
+    // the wall, the vignette) fall outside it and the plate is wall from edge to edge
+    const crop = params.get("crop")?.split(",").map(Number)
+    const cropped = (canvas) => {
+      if (!crop) return canvas
+      const c = document.createElement("canvas")
+      c.width = canvas.width; c.height = crop[1]
+      c.getContext("2d").drawImage(canvas, 0, -crop[0])
+      return c
+    }
     window.__bake = () => {
       const room = pixels(hero.bakeFrame({ at: 14, glow: 0 }))
       const lit = pixels(hero.bakeFrame({ at: 14, glow: 1 }))
@@ -45,7 +55,7 @@
       const sign = document.createElement("canvas")
       sign.width = out.width; sign.height = out.height
       sign.getContext("2d").putImageData(out, 0, 0)
-      return { room: room.c.toDataURL("image/png"), lit: lit.c.toDataURL("image/png"), sign: sign.toDataURL("image/png"), wm: hero.view.wm }
+      return { room: cropped(room.c).toDataURL("image/png"), lit: cropped(lit.c).toDataURL("image/png"), sign: cropped(sign).toDataURL("image/png"), wm: hero.view.wm }
     }
     window.__bakeReady = true
 
